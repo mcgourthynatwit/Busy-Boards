@@ -12,12 +12,16 @@ function Login() {
         <div className="Login">
             <header className="App-header">
                 <p>
-                    Test p
+                    Welcome to Bizi Boardz
                 </p>
                 <form>
                     <label>
                         Enter repository URL:
                         <input type="text" onChange={handleChange}/>
+                    </label>
+                    <label>
+                        Enter repository Key:
+                        <input type="password" onChange={handleChange}/>
                     </label>
                     <input type="submit" value="Submit" />
                 </form>

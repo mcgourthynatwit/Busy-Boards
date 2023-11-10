@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 
 function Login() {
     const [url, setUrl] = useState('');
+    const [token, setToken] = useState('');
+    const [submittedUrl, setSubmittedUrl] = useState(null);
 
-
-    function handleChange(event) {
-        setUrl(event.target.value);
+    const handleUrlChange = event => setUrl(event.target.value);
+    const handleTokenChange = event => setToken(event.target.value);
+    
+    const handleSubmit = event => {
+        event.preventDefault();
+        setSubmittedUrl(url);
     }
 
     return (
@@ -14,20 +19,23 @@ function Login() {
                 <p>
                     Welcome to Bizi Boardz
                 </p>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <label>
                         Enter repository URL:
-                        <input type="text" onChange={handleChange}/>
+                        <input type="text" value={url} onChange={handleUrlChange}/>
                     </label>
                     <label>
-                        Enter repository Key:
-                        <input type="password" onChange={handleChange}/>
+                        Enter Personal Access Token:
+                        <input type="password" onChange={handleTokenChange}/>
                     </label>
                     <input type="submit" value="Submit" />
                 </form>
-                <p>
-                    You entered: {url}
-                </p>
+
+                {submittedUrl && 
+                    <p>
+                        You submitted {submittedUrl} and token {token}
+                    </p>
+                }
             </header>
         </div>
     );

@@ -1,8 +1,9 @@
 import { Outlet, Link } from "react-router-dom";
 
-const Layout = () => {
+const Layout = ({isLoggedIn}) => {
   return (
     <>
+    {isLoggedIn &&
       <nav>
         <ul>
           <li>
@@ -16,7 +17,7 @@ const Layout = () => {
           </li>
         </ul>
       </nav>
-
+      }
       <Outlet />
     </>
   )

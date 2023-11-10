@@ -28,7 +28,7 @@ const CustomInput = ({ type, icon, placeholder, value, onChange, name }) => {
                     
                     {type === 'password' && (
                         <div className="input_icon" onClick={handleTogglePassword}>
-                            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                            {!showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                         </div>
                     )}
                 </div>

@@ -8,18 +8,15 @@ import Login from './pages/Login';
 import Contact from './pages/Contact';
 import reportWebVitals from './reportWebVitals';
 
+const isLoggedIn = false;
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Layout isLoggedIn={isLoggedIn}/>}>
           <Route index element={<Login />} />
           <Route path="contact" element={<Contact />} />
-          {/*
-          <Route path="blogs" element={<Blogs />} />
-          
-          <Route path="*" element={<NoPage />} />
-        */}
         </Route>
       </Routes>
     </BrowserRouter>

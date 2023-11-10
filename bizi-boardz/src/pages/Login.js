@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+const Login = () => {
     const [url, setUrl] = useState('');
     const [token, setToken] = useState('');
     const [submittedUrl, setSubmittedUrl] = useState(null);
+    const navigate = useNavigate();
+
 
     const handleUrlChange = event => setUrl(event.target.value);
     const handleTokenChange = event => setToken(event.target.value);
@@ -11,6 +14,7 @@ function Login() {
     const handleSubmit = event => {
         event.preventDefault();
         setSubmittedUrl(url);
+        navigate("/contact");
     }
 
     return (

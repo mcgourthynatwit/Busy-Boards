@@ -4,6 +4,7 @@ import CustomInput from '../components/CustomInput.js';
 import { AiFillGithub } from 'react-icons/ai'
 import { BsFillKeyFill } from 'react-icons/bs'
 import BiziLogo from '../icons/Bizi_Boardz-logos.jpeg'
+import { octokitAuth } from '../backend/octokitAuth.js';
 
 const Login = () => {
     const [url, setUrl] = useState('');
@@ -15,11 +16,29 @@ const Login = () => {
     const handleUrlChange = event => setUrl(event.target.value);
     const handleTokenChange = event => setToken(event.target.value);
     
-    const handleSubmit = event => {
+    const handleSubmit = async event => {
         event.preventDefault();
-        setSubmittedUrl(url);
-        navigate("/contact");
-    }
+    
+        const personalAccess = token; 
+        console.log('Token:', personalAccess); // Debug token value
+    
+        try {
+            const login = await octokitAuth(personalAccess);
+            console.log('Login response:', login); // Debug login response
+    
+            if (login) {
+                setSubmittedUrl(url);
+                console.log('Navigating to /contact'); // Debug navigation
+                navigate("/contact");
+            } else {
+                alert('Login failed');
+            }
+        } catch (error) {
+            console.error('Error during authentication:', error);
+        }
+    };
+    
+    
 
     return (
         <div className="Login">

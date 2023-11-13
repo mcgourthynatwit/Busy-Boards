@@ -7,6 +7,7 @@ import Layout from './pages/Layout'
 import Login from './pages/Login';
 import Contact from './pages/Contact';
 import reportWebVitals from './reportWebVitals';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 
 const isLoggedIn = false;
 

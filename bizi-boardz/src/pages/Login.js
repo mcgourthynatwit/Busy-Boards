@@ -44,9 +44,9 @@ const Login = () => {
         try {
             const loggedInUser = await octokitAuth(personalAccess);
             
-            await validRepo(loggedInUser, url);
+            const validUrl = await validRepo(loggedInUser, url);
         
-            if (loggedInUser && validRepoUrl) {
+            if (loggedInUser && validUrl) {
                 navigate("/contact");
             } else {
               //  alert('Login failed');

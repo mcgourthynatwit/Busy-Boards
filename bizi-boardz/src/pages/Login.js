@@ -11,14 +11,14 @@ const Login = () => {
     const [url, setUrl] = useState('');
     const [token, setToken] = useState('');
     const navigate = useNavigate();
-    const [validRepoUrl, setValidRepoUrl] = useState(true);
+    const [validRepoUrl, setValidRepoUrl] = useState(false);
     const [validPAT, setValidPAT] = useState(true);
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
+    let repoUrlValid = false
 
     const handleUrlChange = event => {
         setUrl(event.target.value);
-        setValidRepoUrl(true);
     }
     const handleTokenChange = event => {
         setToken(event.target.value);
@@ -28,7 +28,8 @@ const Login = () => {
     const validRepo = async (userName, repoURL) => {
         try {
             const valid = await octokitAuthRepo(token, userName, repoURL); // Returns true if valid url
-            setValidRepoUrl(valid);
+            console.log('valid = ', valid)
+            repoUrlValid = valid
         } catch (error) {
             setValidRepoUrl(false);
         }
@@ -44,9 +45,10 @@ const Login = () => {
         try {
             const loggedInUser = await octokitAuth(personalAccess);
             
-            const validUrl = await validRepo(loggedInUser, url);
-        
-            if (loggedInUser && validUrl) {
+            await validRepo(loggedInUser, url);
+            
+            console.log('logged in', loggedInUser, 'valid', validRepoUrl)
+            if (loggedInUser && repoUrlValid) {
                 navigate("/contact");
             } else {
               //  alert('Login failed');

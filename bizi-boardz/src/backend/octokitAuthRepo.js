@@ -8,6 +8,8 @@ const octokitAuthRepo = async (personalAccess, userName, repoUrl) => {
 
     try {
         const response = await octokit.request(`GET /repos/${userName}/${repoName}`);
+        console.log(response.data)
+        console.log(response)
         return response.status === 200
     } catch (error) {
         console.error('Error in octokitAuthRepo:', error);

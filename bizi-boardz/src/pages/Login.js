@@ -14,7 +14,6 @@ const Login = () => {
     const navigate = useNavigate();
     const [showUrlError, setShowUrlError] = useState(false);
     const [showPATError, setShowPATError] = useState(false);
-    const [hasSubmitted, setHasSubmitted] = useState(false);
 
     const handleUrlChange = event => {
         setUrl(event.target.value);
@@ -27,7 +26,7 @@ const Login = () => {
 
     const validRepo = async (userName, repoURL) => {
         try {
-            const valid = await octokitAuthRepo(token, userName, repoURL); // Returns true if valid url
+            const valid = await octokitAuthRepo(token, repoURL); // Returns true if valid url
             return valid;
         } catch (error) {
             setShowUrlError(true);
@@ -37,8 +36,6 @@ const Login = () => {
     
     const handleSubmit = async event => {
         event.preventDefault();
-        setHasSubmitted(true);
-    
         try {
             const loggedInUser = await octokitAuth(token);
             setShowPATError(false);

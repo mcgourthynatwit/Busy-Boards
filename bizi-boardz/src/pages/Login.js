@@ -16,8 +16,6 @@ const Login = () => {
     const [showPATError, setShowPATError] = useState(false);
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
-    let repoUrlValid = false
-
     const handleUrlChange = event => {
         setUrl(event.target.value);
         setShowUrlError(false);  // Hide error messages when re-focusing text

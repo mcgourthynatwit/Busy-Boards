@@ -6,33 +6,35 @@ import { BsFillKeyFill } from 'react-icons/bs'
 import BiziLogo from '../icons/Bizi_Boardz-logos.jpeg'
 import { octokitAuth } from '../backend/octokitAuth.js';
 import { octokitAuthRepo } from '../backend/octokitAuthRepo.js';
+import FormInputError from '../components/FormInputError.js';
 
 const Login = () => {
     const [url, setUrl] = useState('');
     const [token, setToken] = useState('');
     const navigate = useNavigate();
-    const [validRepoUrl, setValidRepoUrl] = useState(false);
-    const [validPAT, setValidPAT] = useState(true);
+    const [showUrlError, setShowUrlError] = useState(false);
+    const [showPATError, setShowPATError] = useState(false);
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
     let repoUrlValid = false
 
     const handleUrlChange = event => {
         setUrl(event.target.value);
+        setShowUrlError(false);  // Hide error messages when re-focusing text
     }
     const handleTokenChange = event => {
         setToken(event.target.value);
-        setValidPAT(true);
+        setShowPATError(false); // Hide error messages when re-focusing text
     }
 
     const validRepo = async (userName, repoURL) => {
         try {
             const valid = await octokitAuthRepo(token, userName, repoURL); // Returns true if valid url
-            console.log('valid = ', valid)
-            repoUrlValid = valid
+            return true;
         } catch (error) {
-            setValidRepoUrl(false);
+            setShowUrlError(true);
         }
+        return false;
     };
     
     const handleSubmit = async event => {
@@ -44,17 +46,17 @@ const Login = () => {
     
         try {
             const loggedInUser = await octokitAuth(personalAccess);
+            setShowPATError(false);
+
+            const validUrl = await validRepo(loggedInUser, url);
             
-            await validRepo(loggedInUser, url);
-            
-            console.log('logged in', loggedInUser, 'valid', validRepoUrl)
-            if (loggedInUser && repoUrlValid) {
+            if (loggedInUser && validUrl) {
                 navigate("/contact");
             } else {
               //  alert('Login failed');
             }
         } catch (error) {
-            setValidPAT(false);
+            setShowPATError(true);
             console.error('Error during authentication:', error);
         }
     };
@@ -77,15 +79,13 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit} className = "Form">
                     <CustomInput icon={<AiFillGithub />} type={'text'} onChange = {handleUrlChange} placeholder={'Enter your GitHub repository URL'} />
-                    {(!validRepoUrl && hasSubmitted)  &&
-                        <p>
-                            Please enter a valid repository url!
-                        </p>
+                    {(showUrlError && hasSubmitted)  &&
+                        <FormInputError errorText = {'Please enter a valid GitHub Repository Url!'} visible={showUrlError}/>
                     }
                     <CustomInput icon = {<BsFillKeyFill/>} type = {'password'} onChange = {handleTokenChange} placeholder = {'Enter your GitHub personal Access token'} />
-                    {(!validPAT && hasSubmitted)  &&
+                    {(showPATError && hasSubmitted)  &&
                         <p>
-                            Please enter a valid Personal Access Token!
+                            <FormInputError errorText = {'Please enter a valid GitHub Personal Access Token!'} visible={showPATError}/>
                         </p>
                     } 
                     

@@ -3,7 +3,7 @@ import NavigationBar from "../components/NavigationBar";
 const Contact = () => {
   return (
     <>
-    <NavigationBar></NavigationBar>
+    <NavigationBar> </NavigationBar>
       <p>
         Contact page
       </p>

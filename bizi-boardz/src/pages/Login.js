@@ -28,7 +28,7 @@ const Login = () => {
     const validRepo = async (userName, repoURL) => {
         try {
             const valid = await octokitAuthRepo(token, userName, repoURL); // Returns true if valid url
-            return true;
+            return valid;
         } catch (error) {
             setShowUrlError(true);
         }

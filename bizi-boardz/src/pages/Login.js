@@ -77,16 +77,11 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit} className = "Form">
                     <CustomInput icon={<AiFillGithub />} type={'text'} onChange = {handleUrlChange} placeholder={'Enter your GitHub repository URL'} />
-                    {(showUrlError && hasSubmitted)  &&
-                        <FormInputError errorText = {'Please enter a valid GitHub Repository Url!'} visible={showUrlError}/>
-                    }
-                    <CustomInput icon = {<BsFillKeyFill/>} type = {'password'} onChange = {handleTokenChange} placeholder = {'Enter your GitHub personal Access token'} />
-                    {(showPATError && hasSubmitted)  &&
-                        <p>
-                            <FormInputError errorText = {'Please enter a valid GitHub Personal Access Token!'} visible={showPATError}/>
-                        </p>
-                    } 
+                    <FormInputError errorText = {'Please enter a valid GitHub Repository Url!'} visible={showUrlError}/>
                     
+                    <CustomInput icon = {<BsFillKeyFill/>} type = {'password'} onChange = {handleTokenChange} placeholder = {'Enter your GitHub personal Access token'} /> 
+                    <FormInputError errorText = {'Please enter a valid GitHub Personal Access Token!'} visible={showPATError}/>
+                
                     <input type="submit" value="Submit" />
                 </form>
 

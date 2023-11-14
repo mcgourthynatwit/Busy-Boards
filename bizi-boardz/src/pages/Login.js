@@ -37,13 +37,10 @@ const Login = () => {
     
     const handleSubmit = async event => {
         event.preventDefault();
-
         setHasSubmitted(true);
     
-        const personalAccess = token; 
-    
         try {
-            const loggedInUser = await octokitAuth(personalAccess);
+            const loggedInUser = await octokitAuth(token);
             setShowPATError(false);
 
             const validUrl = await validRepo(loggedInUser, url);
@@ -59,8 +56,6 @@ const Login = () => {
         }
     };
     
-    
-
     return (
         <div className="Login">
             <header className="App-header">
@@ -87,10 +82,7 @@ const Login = () => {
 
                 </div>
 
-            </header>
-            
-            
-           
+            </header>           
         </div>
     );
 }

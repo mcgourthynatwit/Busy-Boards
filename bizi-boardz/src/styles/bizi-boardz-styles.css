@@ -1,24 +1,40 @@
-.bizi-bright-txt{
-    color: #E79215;
+:root{
+    --bizi-dark: #2D2928;
+    --bizi-yellow: #E79215;
+    --bizi-white: #E7E5DF;
 }
 
-.bizi-bright-bg{
-    background-color: #E79215;
+
+.bizi-yellow-txt{
+    color: var(--bizi-yellow);
+}
+
+.bizi-yellow-bg{
+    background-color: var(--bizi-yellow);
 }
 
 .bizi-dark-txt{
-    color: #2D2928;
+    color: var(--bizi-dark);
 }
 
 .bizi-dark-bg{
-    background-color: #2D2928;
+    background-color: var(--bizi-dark);
 }
 
 .bizi-white-txt{
-    color: #E7E5DF;
+    color: var(--bizi-white);
 }
 
 .bizi-white-bg{
-    background-color: #E7E5DF;
+    background-color: var(--bizi-white);
+
+}
+
+.bizi-nav-btn-selected{
+    color: var(--bizi-dark);
+    background-color: var(--bizi-yellow);
+}
+
+.bizi-nav-btn-unselected{
 
 }

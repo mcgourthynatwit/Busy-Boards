@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './NavigationBar.css';
+import '../styles/bizi-boardz-styles.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,12 +12,12 @@ const NavigationBar = ({ CurrentSprint, CreateTask, CreateBacklog, Settings }) =
     };
   
     return (
-      <div className={`navigationbar ${isOpen ? 'open' : ''}`}>
-          <button onClick={toggleNavigationBar}> <FontAwesomeIcon icon={faBars} /> </button>
-          <button onClick={CurrentSprint}>Create Sprint</button>
-          <button onClick={CreateTask}> New Task</button>
-          <button onClick={CreateBacklog}> View Backlog</button>
-          <button onClick={Settings}>Settings</button>
+      <div className={`bizi-bright-bg navigationbar ${isOpen ? 'open' : ''}`}>
+          <button type='button' onClick={toggleNavigationBar}> <FontAwesomeIcon icon={faBars} /> </button>
+          <button type='button' onClick={CurrentSprint}>Create Sprint</button>
+          <button type='button' onClick={CreateTask}> New Task</button>
+          <button type='button' className="btn btn-primary bizi-dark-txt" onClick={CreateBacklog}> View Backlog</button>
+          <button type='button' className="btn bizi-nav-btn-selected" onClick={Settings}>Settings</button>
       </div>
     );
   };

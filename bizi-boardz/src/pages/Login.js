@@ -56,7 +56,7 @@ const Login = () => {
     return (
         <div className="Login">
             <header className="App-header">
-                <img src = {BiziLogo} style = {{
+                <img src = {BiziLogo} alt={'Bizi Logo'} style = {{
                     width: '300px',
                     height: '300px'
                 }}>

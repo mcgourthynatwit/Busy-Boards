@@ -11,10 +11,10 @@ const NavigationBar = ({ onCreateProject, onCreateTask }) => {
     };
   
     return (
-      <div className={`NavigationBar ${isOpen ? 'open' : ''}`}>
-        <button onClick={toggleNavigationBar}> className="toggle-button" <FontAwesomeIcon icon={faBars} /> </button>
-        <button onClick={onCreateProject}>New Project</button>
-        <button onClick={onCreateTask}>New Task</button>
+      <div className={`navigationbar ${isOpen ? 'open' : ''}`}>
+          <button onClick={toggleNavigationBar}> <FontAwesomeIcon icon={faBars} /> </button>
+          <button onClick={onCreateProject}>New Project</button>
+          <button onClick={onCreateTask}>New Task</button>
       </div>
     );
   };

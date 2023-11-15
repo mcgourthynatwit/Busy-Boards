@@ -7,11 +7,12 @@ function createWindow(){
     const win = new BrowserWindow({
         width: 800,
         height: 600,
+        autoHideMenuBar: true,
         webPreferences: {
             enableRemoteModule: true
         }
     })
-
+    win.maximize()
     win.loadURL('http://localhost:3000')
 }
 

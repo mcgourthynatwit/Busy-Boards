@@ -4,8 +4,8 @@ import CustomInput from '../components/CustomInput.js';
 import { AiFillGithub } from 'react-icons/ai'
 import { BsFillKeyFill } from 'react-icons/bs'
 import BiziLogo from '../icons/Bizi_Boardz-logos.jpeg'
-import { octokitAuth } from '../backend/octokitAuth.js';
-import { octokitAuthRepo } from '../backend/octokitAuthRepo.js';
+import { octokitAuth } from '../backend/octokit/octokitAuth.js';
+import { octokitAuthRepo} from '../backend/octokit/octokitAuthRepo.js'
 import FormInputError from '../components/FormInputError.js';
 
 const Login = () => {

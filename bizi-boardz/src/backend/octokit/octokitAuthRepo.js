@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 
-const octokitAuthRepo = async (personalAccess, repoUrl) => {
-    const octokit = new Octokit({ auth: personalAccess });
+const octokitAuthRepo = async (pat, repoUrl) => {
+    const octokit = new Octokit({ auth: pat });
 
     const parts = repoUrl.replace(/\/$/, '').split('/');
     const userName = parts[parts.length - 2];

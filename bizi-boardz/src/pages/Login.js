@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import CustomInput from '../components/CustomInput.js';
 import { AiFillGithub } from 'react-icons/ai'
@@ -7,26 +7,26 @@ import BiziLogo from '../icons/Bizi_Boardz-logos.jpeg'
 import { octokitAuth } from '../backend/octokit/octokitAuth.js';
 import { octokitAuthRepo} from '../backend/octokit/octokitAuthRepo.js'
 import FormInputError from '../components/FormInputError.js';
+import { globalContext } from '../index.js';
 
 const Login = () => {
-    const [url, setUrl] = useState('');
-    const [token, setToken] = useState('');
-    const navigate = useNavigate();
+    const [pat, setPAT, activeRepo, setActiveRepo, userName, setUserName] = useContext(globalContext);
     const [showUrlError, setShowUrlError] = useState(false);
     const [showPATError, setShowPATError] = useState(false);
+    const navigate = useNavigate();
 
     const handleUrlChange = event => {
-        setUrl(event.target.value);
+        setActiveRepo(event.target.value);
         setShowUrlError(false);  // Hide error messages when re-focusing text
     }
     const handleTokenChange = event => {
-        setToken(event.target.value);
+        setPAT(event.target.value);
         setShowPATError(false); // Hide error messages when re-focusing text
     }
 
-    const validRepo = async (userName, repoURL) => {
+    const validRepo = async () => {
         try {
-            const valid = await octokitAuthRepo(token, repoURL); // Returns true if valid url
+            const valid = await octokitAuthRepo(pat, activeRepo); // Returns true if valid url
             return valid;
         } catch (error) {
             setShowUrlError(true);
@@ -37,10 +37,10 @@ const Login = () => {
     const handleSubmit = async event => {
         event.preventDefault();
         try {
-            const loggedInUser = await octokitAuth(token);
+            const loggedInUser = await octokitAuth(pat);
             setShowPATError(false);
 
-            const validUrl = await validRepo(loggedInUser, url);
+            const validUrl = await validRepo();
             
             if (loggedInUser && validUrl) {
                 navigate("/contact");

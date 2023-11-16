@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, createContext, useContext, useMemo } from 'react'
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
@@ -15,21 +16,27 @@ import reportWebVitals from './reportWebVitals';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
 const isLoggedIn = false;
+export const globalContext = createContext();
 
 export default function App() {
+  const [pat, setPAT] = useState('');
+  const [activeRepo, setActiveRepo] = useState('');
+  const [userName, setUserName] = useState('');
   return (
-  <>
-      <Routes>
-        <Route path="/" element={<Layout isLoggedIn={isLoggedIn}/>}>
-          <Route index element={<Login />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path="/currentSprint" element={<CurrentSprint />} />
-          <Route path='/viewBacklog' element={<ViewBacklog />} />
-          <Route path='/myTasks' element={<MyTasks />} />
-          <Route path='/settings' element={<Settings />} />
-        </Route>
-      </Routes>
-  </>
+    <>
+      <globalContext.Provider value={[pat, setPAT, activeRepo, setActiveRepo, userName, setUserName]}>
+        <Routes>
+          <Route path="/" element={<Layout isLoggedIn={isLoggedIn} />}>
+            <Route index element={<Login />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path="/currentSprint" element={<CurrentSprint />} />
+            <Route path='/viewBacklog' element={<ViewBacklog />} />
+            <Route path='/myTasks' element={<MyTasks />} />
+            <Route path='/settings' element={<Settings />} />
+          </Route>
+        </Routes>
+      </globalContext.Provider>
+    </>
   );
 }
 

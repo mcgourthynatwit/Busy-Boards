@@ -51,11 +51,11 @@ li{
 
 
 .nav li:hover{
-  color: var(--bizi-yellow);
+  color: var(--bizi-dark);
+  background-color: var(--bizi-yellow);
 }
 
 
 .nav li.active{
-  color: var(--bizi-dark);
-  background-color: var(--bizi-yellow);
+  color: var(--bizi-yellow);
 }

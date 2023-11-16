@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #2D2928; /* old color = #282c34 */
   width : 100%;
   min-height: 100vh;
   display: flex;
@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #E7E5DF; /* old color = white */
 }
 
 form {

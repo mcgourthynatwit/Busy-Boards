@@ -1,0 +1,61 @@
+:root{
+  --bizi-dark: #2D2928;
+  --bizi-yellow: #E79215;
+  --bizi-white: #E7E5DF;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+body{
+  margin: 0;
+}
+
+.nav{
+  background-color: var(--bizi-dark);
+  color: var(--bizi-white);
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 2rem;
+  padding: 0 1rem;
+}
+
+.app-title{
+  font-size: 2rem;
+}
+
+
+.nav ul{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.nav a{
+  color: inherit;
+  text-decoration: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 .25rem;
+}
+
+
+li{
+  height: 100%;
+}
+
+
+.nav li:hover{
+  color: var(--bizi-yellow);
+}
+
+
+.nav li.active{
+  color: var(--bizi-dark);
+  background-color: var(--bizi-yellow);
+}

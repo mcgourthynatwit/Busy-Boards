@@ -1,7 +1,7 @@
 :root {
     /* Good practice to have colors, may in the future add global colors to entire application */
-    --primary_color: #e79214; 
-    --placeholder_color : white;
+    --primary_color: #E79215; 
+    --placeholder_color : #E7E5DF; /* old color = white */
 }
 
 /* HTML Input tag styles */

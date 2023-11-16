@@ -19,8 +19,6 @@ const isLoggedIn = false;
 export default function App() {
   return (
   <>
-      
-  <NavigationBar />
       <Routes>
         <Route path="/" element={<Layout isLoggedIn={isLoggedIn}/>}>
           <Route index element={<Login />} />

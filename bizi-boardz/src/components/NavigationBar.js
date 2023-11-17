@@ -1,30 +1,23 @@
 import React, { useState } from 'react';
 import '../styles/NavigationBar.css';
 import '../styles/bizi-boardz-styles.css'
-import { Link, useMatch, useResolvedPath } from 'react-router-dom'
+import { Link, useLocation, useMatch, useResolvedPath } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 
 //currentSprint, View Backlog, My Tasks, Settings
-const NavigationBar = ({ CurrentSprint, CreateTask, CreateBacklog, Settings }) => {
-    const [isOpen, setIsOpen] = useState(false);
-  
-    const toggleNavigationBar = () => {
-      setIsOpen(!isOpen);
-    };
-  
+const NavigationBar = () => {
+
+    //if on login page, dont show NavigationBar element  
+    if(useLocation().pathname === '/'){
+      return <></>;
+    }
+
+    //shows NavigationBar elements
     return (
-      // <div className={`bizi-bright-bg navigationbar ${isOpen ? 'open' : ''}`}>
-      //     <button type='button' onClick={toggleNavigationBar}> <FontAwesomeIcon icon={faBars} /> </button>
-      //     <button type='button' onClick={CurrentSprint}>Create Sprint</button>
-      //     <button type='button' onClick={CreateTask}> New Task</button>
-      //     <button type='button' className="btn text-nowrap" onClick={CreateBacklog}> View Backlog</button>
-      //     <button type='button' className="btn bizi-nav-btn-selected" onClick={Settings}>Settings</button>
-      // </div>
       <>
       <nav className='nav'>
-        {/* <CustomLink to='/' className='app-title'>Bizi Boardz</CustomLink> */}
         <span className='app-title'>Bizi Boardz</span>
         <ul>
           <li>
@@ -46,6 +39,8 @@ const NavigationBar = ({ CurrentSprint, CreateTask, CreateBacklog, Settings }) =
     );
   };
 
+  //im pretty sure this gives/takes away active css class,
+  //giving page name a highlight in the NavigationBar
   function CustomLink({ to, children, ...props }){
     const resolvedPath = useResolvedPath(to);
     const isActive = useMatch({ path: resolvedPath.pathname, end: true})

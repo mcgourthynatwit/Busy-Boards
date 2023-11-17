@@ -18,7 +18,6 @@ const Contact = () => {
   
   return (
     <>
-      <NavigationBar />
       <p>Contact page content goes here</p>
     </>
   );

@@ -4,6 +4,10 @@
     --bizi-white: #E7E5DF;
 }
 
+body{
+    background-color: var(--bizi-yellow);
+    color:var(--bizi-dark);
+}
 
 .bizi-yellow-txt{
     color: var(--bizi-yellow);
@@ -27,14 +31,5 @@
 
 .bizi-white-bg{
     background-color: var(--bizi-white);
-
-}
-
-.bizi-nav-btn-selected{
-    color: var(--bizi-dark);
-    background-color: var(--bizi-yellow);
-}
-
-.bizi-nav-btn-unselected{
 
 }

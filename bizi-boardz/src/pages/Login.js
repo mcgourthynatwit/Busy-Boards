@@ -43,7 +43,7 @@ const Login = () => {
             const validUrl = await validRepo();
             
             if (loggedInUser && validUrl) {
-                navigate("/contact");
+                navigate("/currentSprint");
             } else {
               //  alert('Login failed');
             }

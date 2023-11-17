@@ -15,6 +15,7 @@ import Settings from './pages/Settings.js';
 import reportWebVitals from './reportWebVitals';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
+//<Route path='/contact' element={<Contact />} />
 const isLoggedIn = false;
 export const globalContext = createContext();
 
@@ -25,10 +26,11 @@ export default function App() {
   return (
     <>
       <globalContext.Provider value={[pat, setPAT, activeRepo, setActiveRepo, userName, setUserName]}>
+        
+      <NavigationBar />
         <Routes>
           <Route path="/" element={<Layout isLoggedIn={isLoggedIn} />}>
             <Route index element={<Login />} />
-            <Route path='/contact' element={<Contact />} />
             <Route path="/currentSprint" element={<CurrentSprint />} />
             <Route path='/viewBacklog' element={<ViewBacklog />} />
             <Route path='/myTasks' element={<MyTasks />} />

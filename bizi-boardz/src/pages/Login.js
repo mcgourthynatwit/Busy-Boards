@@ -1,51 +1,40 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import CustomInput from '../components/CustomInput.js';
 import { AiFillGithub } from 'react-icons/ai'
 import { BsFillKeyFill } from 'react-icons/bs'
 import BiziLogo from '../icons/Bizi_Boardz-logos.jpeg'
-import { octokitAuth } from '../backend/octokit/octokitAuth.js';
-import { octokitAuthRepo} from '../backend/octokit/octokitAuthRepo.js'
 import FormInputError from '../components/FormInputError.js';
-import { globalContext } from '../index.js';
+import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
 
 const Login = () => {
-    const [pat, setPAT, activeRepo, setActiveRepo, userName, setUserName] = useContext(globalContext);
+    const { setPAT, setActiveRepo, setUsername, octokitAuth, octokitAuthRepo } = useAuthUtils(); 
     const [showUrlError, setShowUrlError] = useState(false);
     const [showPATError, setShowPATError] = useState(false);
     const navigate = useNavigate();
 
     const handleUrlChange = event => {
-        setActiveRepo(event.target.value);
+        setActiveRepo(event.target.value); // Setting state in custom auth util hook
         setShowUrlError(false);  // Hide error messages when re-focusing text
     }
     const handleTokenChange = event => {
-        setPAT(event.target.value);
+        setPAT(event.target.value); 
         setShowPATError(false); // Hide error messages when re-focusing text
     }
-
-    const validRepo = async () => {
-        try {
-            const valid = await octokitAuthRepo(pat, activeRepo); // Returns true if valid url
-            return valid;
-        } catch (error) {
-            setShowUrlError(true);
-        }
-        return false;
-    };
     
     const handleSubmit = async event => {
         event.preventDefault();
         try {
-            const loggedInUser = await octokitAuth(pat);
-            setShowPATError(false);
+            const loggedInUser = await octokitAuth(); // Get logged in username from auth hook
+            setUsername(loggedInUser); // Set in auth hook
 
-            const validUrl = await validRepo();
+            setShowPATError(false);
+            const validUrl = await octokitAuthRepo(); // Returns true if valid url
             
             if (loggedInUser && validUrl) {
                 navigate("/currentSprint");
-            } else {
-              //  alert('Login failed');
+            } else if (!validUrl) {
+                setShowUrlError(true);
             }
         } catch (error) {
             setShowPATError(true);

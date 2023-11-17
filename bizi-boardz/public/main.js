@@ -3,8 +3,8 @@ const { app, BrowserWindow } = require('electron')
 //require('@electron/remote/main').initialize()
 
 function createWindow(){
-
     const win = new BrowserWindow({
+        icon: 'icon.ico',
         width: 800,
         height: 600,
         autoHideMenuBar: true,

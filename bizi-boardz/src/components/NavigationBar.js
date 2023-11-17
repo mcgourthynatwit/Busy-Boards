@@ -14,7 +14,7 @@ const NavigationBar = () => {
       return <></>;
     }
 
-    //shows NavigationBar elements
+    //the usual render - shows NavigationBar elements
     return (
       <>
       <nav className='nav'>

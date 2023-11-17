@@ -5,8 +5,8 @@
 }
 
 body{
-    background-color: var(--bizi-yellow);
-    color:var(--bizi-dark);
+    background-color: var(--bizi-dark);
+    color:var(--bizi-white);
 }
 
 .bizi-yellow-txt{

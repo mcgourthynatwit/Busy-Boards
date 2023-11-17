@@ -51,11 +51,19 @@ li{
 
 
 .nav li:hover{
-  color: var(--bizi-dark);
-  background-color: var(--bizi-yellow);
+  color: var(--bizi-yellow);
 }
 
 
 .nav li.active{
   color: var(--bizi-yellow);
+  background-image: radial-gradient(circle, var(--bizi-yellow) 2px, transparent 2px),
+  linear-gradient(to right, var(--bizi-yellow), var(--bizi-yellow)),
+  radial-gradient(circle, var(--bizi-yellow) 2px, transparent 2px);
+  background-repeat: no-repeat;
+  background-size: 4px 4px, calc(100% - 6px) 4px, 4px 4px;
+  background-position: left top, center top, right top;
+  display: block;
+  outline: none;
+  border: none;
 }

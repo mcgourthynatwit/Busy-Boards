@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import './CustomInput.css'
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import '../styles/CustomInput.css'
 import '../styles/bizi-boardz-styles.css'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 const CustomInput = ({ type, icon, placeholder, value, onChange, name }) => {
     const [showPassword, setShowPassword] = useState(false);

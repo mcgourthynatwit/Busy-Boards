@@ -5,7 +5,7 @@ import { useState } from "react";
  * Custom hook utility for authentication functions AND
  * Holds state of auth-related info (personal access toke, active repo url, logged in username)
  * 
- * @returns object '{ pat, setPAT, activeRepo, setActiveRepo, userName, setUsername, octokitAuth, octokitAuthRepo }'
+ * @returns object '{ pat, setPAT, activeRepo, setActiveRepo, userName, setUserName, octokitAuth, octokitAuthRepo }'
  * pat:                 personal access token
  * setPAT:              set personal access token
  * activeRepo:          url of repo
@@ -38,8 +38,6 @@ const useAuthUtils = () => {
 
         try {
             const response = await octokit.request(`GET /repos/${userName}/${repoName}`);
-            console.log(response.data)
-            console.log(response)
             return response.status === 200
         } catch (error) {
             return false;

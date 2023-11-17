@@ -8,7 +8,7 @@ import FormInputError from '../components/FormInputError.js';
 import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
 
 const Login = () => {
-    const { setPAT, setActiveRepo, setUsername, octokitAuth, octokitAuthRepo } = useAuthUtils(); 
+    const { setPAT, setActiveRepo, setUserName, octokitAuth, octokitAuthRepo } = useAuthUtils(); 
     const [showUrlError, setShowUrlError] = useState(false);
     const [showPATError, setShowPATError] = useState(false);
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Login = () => {
         event.preventDefault();
         try {
             const loggedInUser = await octokitAuth(); // Get logged in username from auth hook
-            setUsername(loggedInUser); // Set in auth hook
+            setUserName(loggedInUser); // Set in auth hook
 
             setShowPATError(false);
             const validUrl = await octokitAuthRepo(); // Returns true if valid url

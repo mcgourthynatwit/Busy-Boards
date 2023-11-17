@@ -34,7 +34,7 @@ const useAuthUtils = () => {
     const octokitAuthRepo = async () => {
         const parts = activeRepo.replace(/\/$/, '').split('/');
         const repoName = parts[parts.length - 1];
-        const userName = parts[parts.length - 2];
+        const userName = parts[parts.length - 2]; // Extract username from url because username in state may not be set yet
 
         try {
             const response = await octokit.request(`GET /repos/${userName}/${repoName}`);

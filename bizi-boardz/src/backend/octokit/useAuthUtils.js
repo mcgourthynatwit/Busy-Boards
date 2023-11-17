@@ -11,27 +11,15 @@ import { useState } from "react";
  * activeRepo:          url of repo
  * setActiveRepo:       set active repo url
  * userName:            user name
- * setUsername:         set user name
+ * setUserName:         set user name
  * octokitAuth:         returns name of authenticated user (using pat)
  * octokitAuthRepo:     returns true if valid activeRepo url 
  */
 const useAuthUtils = () => {
-    const [pat, setUtilPAT] = useState('');
-    const [activeRepo, setUtilActiveRepo] = useState('');
-    const [userName, setUtilUserName] = useState('');
+    const [pat, setPAT] = useState('');
+    const [activeRepo, setActiveRepo] = useState('');
+    const [userName, setUserName] = useState('');
     const octokit = new Octokit({ auth: pat });
-
-    const setPAT = (toPAT) => {
-        setUtilPAT(toPAT);
-    }
-
-    const setActiveRepo = (toRepoUrl) => {
-        setUtilActiveRepo(toRepoUrl);
-    }
-
-    const setUsername = (toUsername) => {
-        setUtilUserName(toUsername);
-    }
 
     const octokitAuth = async () => {
         try {
@@ -58,7 +46,7 @@ const useAuthUtils = () => {
         }
     };
 
-    return { pat, setPAT, activeRepo, setActiveRepo, userName, setUsername, octokitAuth, octokitAuthRepo };
+    return { pat, setPAT, activeRepo, setActiveRepo, userName, setUserName, octokitAuth, octokitAuthRepo };
 }
 
 export { useAuthUtils };

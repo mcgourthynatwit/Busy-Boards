@@ -4,7 +4,7 @@ const { app, BrowserWindow } = require('electron')
 
 function createWindow(){
     const win = new BrowserWindow({
-        icon: 'src/icons/bizi-b-circle.ico',
+        icon: 'src/icons/bizi-b-circle.png',
         width: 800,
         height: 600,
         autoHideMenuBar: true,

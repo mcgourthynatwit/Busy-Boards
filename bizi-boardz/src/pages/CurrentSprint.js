@@ -7,9 +7,7 @@ export default function CurrentSprint() {
       <div className="pageHeader">Example Project Name (Grab from GitHub?)</div>
       <div className="pageBody">
         <div className="progressColumn">
-          <div className="columnHeader">
-            <h2>To Do</h2>
-          </div>
+          <div className="columnHeader">To Do</div>
           <div className="columnBody">
             <ul>
               <TaskCard />
@@ -20,9 +18,7 @@ export default function CurrentSprint() {
           </div>
         </div>
         <div className="progressColumn">
-          <div className="columnHeader">
-            <h2>In Progress</h2>
-          </div>
+          <div className="columnHeader">In Progress</div>
           <div className="columnBody">
             <ul>
               <TaskCard />
@@ -36,9 +32,7 @@ export default function CurrentSprint() {
           </div>
         </div>
         <div className="progressColumn">
-          <div className="columnHeader">
-            <h2>Done</h2>
-          </div>
+          <div className="columnHeader">Done</div>
           <div className="columnBody">
             <ul>
               <TaskCard
@@ -48,10 +42,10 @@ export default function CurrentSprint() {
                 priority={3}
                 taskLength={10.5}
               />
-              <TaskCard />
-              <TaskCard />
-              <TaskCard />
-              <TaskCard />
+              <TaskCard priority={2} />
+              <TaskCard priority={1} />
+              <TaskCard priority={-1} />
+              <TaskCard taskName="THIS IS A REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY LONG NAME" />
               <TaskCard />
               <TaskCard />
               <TaskCard />

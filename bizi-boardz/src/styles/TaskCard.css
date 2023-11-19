@@ -24,11 +24,10 @@
 
 .taskCardHeader .taskName{
     color: var(--bizi-white);
-    height: 48px;
+    min-height: 24px;
+    max-height: 48px;
     font-weight: 500;
     overflow: hidden;
-    display: flex;
-    align-items: center;
 }
 
 .taskCardHeader .assignee{

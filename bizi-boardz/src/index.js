@@ -1,37 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './styles/index.css';
-import './styles/App.css';
-import NavigationBar from './components/NavigationBar';
-import Login from './pages/Login';
-import CurrentSprint from './pages/CurrentSprint.js';
-import ViewBacklog from './pages/ViewBacklog.js';
-import MyTasks from './pages/MyTasks.js';
-import Settings from './pages/Settings.js';
+import "./styles/index.css";
+import "./styles/App.css";
+import NavigationBar from "./components/NavigationBar";
+import Login from "./pages/Login";
+import CurrentSprint from "./pages/CurrentSprint.js";
+import ViewBacklog from "./pages/ViewBacklog.js";
+import MyTasks from "./pages/MyTasks.js";
+import Settings from "./pages/Settings.js";
 //import reportWebVitals from './reportWebVitals';
-import '@fortawesome/fontawesome-svg-core/styles.css';
+import "@fortawesome/fontawesome-svg-core/styles.css";
 
 //<Route path='/contact' element={<Contact />} />
 
 export default function App() {
   return (
-    <> 
+    <>
       <NavigationBar />
-        <Routes>
-          <Route path="/">
-            <Route index element={<Login />} />
-            <Route path="/currentSprint" element={<CurrentSprint />} />
-            <Route path='/viewBacklog' element={<ViewBacklog />} />
-            <Route path='/myTasks' element={<MyTasks />} />
-            <Route path='/settings' element={<Settings />} />
-          </Route>
-        </Routes>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Login />} />
+          <Route path="/currentSprint" element={<CurrentSprint />} />
+          <Route path="/viewBacklog" element={<ViewBacklog />} />
+          <Route path="/myTasks" element={<MyTasks />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+      </Routes>
     </>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>

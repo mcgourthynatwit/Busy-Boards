@@ -1,0 +1,122 @@
+:root{
+    --bizi-dark: #2D2928;
+    --bizi-yellow: #E79215;
+    --bizi-white: #E7E5DF;
+  }
+
+.taskCard{
+    background-color:var(--bizi-dark);
+    color: var(--bizi-dark);
+    width: 96%;
+    height: 130px;
+    margin: 5px 10px;
+    padding: 5px;
+    border-radius: 10px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* .taskCard .taskCardHeader{
+    background-color: orangered;
+} */
+
+.taskCardHeader .taskName{
+    color: var(--bizi-white);
+    height: 48px;
+    font-weight: 500;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.taskCardHeader .assignee{
+    color:#A9A6A2;
+    height: 18px;
+    font-size: 12px;
+    font-weight: 500;
+    overflow: hidden;
+}
+
+
+.taskCard .taskCardFooter{
+    margin: 5px 10px 5px 5px;
+    height: 24px;
+    display: grid;
+    grid-template-columns: 24px 1fr 40px 40px;
+    
+}
+
+.taskCardFooter .bubbleStory{
+    background-color:mediumorchid;
+    color: var(--bizi-white);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 18px;
+    border: 2px solid var(--bizi-white);
+}
+
+.taskCardFooter .bubbleTask{
+    background-color: slateblue;
+    color: var(--bizi-white);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 18px;
+    border: 2px solid var(--bizi-white);
+}
+
+/*
+1: medium blue?
+2: bizi-yellow?
+3: crimson?
+*/
+.taskCardFooter .bubblePriority{
+    background-color: var(--bizi-white);
+    border-radius: 100px;
+    height: 24px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+    font-size: 18px;
+    word-spacing: -3px;
+}
+
+.priorityNA{
+    color: var(--bizi-dark);
+}
+
+.priorityLow{
+    color:seagreen;
+}
+
+.priorityModerate{
+    color: var(--bizi-yellow);
+}
+
+.priorityHigh{
+    color: crimson;
+}
+
+.taskCardFooter .bubbleTaskLength{
+    background-color: var(--bizi-white);
+    border-radius: 100px;
+    height: 24px;
+    width: 40px;
+    margin: 0 0 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 16px;
+}

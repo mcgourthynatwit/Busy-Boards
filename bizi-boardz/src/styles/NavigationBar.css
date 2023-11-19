@@ -15,11 +15,16 @@ body{
 .nav{
   background-color: var(--bizi-dark);
   color: var(--bizi-white);
+  width: 100%;
+  height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   gap: 2rem;
   padding: 0 1rem;
+  position: fixed;
+  top: 0;
+  z-index: 10;
 }
 
 .app-title{
@@ -70,7 +75,7 @@ li{
   linear-gradient(to right, var(--bizi-yellow), var(--bizi-yellow)),
   radial-gradient(circle, var(--bizi-yellow) 2px, transparent 2px);
   background-repeat: no-repeat;
-  background-size: 4px 4px, calc(100% - 6px) 4px, 4px 4px;
+  background-size: 10px 4px, calc(100% - 8px) 4px, 10px 4px;
   background-position: left top, center top, right top;
   display: block;
   outline: none;

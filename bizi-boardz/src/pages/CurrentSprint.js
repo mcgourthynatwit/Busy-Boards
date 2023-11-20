@@ -5,7 +5,9 @@ import Column from "../components/Column.js";
 export default function CurrentSprint() {
   return (
     <div className="pageCurrentSprint">
-      <div className="pageHeader">Example Project Name (Grab from GitHub?)</div>
+      <div className="pageHeader">
+        comp4960-fall2023-project-biziboyz-group-2 (Grab from GitHub?)
+      </div>
       <div className="pageBody">
         <Column columnHeader={"To Do"} />
         <Column columnHeader={"In Progress"} />

@@ -16,7 +16,7 @@ const NavigationBar = () => {
   return (
     <>
       <nav className="nav">
-        <span className="app-title">Bizi Boardz</span>
+        <div className="app-title">Bizi Boardz</div>
         <ul>
           <li>
             <CustomLink to="/currentSprint">Current Sprint</CustomLink>

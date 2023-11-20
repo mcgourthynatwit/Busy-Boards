@@ -1,10 +1,11 @@
 import "../styles/TaskCard.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChalkboardUser } from "@fortawesome/free-solid-svg-icons";
 
 //display task name, assignee, story/task, priority (!, !!, !!!), length
 export default function TaskCard({
   taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
   assignee = "Hubert Wolfeschlegelsteinhausenbergerdorff",
-  isStory = false,
   priority = -1,
   taskLength = 1,
 }) {
@@ -15,18 +16,15 @@ export default function TaskCard({
         <div className="assignee">{assignee}</div>
       </div>
       <div className="taskCardFooter">
-        {decideStoryTask(isStory)}
+        <button className="bubbleWhiteboard">
+          <FontAwesomeIcon icon={faChalkboardUser} />
+        </button>
         <div className="EMPTY_DIV_ON_PURPOSE"></div>
         {decidePriority(priority)}
         <div className="bubbleTaskLength">{decideTaskLength(taskLength)}</div>
       </div>
     </div>
   );
-}
-
-function decideStoryTask(isStory) {
-  if (isStory) return <div className="bubbleStory">S</div>;
-  else return <div className="bubbleTask">T</div>;
 }
 
 function decidePriority(priority) {

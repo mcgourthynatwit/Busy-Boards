@@ -1,3 +1,9 @@
+:root{
+    --bizi-dark: #2D2928;
+    --bizi-yellow: #E79215;
+    --bizi-white: #E7E5DF;
+  }
+  
 .progressColumn{
     /* background-color: #8A8784;
     background-color: var(--bizi-yellow); */
@@ -10,7 +16,7 @@
 }
 
 .columnHeader{
-    color: var(--bizi-white);
+    color: var(--bizi-yellow);
     margin: 10px 5px 0 5px;
     padding: 5px 5px;
     display: flex;
@@ -20,12 +26,13 @@
 }
 
 .columnBody{
-    background-color: #575452;
+    background-color: var(--bizi-yellow);
     border-radius: 10px;
     margin: 0 5px 5px 5px;
     justify-content: center;
     flex: 1;
     padding: 5px 2px 0 2px;
+    box-shadow: -2px 0 4px 0 rgba(0,0,0,.3);
 }
 
 .columnBody ul{

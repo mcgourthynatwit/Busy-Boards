@@ -10,7 +10,6 @@ export default function Column({ columnHeader }) {
           <TaskCard
             taskName="THIS IS A TEST STORY NAME"
             assignee="Tim Magee"
-            isStory={true}
             priority={3}
             taskLength={10.5}
           />

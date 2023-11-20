@@ -33,8 +33,11 @@ body{
 }
 
 .app-title{
-  margin: 0 10px;
+  margin: 0 50px;
   font-size: 2rem;
+  color: var(--bizi-yellow);
+  font-weight: 500;
+  font-style: italic;
 }
 
 

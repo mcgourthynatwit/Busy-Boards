@@ -1,6 +1,9 @@
 import "../styles/TaskCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChalkboardUser } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import PopupEditTask from "./PopupEditTask";
+import React from "react";
 
 //display task name, assignee, story/task, priority (!, !!, !!!), length
 export default function TaskCard({
@@ -9,21 +12,36 @@ export default function TaskCard({
   priority = -1,
   taskLength = 1,
 }) {
+  const [editTaskPopup, setEditTaskPopup] = useState(false);
+
+  //stops whiteboard click from activating the Edit Task Popup
+  const ignoreParentOnClick = (e) => e.stopPropagation();
+
   return (
-    <div className="taskCard">
-      <div className="taskCardHeader">
-        <div className="taskName">{taskName}</div>
-        <div className="assignee">{assignee}</div>
+    <>
+      <div className="taskCard" onClick={() => setEditTaskPopup(true)}>
+        <div className="taskCardHeader">
+          <div className="taskName">{taskName}</div>
+          <div className="assignee">{assignee}</div>
+        </div>
+        <div className="taskCardFooter">
+          <button
+            className="bubbleWhiteboard"
+            onClick={(e) => ignoreParentOnClick(e)}
+          >
+            <FontAwesomeIcon icon={faChalkboardUser} />
+          </button>
+          <div className="EMPTY_DIV_ON_PURPOSE"></div>
+          {decidePriority(priority)}
+          <div className="bubbleTaskLength">{decideTaskLength(taskLength)}</div>
+        </div>
       </div>
-      <div className="taskCardFooter">
-        <button className="bubbleWhiteboard">
-          <FontAwesomeIcon icon={faChalkboardUser} />
-        </button>
-        <div className="EMPTY_DIV_ON_PURPOSE"></div>
-        {decidePriority(priority)}
-        <div className="bubbleTaskLength">{decideTaskLength(taskLength)}</div>
-      </div>
-    </div>
+      <PopupEditTask
+        trigger={editTaskPopup}
+        setTrigger={setEditTaskPopup}
+        taskName={taskName}
+      />
+    </>
   );
 }
 

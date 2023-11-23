@@ -18,6 +18,9 @@
     justify-content: space-between;
     box-shadow: -2px -2px 4px 0 rgba(0,0,0,.5);
 }
+.taskCard:hover{
+    cursor: pointer;
+}
 
 /* .taskCard .taskCardHeader{
     background-color: orangered;
@@ -89,12 +92,12 @@
     font-weight: 700;
     font-size: 16px;
     border: none;
-    box-shadow: 0 3px 0 rgba(231,229,223,.7);
+    box-shadow: 0 2px 0 rgba(231,229,223,.6);
 }
 
 .taskCardFooter .bubbleWhiteboard:active{
     box-shadow: none;
-    transform: translateY(3px);
+    transform: translateY(2px);
 }
 
 /*

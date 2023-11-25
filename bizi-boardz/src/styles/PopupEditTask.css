@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgba(0,0,0,.4);
+    background-color: rgba(0,0,0,.5);
     z-index: 5;
     display: flex;
     justify-content: center;
@@ -13,7 +13,7 @@
 
 .popup-inner{
     background-color: var(--bizi-dark);
-    box-shadow: 0 0 8px #E7E5DF88;
+    box-shadow: 0 0 6px #E7E5DF33;
     width: 1000px;
     border-radius: 10px;
     position: relative;
@@ -97,6 +97,7 @@
     border-radius: 4px;
     width: 75px;
     font-weight: 400;
+    letter-spacing: 1px;
     text-align: center;
     outline: none;
 }

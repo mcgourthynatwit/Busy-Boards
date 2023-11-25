@@ -9,7 +9,7 @@ import React from "react";
 export default function TaskCard({
   taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
   assignee = "Hubert Wolfeschlegelsteinhausenbergerdorff",
-  priority = -1,
+  priority = "-",
   taskLength = 1,
 }) {
   const [editTaskPopup, setEditTaskPopup] = useState(false);
@@ -41,6 +41,8 @@ export default function TaskCard({
         setTrigger={setEditTaskPopup}
         taskName={taskName}
         assignee={assignee}
+        priority={priority}
+        taskLength={taskLength}
       />
     </>
   );

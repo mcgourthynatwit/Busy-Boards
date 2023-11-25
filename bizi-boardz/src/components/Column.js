@@ -11,14 +11,14 @@ export default function Column({ columnHeader }) {
             taskName="THIS IS A TEST STORY NAME"
             assignee="Tim Magee"
             priority={3}
-            taskLength={10.5}
+            taskLength={9.5}
           />
           <TaskCard priority={2} />
           <TaskCard priority={1} />
           <TaskCard priority={-1} />
           <TaskCard taskName="THIS IS A REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY LONG NAME" />
-          <TaskCard />
-          <TaskCard />
+          <TaskCard taskLength={3.5} />
+          <TaskCard taskLength={0.5} />
           <TaskCard />
           <TaskCard />
           <TaskCard />

@@ -17,6 +17,48 @@ export default function PopupEditTask({
   priority,
   taskLength,
 }) {
+  //sets default value for priority dropdown
+  const priorityValues = ["-", 1, 2, 3];
+  const priorityOptions = priorityValues.map((value) =>
+    value === priority ? (
+      <option selected>{value}</option>
+    ) : (
+      <option>{value}</option>
+    )
+  );
+
+  //sets default value for task length dropdown
+  const lengthValues = [
+    "-",
+    0.5,
+    1,
+    1.5,
+    2,
+    2.5,
+    3,
+    3.5,
+    4,
+    4.5,
+    5,
+    5.5,
+    6,
+    6.5,
+    7,
+    7.5,
+    8,
+    8.5,
+    9,
+    9.5,
+    10,
+  ];
+  const lengthOptions = lengthValues.map((value) =>
+    value === taskLength ? (
+      <option selected>{value}</option>
+    ) : (
+      <option>{value}</option>
+    )
+  );
+
   //stops inner popup click from closing the popup
   const ignoreParentOnClick = (e) => e.stopPropagation();
 
@@ -58,38 +100,11 @@ export default function PopupEditTask({
             </div>
             <div className="priority-section">
               Priority:
-              <select>
-                <option>-</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-              </select>
+              <select>{priorityOptions}</select>
             </div>
             <div className="task-length-section">
               Task Length:
-              <select>
-                <option>-</option>
-                <option>0.5</option>
-                <option>1</option>
-                <option>1.5</option>
-                <option>2</option>
-                <option>2.5</option>
-                <option>3</option>
-                <option>3.5</option>
-                <option>4</option>
-                <option>4.5</option>
-                <option>5</option>
-                <option>5.5</option>
-                <option>6</option>
-                <option>6.5</option>
-                <option>7</option>
-                <option>7.5</option>
-                <option>8</option>
-                <option>8.5</option>
-                <option>9</option>
-                <option>9.5</option>
-                <option>10</option>
-              </select>
+              <select>{lengthOptions}</select>
             </div>
           </div>
           <div className="description-section">
@@ -119,21 +134,3 @@ export default function PopupEditTask({
     ""
   );
 }
-// <div className="edit-dropdowns">
-//   <div className="progress-section">
-//     <span className="field-label">Estimated Progress: </span>
-//   </div>
-//   <div className="priority-section">
-//     Priority:{" "}
-//     <select>
-//       <option value="a">a</option>
-//       <option value="b">b</option>
-//     </select>
-//   </div>
-//   <div className="task-length-section">Task Length:</div>
-// </div>
-// <div className="description-section">
-//   <span className="field-label">Description: </span>
-//   <br />
-//   <textarea placeholder="Enter a task description..."></textarea>
-// </div>

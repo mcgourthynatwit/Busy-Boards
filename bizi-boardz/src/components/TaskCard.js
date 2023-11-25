@@ -40,6 +40,7 @@ export default function TaskCard({
         trigger={editTaskPopup}
         setTrigger={setEditTaskPopup}
         taskName={taskName}
+        assignee={assignee}
       />
     </>
   );

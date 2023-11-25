@@ -7,7 +7,7 @@ function createWindow() {
     icon: "src/icons/bizi-b-circle.png",
     width: 1500,
     height: 600,
-    minWidth: 950,
+    minWidth: 1200,
     minHeight: 600,
     autoHideMenuBar: true,
     webPreferences: {

@@ -1,0 +1,96 @@
+.taskLine{
+    background-color: var(--bizi-dark);
+    height: 40px;
+    margin: 4px 8px;
+    padding: 5px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: -2px -2px 4px 0 rgba(0,0,0,.5);
+}
+
+.taskLine .taskLineMain{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.taskLineMain .taskName{
+    /* background-color: red; */
+    color: var(--bizi-white);
+    /* min-height: 24px;
+    max-height: 48px; */
+    height: 20px;
+    min-width: 2px;
+    max-width: 700px;
+    font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;   
+}
+
+
+.taskLineMain .assignee{
+    /* background-color: green; */
+    color: var(--bizi-white);
+    opacity: .6;
+    height: 18px;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: .3px;
+    padding-left: 8px;
+    overflow: hidden;
+}
+
+.taskLineBubbles{
+    /* background-color: blue; */
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.taskLineBubbles .bubblePriority{
+    background-color: var(--bizi-white);
+    border-radius: 100px;
+    height: 24px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+    font-size: 18px;
+    word-spacing: -3px;
+}
+
+.priorityNA{
+    color: var(--bizi-dark);
+}
+
+.priorityLow{
+    color:seagreen;
+}
+
+.priorityModerate{
+    color: var(--bizi-yellow);
+}
+
+.priorityHigh{
+    color: crimson;
+}
+
+.taskLineBubbles .bubbleTaskLength{
+    background-color: var(--bizi-white);
+    color: var(--bizi-dark);
+    border-radius: 100px;
+    height: 24px;
+    width: 40px;
+    margin: 0 0 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 16px;
+}

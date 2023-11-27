@@ -1,16 +1,21 @@
 import "../styles/TaskLine.css";
+import PopupEditTask from "./PopupEditTask";
+import React from "react";
+import { useState } from "react";
 
 export default function TaskLine({
-  taskName = "THIS IS A REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY LONG NAME",
+  taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
   assignee = "Hubert Wolfeschlegelsteinhausenbergerdorff",
   priority = "-",
   taskLength = 1,
 }) {
+  const [editTaskPopup, setEditTaskPopup] = useState(false);
+
   //stops whiteboard click from activating the Edit Task Popup
   const ignoreParentOnClick = (e) => e.stopPropagation();
   return (
     <>
-      <div className="taskLine">
+      <div className="taskLine" onClick={() => setEditTaskPopup(true)}>
         <div className="taskLineMain">
           <div className="taskName">{taskName}</div>
           <div className="assignee">{assignee}</div>
@@ -20,6 +25,14 @@ export default function TaskLine({
           <div className="bubbleTaskLength">{decideTaskLength(taskLength)}</div>
         </div>
       </div>
+      <PopupEditTask
+        trigger={editTaskPopup}
+        setTrigger={setEditTaskPopup}
+        taskName={taskName}
+        assignee={assignee}
+        priority={priority}
+        taskLength={taskLength}
+      />
     </>
   );
 }

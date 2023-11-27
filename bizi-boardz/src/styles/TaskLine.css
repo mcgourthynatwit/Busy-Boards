@@ -1,7 +1,7 @@
 .taskLine{
     background-color: var(--bizi-dark);
     height: 40px;
-    margin: 4px 8px;
+    margin: 6px 4px;
     padding: 5px;
     border-radius: 10px;
     display: flex;
@@ -9,10 +9,15 @@
     box-shadow: -2px -2px 4px 0 rgba(0,0,0,.5);
 }
 
+.taskLine:hover{
+    cursor: pointer;
+}
+
 .taskLine .taskLineMain{
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
+    width: 75%;
 }
 
 
@@ -22,8 +27,9 @@
     /* min-height: 24px;
     max-height: 48px; */
     height: 20px;
-    min-width: 2px;
-    max-width: 700px;
+    width: 70%;
+    /* min-width: 2px;
+    max-width: 700px; */
     font-weight: 500;
     overflow: hidden;
     white-space: nowrap;

@@ -17,10 +17,18 @@ export default function BacklogSection({ sectionHeader = "<< INVALID >>" }) {
         {sectionHeader}
       </div>
       <div className="sectionBody">
-        <TaskLine />
-        <TaskLine />
-        <TaskLine />
-        <TaskLine />
+        <TaskLine
+          taskName="THIS IS A TEST STORY NAME"
+          assignee="Tim Magee"
+          priority={3}
+          taskLength={9.5}
+        />
+        <TaskLine priority={2} />
+        <TaskLine priority={1} />
+        <TaskLine priority={-1} />
+        <TaskLine taskName="THIS IS A REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY REALLY LONG NAME" />
+        <TaskLine taskLength={3.5} />
+        <TaskLine taskLength={0.5} />
         <TaskLine />
         <TaskLine />
         <TaskLine />

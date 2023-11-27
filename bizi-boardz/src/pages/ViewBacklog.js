@@ -1,9 +1,14 @@
 import "../styles/ViewBacklog.css";
 import BacklogSection from "../components/BacklogSection.js";
+import PopupNewTask from "../components/PopupNewTask";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonRunning, faBullseye } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
+import { useState } from "react";
 
 export default function ViewBacklog() {
+  const [newTaskPopup, setNewTaskPopup] = useState(false);
+
   return (
     <>
       <div className="pageViewBacklog">
@@ -17,7 +22,10 @@ export default function ViewBacklog() {
               />
               New Sprint
             </button>
-            <button className="btnNewTask">
+            <button
+              className="btnNewTask"
+              onClick={() => setNewTaskPopup(true)}
+            >
               <FontAwesomeIcon
                 icon={faBullseye}
                 style={{ paddingRight: "4px" }}
@@ -32,6 +40,7 @@ export default function ViewBacklog() {
           <BacklogSection sectionHeader="Backlog" />
         </div>
       </div>
+      <PopupNewTask trigger={newTaskPopup} setTrigger={setNewTaskPopup} />
     </>
   );
 }

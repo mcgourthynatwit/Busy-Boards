@@ -145,7 +145,7 @@
 .popup-footer .save-btn{
     background-color: var(--bizi-yellow);
     color: var(--bizi-dark);
-    border: 2px solid var(--bizi-dark);
+    border: 2px solid var(--bizi-yellow);
     border-radius: 4px;
     font-size: 18px;
     font-weight: 600;   

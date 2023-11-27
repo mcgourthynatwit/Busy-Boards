@@ -1,11 +1,7 @@
 import "../styles/CurrentSprint.css";
 import Column from "../components/Column.js";
-import PopupEditTask from "../components/PopupEditTask";
-import { useState } from "react";
 
 export default function CurrentSprint() {
-  const [buttonPopup, setButtonPopup] = useState(false);
-
   return (
     <>
       <div className="pageCurrentSprint">

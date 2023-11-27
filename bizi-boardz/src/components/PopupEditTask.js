@@ -19,6 +19,11 @@ export default function PopupEditTask({
   priority,
   taskLength,
 }) {
+  //still needs to have saving functionality
+  function saveTaskChanges() {
+    setTrigger(false);
+  }
+
   //sets default value for priority dropdown
   const priorityValues = ["-", 1, 2, 3];
   const priorityOptions = priorityValues.map((value) =>
@@ -128,7 +133,7 @@ export default function PopupEditTask({
               />
               Delete Task
             </button>
-            <button className="save-btn">
+            <button className="save-btn" onClick={() => saveTaskChanges()}>
               <FontAwesomeIcon
                 icon={faFloppyDisk}
                 style={{ height: "100%", paddingRight: "6px" }}

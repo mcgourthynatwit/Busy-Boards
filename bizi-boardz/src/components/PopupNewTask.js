@@ -8,6 +8,11 @@ import { React } from "react";
 //trigger decides if the popup is visible
 //setTrigger takes in setEditTaskPopup from TaskCard.js, which changes the trigger variable
 export default function PopupNewTask({ trigger, setTrigger }) {
+  //still needs to have creation functionality
+  function createTask() {
+    setTrigger(false);
+  }
+
   //sets up options for progress dropdown
   const progressValues = [
     "-",
@@ -62,8 +67,6 @@ export default function PopupNewTask({ trigger, setTrigger }) {
   //stops inner popup click from closing the popup
   const ignoreParentOnClick = (e) => e.stopPropagation();
 
-  const [deleteTaskPopup, setDeleteTaskPopup] = useState(false);
-
   return trigger ? (
     <>
       <div className="new-popup" onClick={() => setTrigger(false)}>
@@ -106,7 +109,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
             </div>
           </div>
           <div className="new-popup-footer">
-            <button className="create-btn">
+            <button className="create-btn" onClick={() => createTask()}>
               <FontAwesomeIcon
                 icon={faBullseye}
                 style={{ height: "100%", paddingRight: "6px" }}
@@ -116,10 +119,6 @@ export default function PopupNewTask({ trigger, setTrigger }) {
           </div>
         </div>
       </div>
-      <PopupDeleteTask
-        trigger={deleteTaskPopup}
-        setTrigger={setDeleteTaskPopup}
-      />
     </>
   ) : (
     ""

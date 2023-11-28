@@ -15,7 +15,7 @@ const useTaskUtils = () => {
     const repoName = parts[parts.length - 1];
     const [tasks, setTasks] = useState([]);
     const [taskJSONError, setTaskJSONError] = useState(false);
-    const [taskCreateError, setTaskCreateError] = useState(false);
+    const [ taskJSONFileSHA, setTaskJSONSHA ] = useState('');
 
     // File blob sha is needed to update a file in github; this value should be updated after every file change
     let task_json_file_sha = null;
@@ -26,16 +26,18 @@ const useTaskUtils = () => {
     }, [pat, activeRepo, userName]);
 
     // Pushes tasks state as JSON to github task.JSON
-    const syncTasks = async () => {
+    const syncTasks = async (syncMessage = `System synced tasks from user ${userName}`) => {
         //TODO: maybe pull first?
-        
+
         // Push serialized task state to github
         const path = "task.JSON";
         try {
-            task_json_file_sha = await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(tasks)), "System created task.JSON", task_json_file_sha);
+            console.log("SYNC TASKS CALLING UPDATE FILE WITH SHA", task_json_file_sha);
+            const sha = await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(tasks)), syncMessage, taskJSONFileSHA);
+            setTaskJSONSHA(sha);
             return true;
         } catch(error){
-            setTaskCreateError(true);
+            console.log(error);
             return false;
         }
     }
@@ -50,7 +52,7 @@ const useTaskUtils = () => {
             "length": length,
             "currentProgress": currentProgress
         });
-        return await syncTasks();
+        return await syncTasks(`System pushed new task ${taskName} from user ${userName}`);
     }
 
     const updateTask = async () => {
@@ -62,16 +64,17 @@ const useTaskUtils = () => {
         
         try {
             // Try to get tasks from task.JSON and set task state
-            const taskData = await getFileContent(pat, userName, repoName, path);
+            const [taskData, fileSHA] = await getFileContent(pat, userName, repoName, path);
+            setTaskJSONSHA(fileSHA);
+            console.log("GET TASKS HAS SET THE SHA TO", fileSHA);
             setTasks(taskData);
             console.log("Successfully set task state");
         } catch (error) {
             if (error.response.status === 404){
                 // Task.JSON was not found in project repo, create file and set sha; throws error if create fail
                 console.log("CAUGHT ERROR TASK.JSON NOT FOUND");
-                task_json_file_sha = await createOrUpdateFile(pat, userName, repoName, path, btoa("[]"), "System created task.JSON");
-               
-                console.log("RESULT OF CREATE FILE:", createSuccess)
+                const sha = await createOrUpdateFile(pat, userName, repoName, path, btoa("[]"), "System created task.JSON");
+                setTaskJSONSHA(sha);
             } else {
                 setTaskJSONError(true);
             }

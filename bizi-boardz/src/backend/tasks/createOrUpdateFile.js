@@ -4,17 +4,20 @@ const createOrUpdateFile = async (pat, userName, repoName, path, content, messag
     const octokit = new Octokit({ auth: pat });
 
     try {
-        console.log("CREATING FILE with vals", pat, userName, repoName, path);
-        const response = await octokit.request(
-            `PUT /repos/${userName}/${repoName}/contents/${path}`,
-            {
+        console.log("CREATING FILE with vals", pat, userName, repoName, path, sha);
+        let fileData = {
             owner: userName,
             repo: repoName,
             path: path,
             content: content,
-            message: message,
-            sha: sha
-            }
+            message: message
+        }
+        if (sha) {
+            fileData['sha'] = sha;
+        }
+        const response = await octokit.request(
+            `PUT /repos/${userName}/${repoName}/contents/${path}`,
+            fileData
         );
         return response.data.content.sha;
     } catch (error) {

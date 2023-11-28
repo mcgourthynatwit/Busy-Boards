@@ -4,13 +4,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faBullseye } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { React } from "react";
+import useTaskUtils from "../backend/tasks/useTaskUtils";
+
 
 //trigger decides if the popup is visible
 //setTrigger takes in setEditTaskPopup from TaskCard.js, which changes the trigger variable
 export default function PopupNewTask({ trigger, setTrigger }) {
-  //still needs to have creation functionality
-  function createTask() {
-    setTrigger(false);
+
+  const { createTask } = useTaskUtils();
+  const [taskName, setTaskName] = useState('');
+  const [assignee, setAssignee] = useState('');
+  const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState('');
+  const [length, setLength] = useState('');
+  const [currentProgress, setCurrentProgress] = useState('');
+  const [taskCreateError, setTaskCreateError] = useState(false); // Can use this to show some type of error div if backend returns error
+
+  const createTaskHandler = async () => {
+    // Backend returns true if create success
+    const createSuccess = await createTask({
+      taskName: taskName,
+      assignee: assignee,
+      description: description,
+      priority: priority,
+      length: length,
+      currentProgress: currentProgress
+    })
+    setTaskCreateError(!createSuccess);
   }
 
   //sets up options for progress dropdown
@@ -70,7 +90,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
           <div className="new-popup-body">
             <div className="new-task-name-section">
               Task Name:
-              <input type="text"></input>
+              <input type="text" onChange={(e) => {setTaskName(e.target.value)}}></input>
             </div>
             <div className="new-assignee-section">
               Assignee:
@@ -79,24 +99,24 @@ export default function PopupNewTask({ trigger, setTrigger }) {
             <div className="dropdowns-row">
               <div className="progress-section">
                 Current Progress:
-                <select>{progressOptions}</select>
+                <select onChange={(e) => {setCurrentProgress(e.target.value)}}>{progressOptions}</select>
               </div>
               <div className="new-priority-section">
                 Priority:
-                <select>{priorityOptions}</select>
+                <select onChange={(e) => {setPriority(e.target.value)}}>{priorityOptions}</select>
               </div>
               <div className="new-task-length-section">
                 Task Length:
-                <select>{lengthOptions}</select>
+                <select onChange={(e) => {setLength(e.target.value)}}>{lengthOptions}</select>
               </div>
             </div>
             <div className="new-description-section">
               Description:<br></br>
-              <textarea rows="3"></textarea>
+              <textarea rows="3" onChange={(e) => {setDescription(e.target.value)}} ></textarea>
             </div>
           </div>
           <div className="new-popup-footer">
-            <button className="create-btn" onClick={() => createTask()}>
+            <button className="create-btn" onClick={createTask}>
               <FontAwesomeIcon
                 icon={faBullseye}
                 style={{ height: "100%", paddingRight: "6px" }}

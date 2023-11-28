@@ -16,6 +16,7 @@ export default function PopupEditTask({
   setTrigger,
   taskName = "This is a test",
   assignee,
+  progress = "To Do",
   priority,
   taskLength,
 }) {
@@ -23,6 +24,16 @@ export default function PopupEditTask({
   function saveTaskChanges() {
     setTrigger(false);
   }
+
+  //sets up options for progress dropdown
+  const progressValues = ["To Do", "In Progress", "Done"];
+  const progressOptions = progressValues.map((value) =>
+    value === progress ? (
+      <option selected>{value}</option>
+    ) : (
+      <option>{value}</option>
+    )
+  );
 
   //sets default value for priority dropdown
   const priorityValues = ["-", 1, 2, 3];
@@ -93,20 +104,7 @@ export default function PopupEditTask({
             <div className="dropdowns-row">
               <div className="progress-section">
                 Current Progress:
-                <select>
-                  <option>-</option>
-                  <option>0%</option>
-                  <option>10%</option>
-                  <option>20%</option>
-                  <option>30%</option>
-                  <option>40%</option>
-                  <option>50%</option>
-                  <option>60%</option>
-                  <option>70%</option>
-                  <option>80%</option>
-                  <option>90%</option>
-                  <option>100%</option>
-                </select>
+                <select>{progressOptions}</select>
               </div>
               <div className="priority-section">
                 Priority:

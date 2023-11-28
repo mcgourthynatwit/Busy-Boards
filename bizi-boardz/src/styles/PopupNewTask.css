@@ -79,7 +79,7 @@
     font-weight: 400;
 }
 
-.new-dropdowns-row{
+.new-popup-body .dropdowns-row{
     width: 85%;
     display: flex;
     justify-content:space-between;
@@ -88,14 +88,14 @@
     margin: 20px 0;
 }
 
-.new-dropdowns-row select{
+.new-popup-body .dropdowns-row select{
     margin-left: 8px;
     padding: 0 2px;
     background-color: var(--bizi-dark);
     color: var(--bizi-white);
     border: 2px solid var(--bizi-yellow);
     border-radius: 4px;
-    width: 75px;
+    width: auto;
     font-weight: 400;
     letter-spacing: 1px;
     text-align: center;

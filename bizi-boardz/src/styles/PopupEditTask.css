@@ -95,7 +95,7 @@
     color: var(--bizi-white);
     border: 2px solid var(--bizi-yellow);
     border-radius: 4px;
-    width: 75px;
+    width: auto;
     font-weight: 400;
     letter-spacing: 1px;
     text-align: center;

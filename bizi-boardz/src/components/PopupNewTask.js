@@ -14,20 +14,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
   }
 
   //sets up options for progress dropdown
-  const progressValues = [
-    "-",
-    "0%",
-    "10%",
-    "20%",
-    "30%",
-    "40%",
-    "50%",
-    "60%",
-    "70%",
-    "80%",
-    "90%",
-    "100%",
-  ];
+  const progressValues = ["To Do", "In Progress", "Done"];
   const progressOptions = progressValues.map((value) => (
     <option>{value}</option>
   ));

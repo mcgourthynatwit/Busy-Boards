@@ -22,6 +22,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
 
   const createTaskHandler = async () => {
     // Backend returns true if create success
+    console.log("component calling create task with name", taskName);
     const createSuccess = await createTask({
       taskName: taskName,
       assignee: assignee,
@@ -69,7 +70,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
     9.5,
     10,
   ];
-  const lengthOptions = lengthValues.map((value) => <option>{value}</option>);
+  const lengthOptions = lengthValues.map((value, idx) => <option key={idx}>{value}</option>);
 
   //stops inner popup click from closing the popup
   const ignoreParentOnClick = (e) => e.stopPropagation();
@@ -94,7 +95,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
             </div>
             <div className="new-assignee-section">
               Assignee:
-              <input type="text"></input>
+              <input type="text" onChange={(e) => {setAssignee(e.target.value)}}></input>
             </div>
             <div className="dropdowns-row">
               <div className="progress-section">
@@ -116,7 +117,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
             </div>
           </div>
           <div className="new-popup-footer">
-            <button className="create-btn" onClick={createTask}>
+            <button className="create-btn" onClick={createTaskHandler}>
               <FontAwesomeIcon
                 icon={faBullseye}
                 style={{ height: "100%", paddingRight: "6px" }}

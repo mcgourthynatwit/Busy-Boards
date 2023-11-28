@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/core";
 import { useState } from "react";
+import { useAuthContext } from "../../pages/AuthProvider";
 
 /**
  * Custom hook utility for authentication functions AND
@@ -16,9 +17,7 @@ import { useState } from "react";
  * octokitAuthRepo:     returns true if valid activeRepo url 
  */
 const useAuthUtils = () => {
-    const [pat, setPAT] = useState('');
-    const [activeRepo, setActiveRepo] = useState('');
-    const [userName, setUserName] = useState('');
+    const {pat, setPAT, activeRepo, setActiveRepo, userName, setUserName} = useAuthContext(); // calls useContext hook in AuthProvider, returns value of AuthProvider 
     const octokit = new Octokit({ auth: pat });
 
     const octokitAuth = async () => {

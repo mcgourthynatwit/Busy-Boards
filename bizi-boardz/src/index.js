@@ -11,12 +11,14 @@ import MyTasks from "./pages/MyTasks.js";
 import Settings from "./pages/Settings.js";
 //import reportWebVitals from './reportWebVitals';
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import AuthProvider from "./pages/AuthProvider.js"
 
 //<Route path='/contact' element={<Contact />} />
 
 export default function App() {
   return (
     <>
+    <AuthProvider>
       <NavigationBar />
       <Routes>
         <Route path="/">
@@ -27,6 +29,7 @@ export default function App() {
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>
+      </AuthProvider>
     </>
   );
 }

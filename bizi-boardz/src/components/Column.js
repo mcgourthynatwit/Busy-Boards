@@ -3,7 +3,7 @@ import TaskCard from "./TaskCard";
 import useTaskUtils from "../backend/tasks/useTaskUtils"
 
 export default function Column({ columnHeader }) {
-    const { tasks, createTask } = useTaskUtils();
+  const { tasks } = useTaskUtils();
   return (
     <div className="progressColumn">
       <div className="columnHeader">{columnHeader}</div>

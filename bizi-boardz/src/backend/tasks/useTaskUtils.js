@@ -17,7 +17,31 @@ const useTaskUtils = () => {
     const [tasks, setTasks] = useState([]); //Todo, move to context?
 
     /**
-     * ! Only to be used to manage internal state, components should use "task" state value
+     * Creates file task.JSON in repository
+     * If request returns error 422, task.JSON already exists
+     * @param {*} path should be = "task.JSON"
+     * @returns [taskData[], sha]
+     */
+    const createTaskJSONFile = useCallback(async (path) => {
+        const initialContent = [];
+        try {
+            const fileSHA = await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(initialContent)), "System created task.JSON");
+            console.warn("task.JSON not found in the project repo, created file!");
+            return [initialContent, fileSHA];
+        } catch (error) {
+            // Sha was not supplied: task.JSON was created by someone else before we resolved.
+            if (error.response && error.response.status === 422) {
+                console.warn("task.JSON did not exist in the initial call, but now does! Returning data...");
+                return await getFileContent(pat, userName, repoName, path);
+            } else {
+                // Throw error if status != 422 (in any case besides task.JSON created before resolving)
+                throw error;
+            }
+        }
+    }, [pat, userName, repoName]);
+
+    /**
+     * ! Only to be used to manage internal state, components should use "tasks" state value
      * Returns data from task.JSON and sha of task.JSON; sets task state to response if file exists
      * If file does not exist, creates task.JSON and returns [[], sha]
      * @returns [taskData[], sha] of task.JSON
@@ -28,37 +52,21 @@ const useTaskUtils = () => {
         try {
             // Try to get tasks from task.JSON
             const [taskData, fileSHA] = await getFileContent(pat, userName, repoName, path);
-
             // Set task state
             setTasks(taskData);
 
             console.log("Successfully set task state");
             return [taskData, fileSHA];
         } catch (error) {
-            if (error.response.status === 404) {
-                // Task.JSON was not found in project repo, create file
-                const initialContent = [];
-                await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(initialContent)), "System created task.JSON")
-                    .then((fileSHA) => {
-                        console.warn("task.JSON not found in project repo, created file!");
-                        return [initialContent, fileSHA];
-                    })
-                    .catch(async (e) => {
-                        // Sha was not supplied: task.JSON was created by someone else before we resolved.
-                        if (e.response.status === 422) {
-                            console.warn("task.JSON did not exist in initial call, but now does! Returning data...");
-                            return await getTasks();
-                        } else {
-                            // Throw error if status != 422 (in any case besides task.JSON created before resolving)
-                            throw (e);
-                        }
-                    });
+            if (error.response && error.response.status === 404) {
+                // Task.JSON was not found in the project repo, create file
+                return await createTaskJSONFile(path);
             } else {
                 // Throw error if status != 404 (in any case besides task.JSON not found)
-                throw (error);
+                throw error;
             }
         }
-    }, [pat, userName, repoName]);
+    }, [pat, userName, repoName, createTaskJSONFile]);
 
     // Load task data on component mount, (set state so ViewBacklog page can render)
     useEffect(() => {

@@ -1,9 +1,9 @@
 import { Octokit } from "@octokit/core";
 import { useEffect, useState, useCallback } from "react";
 import { useAuthUtils } from "../octokit/useAuthUtils";
-import  getFileContent from "./getFileContent"
+import getFileContent from "./getFileContent"
 import createOrUpdateFile from "./createOrUpdateFile";
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * Custom hook utility for task functions
@@ -24,26 +24,38 @@ const useTaskUtils = () => {
      */
     const getTasks = useCallback(async () => {
         const path = "task.JSON";
-        
+
         try {
             // Try to get tasks from task.JSON
             const [taskData, fileSHA] = await getFileContent(pat, userName, repoName, path);
 
             // Set task state
-            setTasks(taskData); 
-            
+            setTasks(taskData);
+
             console.log("Successfully set task state");
             return [taskData, fileSHA];
         } catch (error) {
-            if (error.response.status === 404){
+            if (error.response.status === 404) {
                 // Task.JSON was not found in project repo, create file
                 const initialContent = [];
-                const fileSHA = await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(initialContent)), "System created task.JSON");
-
-                console.warn("task.JSON not found in project repo, created file!");
-                return [initialContent, fileSHA];
+                await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(initialContent)), "System created task.JSON")
+                    .then((fileSHA) => {
+                        console.warn("task.JSON not found in project repo, created file!");
+                        return [initialContent, fileSHA];
+                    })
+                    .catch(async (e) => {
+                        // Sha was not supplied: task.JSON was created by someone else before we resolved.
+                        if (e.response.status === 422) {
+                            console.warn("task.JSON did not exist in initial call, but now does! Returning data...");
+                            return await getTasks();
+                        } else {
+                            // Throw error if status != 422 (in any case besides task.JSON created before resolving)
+                            throw (e);
+                        }
+                    });
             } else {
-                // throw some type of error
+                // Throw error if status != 404 (in any case besides task.JSON not found)
+                throw (error);
             }
         }
     }, [pat, userName, repoName]);
@@ -51,7 +63,10 @@ const useTaskUtils = () => {
     // Load task data on component mount, (set state so ViewBacklog page can render)
     useEffect(() => {
         console.log("Use effect calling get tasks");
-        getTasks();
+        getTasks()
+            .catch((error) => {
+                console.log("Useeffect failed to get tasks")
+            });
 
     }, [getTasks]);
 
@@ -72,22 +87,27 @@ const useTaskUtils = () => {
             // Successful sync, set task state
             setTasks(newTaskState);
             return true;
-        } catch(error){
+        } catch (error) {
             console.log(error);
 
             // Sync failed, file sha may have changed
             return false;
         }
     }
-   
-   /**
-    * Creates a new task by retrieving up-to-date file from github, 
-    * appending new task, and calling syncTask with new state
-    * 
-    * @returns true if task creation successful, false if otherwise
-    */
-    const createTask = async ({taskName, assignee, description, priority, length, currentProgress}) => {
-        const [existingTasks, fileSHA] = await getTasks(); // Must pull most recent changes first
+
+    /**
+     * Creates a new task by retrieving up-to-date file from github, 
+     * appending new task, and calling syncTask with new state
+     * 
+     * @returns true if task creation successful, false if otherwise
+     */
+    const createTask = async ({ taskName, assignee, description, priority, length, currentProgress }) => {
+        const [existingTasks, fileSHA] = await getTasks() // Must pull most recent changes first
+            .catch((error) => {
+                console.log("Create task failed to get current tasks!", error);
+                return false
+            });
+
         const UUID = uuidv4()
         const newTaskData = {
             "taskID": UUID,
@@ -107,16 +127,20 @@ const useTaskUtils = () => {
     }
 
     const delTask = async (taskUUID) => {
-        const [existingTasks, fileSHA] = await getTasks();
+        const [existingTasks, fileSHA] = await getTasks()
+            .catch((error) => {
+                console.log("Delete task failed to get current tasks!", error);
+                return false
+            });
 
         // getTasks gets all tasks so filter out task with the uuid
         const updatedTasks = existingTasks.filter(task => task.taskID !== taskUUID);
 
         // check if length is the same
-        if(updatedTasks.length === existingTasks.length) {
+        if (updatedTasks.length === existingTasks.length) {
             console.log('Task not found')
             return false;
-        } 
+        }
         console.log(`System removed task with UUID ${taskUUID} by user ${userName}`)
         return await syncTasks(updatedTasks, fileSHA, `System removed task with UUID ${taskUUID} by user ${userName}`)
     }

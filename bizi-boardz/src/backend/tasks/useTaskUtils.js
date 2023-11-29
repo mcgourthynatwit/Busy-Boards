@@ -71,13 +71,15 @@ const useTaskUtils = () => {
 
     // Load task data on component mount, (set state so ViewBacklog page can render)
     useEffect(() => {
-        console.log("Use effect calling get tasks");
-        getTasks()
-            .catch((error) => {
-                console.log("Useeffect failed to get tasks")
-            });
+        if(!tasks){
+            console.log("Use effect calling get tasks");
+            getTasks()
+                .catch((error) => {
+                    console.log("Useeffect failed to get tasks")
+                });
+        }
 
-    }, [getTasks]);
+    }, [getTasks, tasks]);
 
 
     /**

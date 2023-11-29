@@ -4,6 +4,7 @@ import { faChalkboardUser } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import PopupEditTask from "./PopupEditTask";
 import React from "react";
+import PopupWhiteboard from "./PopupWhiteboard";
 
 //display task name, assignee, story/task, priority (!, !!, !!!), length
 export default function TaskCard({
@@ -14,9 +15,13 @@ export default function TaskCard({
   taskLength = 1,
 }) {
   const [editTaskPopup, setEditTaskPopup] = useState(false);
+  const [whiteboardPopup, setWhiteboardPopup] = useState(false);
 
   //stops whiteboard click from activating the Edit Task Popup
-  const ignoreParentOnClick = (e) => e.stopPropagation();
+  const ignoreParentOnClick = (e) => {
+    e.stopPropagation();
+    setWhiteboardPopup(true);
+  };
 
   return (
     <>
@@ -45,6 +50,11 @@ export default function TaskCard({
         assignee={assignee}
         priority={priority}
         taskLength={taskLength}
+      />
+      <PopupWhiteboard
+        trigger={whiteboardPopup}
+        setTrigger={setWhiteboardPopup}
+        taskName={taskName}
       />
     </>
   );

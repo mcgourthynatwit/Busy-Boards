@@ -1,5 +1,6 @@
 import "../styles/ViewBacklog.css";
 import BacklogSection from "../components/BacklogSection.js";
+import { useAuthUtils } from "../backend/octokit/useAuthUtils.js";
 import PopupNewTask from "../components/PopupNewTask";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonRunning, faBullseye } from "@fortawesome/free-solid-svg-icons";
@@ -8,12 +9,13 @@ import { useState } from "react";
 
 export default function ViewBacklog() {
   const [newTaskPopup, setNewTaskPopup] = useState(false);
+  const { pat, activeRepo, userName, updateRepo, newPat } = useAuthUtils();
 
   return (
     <>
       <div className="pageViewBacklog">
         <div className="backlogHeader">
-          comp4960-fall2023-project-biziboyz-group-2 (Grab from GitHub?)
+          {activeRepo}
           <div className="headerButtons">
             <button className="btnNewSprint">
               <FontAwesomeIcon

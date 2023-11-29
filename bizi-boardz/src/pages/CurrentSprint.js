@@ -1,13 +1,14 @@
 import "../styles/CurrentSprint.css";
 import Column from "../components/Column.js";
+import { useAuthUtils } from "../backend/octokit/useAuthUtils.js";
 
 export default function CurrentSprint() {
+  const { pat, activeRepo, userName, updateRepo, newPat } = useAuthUtils();
+
   return (
     <>
       <div className="pageCurrentSprint">
-        <div className="pageHeader">
-          comp4960-fall2023-project-biziboyz-group-2 (Grab from GitHub?)
-        </div>
+        <div className="pageHeader">{activeRepo}</div>
         <div className="pageBody">
           <Column columnHeader={"To Do"} />
           <Column columnHeader={"In Progress"} />

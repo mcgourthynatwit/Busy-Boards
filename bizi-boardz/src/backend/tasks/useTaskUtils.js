@@ -122,7 +122,7 @@ const useTaskUtils = () => {
     }
 
     const delTask = async (taskUUID) => {
-        const [existingTasks, fileSHA] = await getTasks();
+        const [existingTasks, fileSHA] = await getTasks().catch(()=>{return false});
 
         // getTasks gets all tasks so filter out task with the uuid
         const updatedTasks = existingTasks.filter(task => task.taskID !== taskUUID);

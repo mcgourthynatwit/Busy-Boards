@@ -7,6 +7,7 @@ import React from "react";
 
 //display task name, assignee, story/task, priority (!, !!, !!!), length
 export default function TaskCard({
+  taskID = "",
   taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
   assignee = "Hubert Wolfeschlegelsteinhausenbergerdorff",
   priority = "-",
@@ -39,6 +40,7 @@ export default function TaskCard({
       <PopupEditTask
         trigger={editTaskPopup}
         setTrigger={setEditTaskPopup}
+        taskID = {taskID}
         taskName={taskName}
         assignee={assignee}
         priority={priority}

@@ -19,7 +19,7 @@ const useTaskUtils = () => {
      * ! Only to be used to manage internal state, components should use "task" state value
      * Returns data from task.JSON if file exists; sets task state to response
      * If file does not exist, creates task.JSON and returns empty array []
-     * @returns taskData[] if task.JSON exists, [] if otherwise
+     * @returns [taskData[], sha] of task.JSON
      */
     const getTasks = useCallback(async () => {
         const path = "task.JSON";

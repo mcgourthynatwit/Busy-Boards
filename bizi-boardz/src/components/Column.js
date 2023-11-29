@@ -10,7 +10,7 @@ export default function Column({ columnHeader }) {
       <div className="columnHeader">{columnHeader}</div>
       <div className="columnBody">
         <ul>
-          {tasks && tasks.map((task) =>
+          {tasks.map((task) =>
             task.currentProgress === columnHeader ? (
               <TaskCard
                 taskID = {task.taskID}

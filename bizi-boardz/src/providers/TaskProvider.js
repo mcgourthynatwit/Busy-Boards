@@ -4,7 +4,7 @@ import { useState } from "react";
 const TaskContext = createContext();
 
 const TaskProvider = (props) => {
-    const [tasks, setTasks] = useState();
+    const [tasks, setTasks] = useState([]);
 
     return <TaskContext.Provider value={[tasks, setTasks]}>
         {props.children}

@@ -19,6 +19,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
   const [taskCreateError, setTaskCreateError] = useState(false); // Can use this to show some type of error div if backend returns error
 
   const createTaskHandler = async () => {
+    //closes popup; at start so there is no delay when closing
     setTrigger(false);
     // Backend returns true if create success
     console.log("component calling create task with name", taskName);

@@ -3,7 +3,7 @@ import Column from "../components/Column.js";
 import { useAuthUtils } from "../backend/octokit/useAuthUtils.js";
 
 export default function CurrentSprint() {
-  const { pat, activeRepo, userName, updateRepo, newPat } = useAuthUtils();
+  const { activeRepo } = useAuthUtils();
 
   return (
     <>

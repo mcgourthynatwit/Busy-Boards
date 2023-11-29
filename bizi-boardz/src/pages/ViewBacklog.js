@@ -9,7 +9,7 @@ import { useState } from "react";
 
 export default function ViewBacklog() {
   const [newTaskPopup, setNewTaskPopup] = useState(false);
-  const { pat, activeRepo, userName, updateRepo, newPat } = useAuthUtils();
+  const { activeRepo } = useAuthUtils();
 
   return (
     <>

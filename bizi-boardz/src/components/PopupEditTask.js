@@ -14,7 +14,8 @@ import { React } from "react";
 export default function PopupEditTask({
   trigger,
   setTrigger,
-  taskName = "This is a test",
+  taskID,
+  taskName,
   assignee,
   progress = "To Do",
   priority,
@@ -142,6 +143,7 @@ export default function PopupEditTask({
         </div>
       </div>
       <PopupDeleteTask
+        taskID = {taskID}
         trigger={deleteTaskPopup}
         setTrigger={setDeleteTaskPopup}
       />

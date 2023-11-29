@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useAuthUtils } from "../octokit/useAuthUtils";
 import  getFileContent from "./getFileContent"
 import createOrUpdateFile from "./createOrUpdateFile";
+import {v4 as uuidv4} from 'uuid'
 
 /**
  * Custom hook utility for task functions
@@ -87,7 +88,9 @@ const useTaskUtils = () => {
     */
     const createTask = async ({taskName, assignee, description, priority, length, currentProgress}) => {
         const [existingTasks, fileSHA] = await getTasks(); // Must pull most recent changes first
+        const UUID = uuidv4()
         const newTaskData = {
+            "taskID": UUID,
             "name": taskName,
             "assignee": assignee,
             "description": description,
@@ -103,7 +106,21 @@ const useTaskUtils = () => {
 
     }
 
-    return { createTask, tasks };
+    const delTask = async (taskUUID) => {
+        const [existingTasks, fileSHA] = await getTasks();
+
+        // getTasks gets all tasks so filter out task with the uuid
+        const updatedTasks = existingTasks.filter(task => task.taskID !== taskUUID);
+
+        // check if length is the same
+        if(updatedTasks.length === existingTasks.length) {
+            console.log('Task not found')
+            return false;
+        } 
+        console.log(`System removed task with UUID ${taskUUID} by user ${userName}`)
+        return await syncTasks(updatedTasks, fileSHA, `System removed task with UUID ${taskUUID} by user ${userName}`)
+    }
+    return { createTask, delTask, tasks };
 }
 
 export default useTaskUtils;

@@ -1,15 +1,24 @@
 import "../styles/PopupDeleteTask.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useTaskUtils from "../backend/tasks/useTaskUtils";
+
 import {
   faTriangleExclamation,
   faXmark,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function PopupDeleteTask({ trigger, setTrigger }) {
+export default function PopupDeleteTask({ trigger, setTrigger, taskID }) {
+  const { delTask } = useTaskUtils();
+
   //still needs to have delete functionality
-  function deleteTask() {
+  const deleteTask = async ()  => {
     setTrigger(false);
+    console.log('deleting task ', taskID)
+    const delSuccess = await delTask(taskID)
+
+    // del error go here
+    
   }
 
   return trigger ? (

@@ -46,10 +46,10 @@ export default function TaskCard({
         trigger={editTaskPopup}
         setTrigger={setEditTaskPopup}
         taskID = {taskID}
-        taskName={taskName}
-        assignee={assignee}
-        priority={priority}
-        taskLength={taskLength}
+        ogTaskName={taskName}
+        ogAssignee={assignee}
+        ogPriority={priority}
+        ogTaskLength={taskLength}
       />
       <PopupWhiteboard
         trigger={whiteboardPopup}

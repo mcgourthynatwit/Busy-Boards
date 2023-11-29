@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { React } from "react";
+import useTaskUtils from "../backend/tasks/useTaskUtils";
 
 //trigger decides if the popup is visible
 //setTrigger takes in setEditTaskPopup from TaskCard.js, which changes the trigger variable
@@ -15,21 +16,41 @@ export default function PopupEditTask({
   trigger,
   setTrigger,
   taskID,
-  taskName,
-  assignee,
-  progress = "To Do",
-  priority,
-  taskLength,
+  ogTaskName,
+  ogAssignee,
+  ogProgress = "To Do",
+  ogPriority,
+  ogTaskLength,
+  ogDescription
 }) {
-  //still needs to have saving functionality
-  function saveTaskChanges() {
+
+  const [taskName, setTaskName] = useState(ogTaskName);
+  const [assignee, setAssignee] = useState(ogAssignee);
+  const [description, setDescription] = useState(ogDescription);
+  const [currentProgress, setCurrentProgress] = useState(ogProgress);
+  const [priority, setPriority] = useState(ogPriority);
+  const [length, setLength] = useState(ogTaskLength);
+
+  const {updateTask} = useTaskUtils()
+
+  const saveTaskChanges = async () => {
+    console.log('updating task... ', ogTaskName, 'to', taskName)
+    const updateError = await updateTask({
+      taskID: taskID,
+      taskName: taskName,
+      assignee: assignee,
+      description: description,
+      priority: priority,
+      length: length,
+      currentProgress: currentProgress,
+      });
     setTrigger(false);
   }
 
   //sets up options for progress dropdown
   const progressValues = ["To Do", "In Progress", "Done"];
   const progressOptions = progressValues.map((value) =>
-    value === progress ? (
+    value === ogProgress ? (
       <option selected>{value}</option>
     ) : (
       <option>{value}</option>
@@ -71,7 +92,7 @@ export default function PopupEditTask({
     10,
   ];
   const lengthOptions = lengthValues.map((value) =>
-    value === taskLength ? (
+    value === ogTaskLength ? (
       <option selected>{value}</option>
     ) : (
       <option>{value}</option>
@@ -96,29 +117,56 @@ export default function PopupEditTask({
           <div className="popup-body">
             <div className="task-name-section">
               Task Name:
-              <input type="text" defaultValue={taskName}></input>
+              <input 
+                type="text" 
+                defaultValue={ogTaskName}
+                onChange={(e) => setTaskName(e.target.value)}
+              />
             </div>
             <div className="assignee-section">
               Assignee:
-              <input type="text" defaultValue={assignee}></input>
+              <input 
+                type="text" 
+                defaultValue={ogAssignee}
+                onChange={(e) => setAssignee(e.target.value)}
+              />
             </div>
             <div className="dropdowns-row">
               <div className="progress-section">
                 Current Progress:
-                <select>{progressOptions}</select>
+                <select
+                  defaultValue={ogProgress}
+                  onChange={(e) => setCurrentProgress(e.target.value)}
+                >
+                  {progressOptions}
+                </select>
               </div>
               <div className="priority-section">
                 Priority:
-                <select>{priorityOptions}</select>
+                <select
+                  defaultValue={ogPriority}
+                  onChange={(e) => setPriority(e.target.value)}
+                >
+                  {priorityOptions}
+                </select>
               </div>
               <div className="task-length-section">
                 Task Length:
-                <select>{lengthOptions}</select>
+                <select
+                  defaultValue={ogTaskLength}
+                  onChange={(e) => setLength(e.target.value)}
+                >
+                  {lengthOptions}
+                </select>
               </div>
             </div>
             <div className="description-section">
-              Description:<br></br>
-              <textarea rows="3"></textarea>
+              Description:<br />
+              <textarea 
+                rows="3" 
+                defaultValue={description} 
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </div>
           </div>
           <div className="popup-footer">

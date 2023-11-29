@@ -131,11 +131,30 @@ const useTaskUtils = () => {
         return await syncTasks(newTaskState, fileSHA, `System pushed new task ${taskName} from user ${userName}`);
     }
 
-    const updateTask = async () => {
+    const updateTask = async ({taskID, taskName, assignee, description, priority, length, currentProgress}) => {
+        // delete old task
+        console.log("Deletinmg task with id ", taskID)
+        const updatedTasks = await delTask(taskID)
+
+        const [existingTasks, fileSHA] = await getTasks(); // Must pull most recent changes first
+
+        const newTaskData = {
+            "taskID": taskID, 
+            "name": taskName,
+            "assignee": assignee,
+            "description": description,
+            "priority": priority,
+            "length": length,
+            "currentProgress": currentProgress
+        } 
+        
+        const newTaskState = [...existingTasks, newTaskData];
+        return await syncTasks(newTaskState, fileSHA, `System pushed updated task ${taskName} from user ${userName}`);
 
     }
 
     const delTask = async (taskUUID) => {
+        console.log('deleting task ', taskUUID)
         const [existingTasks, fileSHA] = await getTasks()
             .catch((error) => {
                 console.log("Delete task failed to get current tasks!", error);
@@ -153,7 +172,7 @@ const useTaskUtils = () => {
         console.log(`System removed task with UUID ${taskUUID} by user ${userName}`)
         return await syncTasks(updatedTasks, fileSHA, `System removed task with UUID ${taskUUID} by user ${userName}`)
     }
-    return { createTask, delTask, tasks };
+    return { createTask, delTask, updateTask, tasks };
 }
 
 export default useTaskUtils;

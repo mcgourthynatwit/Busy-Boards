@@ -11,36 +11,39 @@ import MyTasks from "./pages/MyTasks.js";
 import Settings from "./pages/Settings.js";
 //import reportWebVitals from './reportWebVitals';
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import AuthProvider from "./pages/AuthProvider.js"
+import AuthProvider from "./providers/AuthProvider.js";
+import TaskProvider from "./providers/TaskProvider.js"
 
 //<Route path='/contact' element={<Contact />} />
 
 export default function App() {
-  return (
-    <>
-    <AuthProvider>
-      <NavigationBar />
-      <Routes>
-        <Route path="/">
-          <Route index element={<Login />} />
-          <Route path="/currentSprint" element={<CurrentSprint />} />
-          <Route path="/viewBacklog" element={<ViewBacklog />} />
-          <Route path="/myTasks" element={<MyTasks />} />
-          <Route path="/settings" element={<Settings />} />
-        </Route>
-      </Routes>
-      </AuthProvider>
-    </>
-  );
+    return (
+        <>
+            <AuthProvider>
+                <TaskProvider>
+                    <NavigationBar />
+                    <Routes>
+                        <Route path="/">
+                            <Route index element={<Login />} />
+                            <Route path="/currentSprint" element={<CurrentSprint />} />
+                            <Route path="/viewBacklog" element={<ViewBacklog />} />
+                            <Route path="/myTasks" element={<MyTasks />} />
+                            <Route path="/settings" element={<Settings />} />
+                        </Route>
+                    </Routes>
+                </TaskProvider>
+            </AuthProvider>
+        </>
+    );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  //<React.StrictMode>
+    //<React.StrictMode>
     <BrowserRouter>
-      <App />
+        <App />
     </BrowserRouter>
- // </React.StrictMode>
+    // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

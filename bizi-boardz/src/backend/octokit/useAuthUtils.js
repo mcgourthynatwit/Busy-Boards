@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/core";
 import { useState } from "react";
-import { useAuthContext } from "../../pages/AuthProvider";
+import { useAuthContext } from "../../providers/AuthProvider";
 
 /**
  * Custom hook utility for authentication functions AND

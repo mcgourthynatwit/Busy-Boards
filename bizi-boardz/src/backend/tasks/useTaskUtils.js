@@ -4,6 +4,7 @@ import { useAuthUtils } from "../octokit/useAuthUtils";
 import getFileContent from "./getFileContent"
 import createOrUpdateFile from "./createOrUpdateFile";
 import { v4 as uuidv4 } from 'uuid'
+import { useTaskContext } from "../../providers/TaskProvider";
 
 /**
  * Custom hook utility for task functions
@@ -14,7 +15,7 @@ const useTaskUtils = () => {
     const { pat, activeRepo, userName } = useAuthUtils();
     const parts = activeRepo.replace(/\/$/, '').split('/');
     const repoName = parts[parts.length - 1];
-    const [tasks, setTasks] = useState([]); //Todo, move to context?
+    const [tasks, setTasks] = useTaskContext();
 
     /**
      * Creates file task.JSON in repository

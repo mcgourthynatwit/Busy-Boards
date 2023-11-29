@@ -6,21 +6,20 @@ import { useState } from "react";
 import { React } from "react";
 import useTaskUtils from "../backend/tasks/useTaskUtils";
 
-
 //trigger decides if the popup is visible
 //setTrigger takes in setEditTaskPopup from TaskCard.js, which changes the trigger variable
 export default function PopupNewTask({ trigger, setTrigger }) {
-
   const { createTask } = useTaskUtils();
-  const [taskName, setTaskName] = useState('');
-  const [assignee, setAssignee] = useState('');
-  const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('');
-  const [length, setLength] = useState('');
-  const [currentProgress, setCurrentProgress] = useState('');
+  const [taskName, setTaskName] = useState("");
+  const [assignee, setAssignee] = useState("");
+  const [description, setDescription] = useState("");
+  const [currentProgress, setCurrentProgress] = useState("To Do");
+  const [priority, setPriority] = useState("-");
+  const [length, setLength] = useState("-");
   const [taskCreateError, setTaskCreateError] = useState(false); // Can use this to show some type of error div if backend returns error
 
   const createTaskHandler = async () => {
+    setTrigger(false);
     // Backend returns true if create success
     console.log("component calling create task with name", taskName);
     const createSuccess = await createTask({
@@ -29,10 +28,10 @@ export default function PopupNewTask({ trigger, setTrigger }) {
       description: description,
       priority: priority,
       length: length,
-      currentProgress: currentProgress
-    })
+      currentProgress: currentProgress,
+    });
     setTaskCreateError(!createSuccess);
-  }
+  };
 
   //sets up options for progress dropdown
   const progressValues = ["To Do", "In Progress", "Done"];
@@ -70,7 +69,9 @@ export default function PopupNewTask({ trigger, setTrigger }) {
     9.5,
     10,
   ];
-  const lengthOptions = lengthValues.map((value, idx) => <option key={idx}>{value}</option>);
+  const lengthOptions = lengthValues.map((value, idx) => (
+    <option key={idx}>{value}</option>
+  ));
 
   //stops inner popup click from closing the popup
   const ignoreParentOnClick = (e) => e.stopPropagation();
@@ -91,29 +92,62 @@ export default function PopupNewTask({ trigger, setTrigger }) {
           <div className="new-popup-body">
             <div className="new-task-name-section">
               Task Name:
-              <input type="text" onChange={(e) => {setTaskName(e.target.value)}}></input>
+              <input
+                type="text"
+                onChange={(e) => {
+                  setTaskName(e.target.value);
+                }}
+              ></input>
             </div>
             <div className="new-assignee-section">
               Assignee:
-              <input type="text" onChange={(e) => {setAssignee(e.target.value)}}></input>
+              <input
+                type="text"
+                onChange={(e) => {
+                  setAssignee(e.target.value);
+                }}
+              ></input>
             </div>
             <div className="dropdowns-row">
               <div className="progress-section">
                 Current Progress:
-                <select onChange={(e) => {setCurrentProgress(e.target.value)}}>{progressOptions}</select>
+                <select
+                  onChange={(e) => {
+                    setCurrentProgress(e.target.value);
+                  }}
+                >
+                  {progressOptions}
+                </select>
               </div>
               <div className="new-priority-section">
                 Priority:
-                <select onChange={(e) => {setPriority(e.target.value)}}>{priorityOptions}</select>
+                <select
+                  onChange={(e) => {
+                    setPriority(e.target.value);
+                  }}
+                >
+                  {priorityOptions}
+                </select>
               </div>
               <div className="new-task-length-section">
                 Task Length:
-                <select onChange={(e) => {setLength(e.target.value)}}>{lengthOptions}</select>
+                <select
+                  onChange={(e) => {
+                    setLength(e.target.value);
+                  }}
+                >
+                  {lengthOptions}
+                </select>
               </div>
             </div>
             <div className="new-description-section">
               Description:<br></br>
-              <textarea rows="3" onChange={(e) => {setDescription(e.target.value)}} ></textarea>
+              <textarea
+                rows="3"
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                }}
+              ></textarea>
             </div>
           </div>
           <div className="new-popup-footer">

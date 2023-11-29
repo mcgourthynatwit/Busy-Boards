@@ -1,6 +1,6 @@
 import "../styles/Column.css";
 import TaskCard from "./TaskCard";
-import useTaskUtils from "../backend/tasks/useTaskUtils"
+import useTaskUtils from "../backend/tasks/useTaskUtils";
 
 export default function Column({ columnHeader }) {
   const { tasks } = useTaskUtils();
@@ -9,16 +9,18 @@ export default function Column({ columnHeader }) {
       <div className="columnHeader">{columnHeader}</div>
       <div className="columnBody">
         <ul>
-            {
-                tasks.map(task => 
-                    <TaskCard
-                        taskName={task.name}
-                        assignee={task.assignee}
-                        priority={task.priority}
-                        taskLength={task.taskLength}
-                    />
-                )
-            }
+          {tasks.map((task) =>
+            task.currentProgress === columnHeader ? (
+              <TaskCard
+                taskName={task.name}
+                assignee={task.assignee}
+                priority={task.priority}
+                taskLength={task.taskLength}
+              />
+            ) : (
+              ""
+            )
+          )}
           {/* <TaskCard
             taskName="THIS IS A TEST STORY NAME"
             assignee="Tim Magee"

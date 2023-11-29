@@ -37,12 +37,24 @@ const useTaskUtils = () => {
             if (error.response.status === 404){
                 // Task.JSON was not found in project repo, create file
                 const initialContent = [];
-                const fileSHA = await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(initialContent)), "System created task.JSON");
-
-                console.warn("task.JSON not found in project repo, created file!");
-                return [initialContent, fileSHA];
+                await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(initialContent)), "System created task.JSON")
+                                    .then((fileSHA)=>{
+                                        console.warn("task.JSON not found in project repo, created file!");
+                                        return [initialContent, fileSHA];
+                                    })
+                                    .catch(async (e)=>{
+                                        // Sha was not supplied: task.JSON was created by someone else before we resolved.
+                                        if (e.response.status === 422){
+                                            console.warn("task.JSON did not exist in initial call, but now does! Returning data...");
+                                            return await getTasks();
+                                        } else {
+                                            throw(e);
+                                        }
+                                    });
+                
+                
             } else {
-                // throw some type of error
+                throw(error);
             }
         }
     }, [pat, userName, repoName]);
@@ -50,7 +62,10 @@ const useTaskUtils = () => {
     // Load task data on component mount, (set state so ViewBacklog page can render)
     useEffect(() => {
         console.log("Use effect calling get tasks");
-        getTasks();
+        getTasks()
+            .catch((error)=>{
+                console.log("Useeffect failed to get tasks")
+            });
 
     }, [getTasks]);
 
@@ -86,7 +101,7 @@ const useTaskUtils = () => {
     * @returns true if task creation successful, false if otherwise
     */
     const createTask = async ({taskName, assignee, description, priority, length, currentProgress}) => {
-        const [existingTasks, fileSHA] = await getTasks(); // Must pull most recent changes first
+        const [existingTasks, fileSHA] = await getTasks().catch(()=>{return false}); // Must pull most recent changes first
         const newTaskData = {
             "name": taskName,
             "assignee": assignee,

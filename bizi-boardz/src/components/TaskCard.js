@@ -9,12 +9,14 @@ import { take } from "lodash";
 
 //display task name, assignee, story/task, priority (!, !!, !!!), length
 export default function TaskCard({
-  key = "",
-  taskID = "",
-  taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
-  assignee = "Hubert Wolfeschlegelsteinhausenbergerdorff",
-  priority = "-",
-  taskLength = 1,
+  key ,
+  taskID ,
+  taskName ,
+  assignee,
+  priority,
+  taskLength,
+  description,
+  currentProgress,
 }) {
   const [editTaskPopup, setEditTaskPopup] = useState(false);
   const [whiteboardPopup, setWhiteboardPopup] = useState(false);
@@ -52,6 +54,8 @@ export default function TaskCard({
         ogAssignee={assignee}
         ogPriority={priority}
         ogTaskLength={taskLength}
+        ogProgress={currentProgress}
+        ogDescription={description}
       />
       <PopupWhiteboard
         trigger={whiteboardPopup}

@@ -18,7 +18,7 @@ export default function PopupEditTask({
   taskID,
   ogTaskName,
   ogAssignee,
-  ogProgress = "To Do",
+  ogProgress,
   ogPriority,
   ogTaskLength,
   ogDescription

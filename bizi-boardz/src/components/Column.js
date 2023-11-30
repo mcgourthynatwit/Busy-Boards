@@ -20,6 +20,8 @@ export default function Column({ columnHeader }) {
                   taskLength={task.length}
                   assignee={task.assignee}
                   priority={task.priority}
+                  description={task.description}
+                  currentProgress={task.currentProgress}
                 />
               ) : (
                 ""

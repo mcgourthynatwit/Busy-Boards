@@ -137,14 +137,12 @@ const useTaskUtils = () => {
     }
 
     const updateTask = async ({taskID, taskName, assignee, description, priority, length, currentProgress}) => {
-        // delete old task
-        console.log("Deleting task with id", taskID)
-        const updatedTasks = await delTask(taskID)
+        // get current tasks array
+        const [existingTasks, fileSHA] = await getTasks(); 
 
-        console.log("Update finished deleting task, getting new fila sha...");
-        const [existingTasks, fileSHA] = await getTasks(); // Must pull most recent changes first
-        console.log("Update finished deleting task, new fila sha", fileSHA);
-
+        // filter out old task create new array 
+        const updatedTasks = existingTasks.filter(task => task.taskID != taskID);
+        
         const newTaskData = {
             "taskID": taskID, 
             "name": taskName,
@@ -155,7 +153,7 @@ const useTaskUtils = () => {
             "currentProgress": currentProgress
         } 
         
-        const newTaskState = [...existingTasks, newTaskData];
+        const newTaskState = [...updatedTasks, newTaskData];
         console.log("Update task calling sync task with sha", fileSHA);
         return await syncTasks(newTaskState, fileSHA, `System pushed updated task ${taskName} from user ${userName}`);
 

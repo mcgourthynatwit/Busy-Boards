@@ -1,5 +1,6 @@
 .taskLine{
     background-color: var(--bizi-dark);
+    width: 98%;
     height: 40px;
     margin: 6px 4px;
     padding: 5px;
@@ -17,7 +18,7 @@
     display: flex;
     align-items: center;
     /* justify-content: center; */
-    width: 75%;
+    /* width: 75%; */
 }
 
 
@@ -27,9 +28,9 @@
     /* min-height: 24px;
     max-height: 48px; */
     height: 20px;
-    width: 70%;
-    /* min-width: 2px;
-    max-width: 700px; */
+    /* width: 400px;; */
+    min-width: 2px;
+    max-width: 400px;
     font-weight: 500;
     overflow: hidden;
     white-space: nowrap;
@@ -39,8 +40,8 @@
 }
 
 
-.taskLineMain .assignee{
-    /* background-color: green; */
+/* .taskLineMain .assignee{
+    background-color: green;
     color: var(--bizi-white);
     opacity: .6;
     height: 18px;
@@ -50,11 +51,11 @@
     padding-left: 8px;
     overflow: hidden;
     text-align: left;
-}
+} */
 
 .taskLineBubbles{
     /* background-color: blue; */
-    width: 100px;
+    /* width: 150px; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,4 +102,25 @@
     align-items: center;
     font-weight: 700;
     font-size: 16px;
+}
+
+.taskLineBubbles .bubbleLocation{
+    background-color: var(--bizi-white);
+    color: var(--bizi-dark);
+    border-radius: 100px;
+    height: 24px;
+    width: 40px;
+    margin: 0 0 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    box-shadow: 0 2px 0 rgba(231,229,223,.6);
+}
+
+.taskLineBubbles .bubbleLocation:active{
+    box-shadow: none;
+    transform: translateY(2px);
 }

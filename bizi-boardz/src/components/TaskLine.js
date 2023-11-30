@@ -2,6 +2,8 @@ import "../styles/TaskLine.css";
 import PopupEditTask from "./PopupEditTask";
 import React from "react";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function TaskLine({
   taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
@@ -18,11 +20,17 @@ export default function TaskLine({
       <div className="taskLine" onClick={() => setEditTaskPopup(true)}>
         <div className="taskLineMain">
           <div className="taskName">{taskName}</div>
-          <div className="assignee">{assignee}</div>
+          {/* <div className="assignee">{assignee}</div> */}
         </div>
         <div className="taskLineBubbles">
           {decidePriority(priority)}
           <div className="bubbleTaskLength">{decideTaskLength(taskLength)}</div>
+          <button
+            className="bubbleLocation"
+            onClick={(e) => ignoreParentOnClick(e)}
+          >
+            <FontAwesomeIcon icon={faRightLeft} />
+          </button>
         </div>
       </div>
       <PopupEditTask

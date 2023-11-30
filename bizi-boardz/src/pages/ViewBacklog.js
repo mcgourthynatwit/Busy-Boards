@@ -11,7 +11,7 @@ export default function ViewBacklog() {
   const [newTaskPopup, setNewTaskPopup] = useState(false);
   const { activeRepo } = useAuthUtils();
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("View backlog mounted");
   });
 
@@ -19,7 +19,7 @@ export default function ViewBacklog() {
     <>
       <div className="pageViewBacklog">
         <div className="backlogHeader">
-          {/* {activeRepo} */}
+          {activeRepo}
           <div className="headerButtons">
             <button className="btnNewSprint">
               <FontAwesomeIcon
@@ -28,23 +28,27 @@ export default function ViewBacklog() {
               />
               New Sprint
             </button>
-             <button
+            <button
               className="btnNewTask"
               onClick={() => setNewTaskPopup(true)}
             >
-            <FontAwesomeIcon
+              <FontAwesomeIcon
                 icon={faBullseye}
                 style={{ paddingRight: "4px" }}
               />
               New Task
-            </button> 
+            </button>
           </div>
         </div>
-         <div className="backlogBody">
-          <BacklogSection sectionHeader="This Sprint" />
-          <BacklogSection sectionHeader="Upcoming Sprint" />
-          <BacklogSection sectionHeader="Backlog" />
-        </div> 
+        <div className="backlogBody">
+          <div className="leftBody">
+            <BacklogSection sectionHeader="Backlog" />
+          </div>
+          <div className="rightBody">
+            <BacklogSection sectionHeader="This Sprint" />
+            <BacklogSection sectionHeader="Upcoming Sprint" />
+          </div>
+        </div>
       </div>
       <PopupNewTask trigger={newTaskPopup} setTrigger={setNewTaskPopup} />
     </>

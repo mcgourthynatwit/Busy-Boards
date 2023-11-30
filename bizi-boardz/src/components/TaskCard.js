@@ -8,6 +8,7 @@ import PopupWhiteboard from "./PopupWhiteboard";
 
 //display task name, assignee, story/task, priority (!, !!, !!!), length
 export default function TaskCard({
+  key="",
   taskID = "",
   taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
   assignee = "Hubert Wolfeschlegelsteinhausenbergerdorff",

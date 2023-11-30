@@ -24,6 +24,8 @@ const createOrUpdateFile = async (pat, userName, repoName, path, content, messag
             `PUT /repos/${userName}/${repoName}/contents/${path}`,
             fileData
         );
+        console.log(message, "with old sha", sha);
+        console.log("Response with new file content", response);
         return response.data.content.sha; // Return file sha
     } catch (error) {
         console.log("Creating file error from createFile function:", error);

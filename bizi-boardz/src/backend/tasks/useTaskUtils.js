@@ -23,9 +23,10 @@ const useTaskUtils = () => {
      * @param {*} path should be = "task.JSON"
      * @returns [taskData[], sha]
      */
-    const createTaskJSONFile = useCallback(async (path) => {
+    const createTaskJSONFile = async (path) => {
         const initialContent = [];
         try {
+            console.log("create task.json trying to create task.json");
             const fileSHA = await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(initialContent)), "System created task.JSON");
             console.warn("task.JSON not found in the project repo, created file!");
             return [initialContent, fileSHA];
@@ -39,7 +40,7 @@ const useTaskUtils = () => {
                 throw error;
             }
         }
-    }, [pat, userName, repoName]);
+    };
 
     /**
      * ! Only to be used to manage internal state, components should use "tasks" state value
@@ -47,7 +48,7 @@ const useTaskUtils = () => {
      * If file does not exist, creates task.JSON and returns [[], sha]
      * @returns [taskData[], sha] of task.JSON
      */
-    const getTasks = useCallback(async () => {
+    const getTasks = async () => {
         const path = "task.JSON";
 
         try {
@@ -61,13 +62,14 @@ const useTaskUtils = () => {
         } catch (error) {
             if (error.response && error.response.status === 404) {
                 // Task.JSON was not found in the project repo, create file
+                console.log("Get tasks calling create task.json");
                 return await createTaskJSONFile(path);
             } else {
                 // Throw error if status != 404 (in any case besides task.JSON not found)
                 throw error;
             }
         }
-    }, [pat, userName, repoName, createTaskJSONFile]);
+    }
 
     // Load task data on component mount, (set state so ViewBacklog page can render)
     useEffect(() => {
@@ -79,7 +81,7 @@ const useTaskUtils = () => {
                 });
         }
 
-    }, [getTasks, tasks]);
+    }, []);
 
 
     /**
@@ -93,6 +95,7 @@ const useTaskUtils = () => {
         const path = "task.JSON";
         // Push newTaskState to github
         try {
+            console.log("Sync tasks calling create...");
             await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(newTaskState)), syncMessage, task_JSON_sha);
 
             // Successful sync, set task state
@@ -135,10 +138,12 @@ const useTaskUtils = () => {
 
     const updateTask = async ({taskID, taskName, assignee, description, priority, length, currentProgress}) => {
         // delete old task
-        console.log("Deletinmg task with id ", taskID)
+        console.log("Deleting task with id", taskID)
         const updatedTasks = await delTask(taskID)
 
+        console.log("Update finished deleting task, getting new fila sha...");
         const [existingTasks, fileSHA] = await getTasks(); // Must pull most recent changes first
+        console.log("Update finished deleting task, new fila sha", fileSHA);
 
         const newTaskData = {
             "taskID": taskID, 
@@ -151,6 +156,7 @@ const useTaskUtils = () => {
         } 
         
         const newTaskState = [...existingTasks, newTaskData];
+        console.log("Update task calling sync task with sha", fileSHA);
         return await syncTasks(newTaskState, fileSHA, `System pushed updated task ${taskName} from user ${userName}`);
 
     }
@@ -171,8 +177,7 @@ const useTaskUtils = () => {
             console.log('Task not found')
             return false;
         }
-        console.log(`System removed task with UUID ${taskUUID} by user ${userName}`)
-        return await syncTasks(updatedTasks, fileSHA, `System removed task with UUID ${taskUUID} by user ${userName}`)
+        return await syncTasks(updatedTasks, fileSHA, `System removed task with UUID ${taskUUID} by user ${userName}`);
     }
     return { createTask, delTask, updateTask, tasks };
 }

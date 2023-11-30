@@ -13,6 +13,7 @@ export default function Column({ columnHeader }) {
           {tasks && tasks.map((task) =>
             task.currentProgress === columnHeader ? (
               <TaskCard
+                key={task.taskID}
                 taskID = {task.taskID}
                 taskName={task.name}
                 assignee={task.assignee}

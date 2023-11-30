@@ -31,7 +31,7 @@ export default function PopupEditTask({
   const [priority, setPriority] = useState(ogPriority);
   const [length, setLength] = useState(ogTaskLength);
 
-  const {updateTask} = useTaskUtils()
+  const { updateTask } = useTaskUtils()
 
   const saveTaskChanges = async () => {
     console.log('updating task... ', ogTaskName, 'to', taskName)
@@ -194,6 +194,7 @@ export default function PopupEditTask({
         taskID = {taskID}
         trigger={deleteTaskPopup}
         setTrigger={setDeleteTaskPopup}
+        taskName = {taskName}
       />
     </>
   ) : (

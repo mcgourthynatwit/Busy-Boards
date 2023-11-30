@@ -8,13 +8,13 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function PopupDeleteTask({ trigger, setTrigger, taskID }) {
+export default function PopupDeleteTask({ trigger, setTrigger, taskID, taskName }) {
   const { delTask } = useTaskUtils();
 
   //still needs to have delete functionality
   const deleteTask = async ()  => {
     setTrigger(false);
-    console.log('deleting task ', taskID)
+    console.log('deleting task ', taskName, taskID)
     const delSuccess = await delTask(taskID)
 
     // del error go here

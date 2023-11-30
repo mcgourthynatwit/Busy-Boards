@@ -10,20 +10,21 @@ export default function Column({ columnHeader }) {
       <div className="columnHeader">{columnHeader}</div>
       <div className="columnBody">
         <ul>
-          {tasks && tasks.map((task) =>
-            task.currentProgress === columnHeader ? (
-              <TaskCard
-                key={task.taskID}
-                taskID = {task.taskID}
-                taskName={task.name}
-                assignee={task.assignee}
-                priority={task.priority}
-                taskLength={task.taskLength}
-              />
-            ) : (
-              ""
-            )
-          )}
+          {tasks &&
+            tasks.map((task) =>
+              task.currentProgress === columnHeader ? (
+                <TaskCard
+                  key={task.taskID}
+                  taskID={task.taskID}
+                  taskName={task.name}
+                  taskLength={task.length}
+                  assignee={task.assignee}
+                  priority={task.priority}
+                />
+              ) : (
+                ""
+              )
+            )}
           {/* <TaskCard
             taskName="THIS IS A TEST STORY NAME"
             assignee="Tim Magee"

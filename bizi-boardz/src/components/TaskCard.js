@@ -5,10 +5,11 @@ import { useState } from "react";
 import PopupEditTask from "./PopupEditTask";
 import React from "react";
 import PopupWhiteboard from "./PopupWhiteboard";
+import { take } from "lodash";
 
 //display task name, assignee, story/task, priority (!, !!, !!!), length
 export default function TaskCard({
-  key="",
+  key = "",
   taskID = "",
   taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
   assignee = "Hubert Wolfeschlegelsteinhausenbergerdorff",
@@ -23,7 +24,7 @@ export default function TaskCard({
     e.stopPropagation();
     setWhiteboardPopup(true);
   };
-
+  console.log({ taskName, taskLength });
   return (
     <>
       <div className="taskCard" onClick={() => setEditTaskPopup(true)}>
@@ -46,7 +47,7 @@ export default function TaskCard({
       <PopupEditTask
         trigger={editTaskPopup}
         setTrigger={setEditTaskPopup}
-        taskID = {taskID}
+        taskID={taskID}
         ogTaskName={taskName}
         ogAssignee={assignee}
         ogPriority={priority}
@@ -62,16 +63,18 @@ export default function TaskCard({
 }
 
 function decidePriority(priority) {
-  if (priority === 1)
+  if (priority === "1")
     return <div className="bubblePriority priorityLow">!</div>;
-  else if (priority === 2)
+  else if (priority === "2")
     return <div className="bubblePriority priorityModerate">! !</div>;
-  else if (priority === 3)
+  else if (priority === "3")
     return <div className="bubblePriority priorityHigh">! ! !</div>;
   else return <div className="bubblePriority priorityNA">-</div>;
 }
 
 function decideTaskLength(taskLength) {
-  if (taskLength <= 0) return "-";
-  else return taskLength.toFixed(1).replace(".0", "");
+  console.log(parseInt(taskLength));
+  console.log(typeof parseInt(taskLength));
+  if (isNaN(parseInt(taskLength))) return "-";
+  else return taskLength;
 }

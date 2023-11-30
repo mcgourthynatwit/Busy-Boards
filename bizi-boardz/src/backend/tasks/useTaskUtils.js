@@ -138,7 +138,11 @@ const useTaskUtils = () => {
 
     const updateTask = async ({taskID, taskName, assignee, description, priority, length, currentProgress}) => {
         // get current tasks array
-        const [existingTasks, fileSHA] = await getTasks(); 
+        const [existingTasks, fileSHA] = await getTasks()
+            .catch((error) => {
+                console.log("Update task failed to get current tasks!", error);
+                return false
+            });
 
         // filter out old task create new array 
         const updatedTasks = existingTasks.filter(task => task.taskID != taskID);
@@ -156,7 +160,6 @@ const useTaskUtils = () => {
         const newTaskState = [...updatedTasks, newTaskData];
         console.log("Update task calling sync task with sha", fileSHA);
         return await syncTasks(newTaskState, fileSHA, `System pushed updated task ${taskName} from user ${userName}`);
-
     }
 
     const delTask = async (taskUUID) => {

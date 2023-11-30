@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
 import "../styles/Settings.css";
+import { useTaskContext } from '../providers/TaskProvider.js';
 
 const Settings = () => {
   const { pat, activeRepo, setPAT, setActiveRepo, userName} = useAuthUtils();
+  const [tasks, setTasks] = useTaskContext();
   
   const [newRepo, setNewRepo] = useState("");  // New state for the input value
   const [newPAT, setNewPAT] = useState("");    // New state for the input value
@@ -22,6 +24,7 @@ const Settings = () => {
     // Use setPAT and setActiveRepo to update the state with the new values
     setPAT(newPAT);
     setActiveRepo(newRepo);
+    setTasks(null); // Needed so useEffect in taskUtil hook will re fetch tasks from new repo
     // Clear the input fields after the submission 
     setNewRepo("");
     setNewPAT("");

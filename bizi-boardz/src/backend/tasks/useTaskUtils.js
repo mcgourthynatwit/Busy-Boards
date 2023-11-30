@@ -81,7 +81,7 @@ const useTaskUtils = () => {
                 });
         }
 
-    }, []);
+    }, [pat, activeRepo, userName]);
 
 
     /**

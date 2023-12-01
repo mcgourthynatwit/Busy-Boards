@@ -29,12 +29,15 @@
     max-height: 48px; */
     height: 20px;
     /* width: 400px;; */
-    min-width: 2px;
-    max-width: 400px;
+    min-width: 200px;
+    max-width: 350px;
+    margin: 0 auto;
     font-weight: 500;
     overflow: hidden;
     white-space: nowrap;
-    display: flex;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
     align-items: center;   
     justify-content: start;
 }

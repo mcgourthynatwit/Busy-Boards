@@ -1,5 +1,6 @@
 import "../styles/TaskLine.css";
-import PopupEditTask from "./PopupEditTask";
+import PopupEditTask from "./PopupEditTask.js";
+import PopupLocation from "./PopupLocation.js";
 import React from "react";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,15 +13,19 @@ export default function TaskLine({
   taskLength = 1,
 }) {
   const [editTaskPopup, setEditTaskPopup] = useState(false);
+  const [locationPopup, setLocationPopup] = useState(false);
 
   //stops whiteboard click from activating the Edit Task Popup
-  const ignoreParentOnClick = (e) => e.stopPropagation();
+  const ignoreParentOnClick = (e) => {
+    e.stopPropagation();
+    setLocationPopup(true);
+  };
+
   return (
     <>
       <div className="taskLine" onClick={() => setEditTaskPopup(true)}>
         <div className="taskLineMain">
           <div className="taskName">{taskName}</div>
-          {/* <div className="assignee">{assignee}</div> */}
         </div>
         <div className="taskLineBubbles">
           {decidePriority(priority)}
@@ -41,6 +46,7 @@ export default function TaskLine({
         priority={priority}
         taskLength={taskLength}
       />
+      <PopupLocation trigger={locationPopup} setTrigger={setLocationPopup} />
     </>
   );
 }

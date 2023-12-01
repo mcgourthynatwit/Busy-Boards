@@ -53,10 +53,7 @@ const useTaskUtils = () => {
         try {
             // Try to get tasks from task.JSON
             const [taskData, fileSHA] = await getFileContent(pat, userName, repoName, path);
-            // Set task state
-            setTasks(taskData);
 
-            console.log("Successfully set task state");
             return [taskData, fileSHA];
         } catch (error) {
             if (error.response && error.response.status === 404) {
@@ -72,8 +69,12 @@ const useTaskUtils = () => {
 
     // Load task data on component mount, (set state so ViewBacklog page can render)
     useEffect(() => {
+        //TODO: check if authenticated first because useEffect will run on login screen
         console.log("Use effect calling get tasks");
         getTasks()
+            .then(([taskData]) => {
+                setTasks(taskData);
+            })
             .catch((error) => {
                  console.log("Useeffect failed to get tasks")
             });

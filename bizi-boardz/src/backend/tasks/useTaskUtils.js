@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/core";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useAuthUtils } from "../octokit/useAuthUtils";
 import getFileContent from "./getFileContent"
 import createOrUpdateFile from "./createOrUpdateFile";
@@ -93,7 +93,7 @@ const useTaskUtils = () => {
         // Push newTaskState to github
         try {
             console.log("Sync tasks calling create...");
-            await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(newTaskState)), syncMessage, task_JSON_sha);
+            await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(newTaskState, null, 2)), syncMessage, task_JSON_sha);
 
             // Successful sync, set task state
             setTasks(newTaskState);

@@ -4,7 +4,6 @@ import { useAuthUtils } from "../octokit/useAuthUtils";
 import getFileContent from "./getFileContent"
 import createOrUpdateFile from "./createOrUpdateFile";
 import { v4 as uuidv4 } from 'uuid'
-import { useTaskContext } from "../../providers/TaskProvider";
 
 /**
  * Custom hook utility for task functions
@@ -15,7 +14,7 @@ const useTaskUtils = () => {
     const { pat, activeRepo, userName } = useAuthUtils();
     const parts = activeRepo.replace(/\/$/, '').split('/');
     const repoName = parts[parts.length - 1];
-    const [tasks, setTasks] = useTaskContext();
+    const [tasks, setTasks] = useState();
 
     /**
      * Creates file task.JSON in repository
@@ -73,13 +72,11 @@ const useTaskUtils = () => {
 
     // Load task data on component mount, (set state so ViewBacklog page can render)
     useEffect(() => {
-        if(!tasks){
-            console.log("Use effect calling get tasks");
-            getTasks()
-                .catch((error) => {
-                    console.log("Useeffect failed to get tasks")
-                });
-        }
+        console.log("Use effect calling get tasks");
+        getTasks()
+            .catch((error) => {
+                 console.log("Useeffect failed to get tasks")
+            });
 
     }, [pat, activeRepo, userName]);
 

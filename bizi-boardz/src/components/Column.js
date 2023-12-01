@@ -1,10 +1,10 @@
 import "../styles/Column.css";
 import TaskCard from "./TaskCard";
-import useTaskUtils from "../backend/tasks/useTaskUtils";
+import { useTaskContext } from "../providers/TaskProvider";
 
 //task.currentProgress === columnHeader ? ------> only put task card in column if it has the header name
 export default function Column({ columnHeader }) {
-  const { tasks } = useTaskUtils();
+  const { tasks } = useTaskContext();
   return (
     <div className="progressColumn">
       <div className="columnHeader">{columnHeader}</div>

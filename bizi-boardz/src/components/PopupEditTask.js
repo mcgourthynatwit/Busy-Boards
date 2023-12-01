@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { React } from "react";
-import useTaskUtils from "../backend/tasks/useTaskUtils";
+import { useTaskContext } from "../providers/TaskProvider";
 
 //trigger decides if the popup is visible
 //setTrigger takes in setEditTaskPopup from TaskCard.js, which changes the trigger variable
@@ -31,7 +31,7 @@ export default function PopupEditTask({
   const [priority, setPriority] = useState(ogPriority);
   const [length, setLength] = useState(ogTaskLength);
 
-  const { updateTask } = useTaskUtils()
+  const { updateTask } = useTaskContext();
 
   const saveTaskChanges = async () => {
     console.log('updating task... ', ogTaskName, 'to', taskName)

@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faBullseye } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { React } from "react";
-import useTaskUtils from "../backend/tasks/useTaskUtils";
+import { useTaskContext } from "../providers/TaskProvider";
 
 //trigger decides if the popup is visible
 //setTrigger takes in setEditTaskPopup from TaskCard.js, which changes the trigger variable
 export default function PopupNewTask({ trigger, setTrigger }) {
-  const { createTask } = useTaskUtils();
+  const { createTask } = useTaskContext();
   const [taskName, setTaskName] = useState("");
   const [assignee, setAssignee] = useState("");
   const [description, setDescription] = useState("");

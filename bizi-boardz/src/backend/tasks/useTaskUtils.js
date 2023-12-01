@@ -142,7 +142,7 @@ const useTaskUtils = () => {
             });
 
         // filter out old task create new array 
-        const updatedTasks = existingTasks.filter(task => task.taskID != taskID);
+        const updatedTasks = existingTasks.filter(task => task.taskID !== taskID);
         
         const newTaskData = {
             "taskID": taskID, 

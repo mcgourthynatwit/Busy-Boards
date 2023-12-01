@@ -14,7 +14,7 @@ const useTaskUtils = () => {
     const { pat, activeRepo, userName } = useAuthUtils();
     const parts = activeRepo.replace(/\/$/, '').split('/');
     const repoName = parts[parts.length - 1];
-    const [tasks, setTasks] = useState();
+    const [tasks, setTasks] = useState([]);
 
     /**
      * Creates file task.JSON in repository

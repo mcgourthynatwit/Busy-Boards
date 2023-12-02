@@ -30,9 +30,9 @@ const useAuthUtils = () => {
         }
     };
 
-    const octokitAuthRepo = async (PAT) => {
+    const octokitAuthRepo = async (PAT, repoURL) => {
         const octokit = new Octokit({ auth: PAT });
-        const parts = activeRepo.replace(/\/$/, '').split('/');
+        const parts = repoURL.replace(/\/$/, '').split('/');
         const repoName = parts[parts.length - 1];
         const userName = parts[parts.length - 2]; // Extract username from url because username in state may not be set yet
 

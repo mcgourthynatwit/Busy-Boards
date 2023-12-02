@@ -31,7 +31,7 @@ const Login = () => {
             localStorage.setItem("pat", pat);
 
             setShowPATError(false);
-            const validUrl = await octokitAuthRepo(activeRepo); // Returns true if valid url
+            const validUrl = await octokitAuthRepo(pat, activeRepo); // Returns true if valid url
             localStorage.setItem("activeRepo", activeRepo);
             
             if (loggedInUser && validUrl) {

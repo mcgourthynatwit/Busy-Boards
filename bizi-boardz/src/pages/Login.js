@@ -27,14 +27,15 @@ const Login = () => {
         try {
             const loggedInUser = await octokitAuth(pat); // Get logged in username from auth hook
             setUserName(loggedInUser); // Set in auth hook
-            localStorage.setItem("userName", loggedInUser);
-            localStorage.setItem("pat", pat);
-
+            
             setShowPATError(false);
             const validUrl = await octokitAuthRepo(pat, activeRepo); // Returns true if valid url
-            localStorage.setItem("activeRepo", activeRepo);
             
             if (loggedInUser && validUrl) {
+                localStorage.setItem("userName", loggedInUser);
+                localStorage.setItem("pat", pat);
+                localStorage.setItem("activeRepo", activeRepo);
+
                 setIsAuthenticated(true);
                 navigate("/currentSprint");
             } else if (!validUrl) {

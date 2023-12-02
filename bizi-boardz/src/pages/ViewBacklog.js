@@ -1,13 +1,15 @@
 import "../styles/ViewBacklog.css";
 import BacklogSection from "../components/BacklogSection.js";
-import { useAuthUtils } from "../backend/octokit/useAuthUtils.js";
 import PopupNewTask from "../components/PopupNewTask";
+import PopupStartSprint from "../components/PopupStartSprint.js";
+import { useAuthUtils } from "../backend/octokit/useAuthUtils.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonRunning, faBullseye } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
 export default function ViewBacklog() {
+  const [startSprintPopup, setStartSprintPopup] = useState(false);
   const [newTaskPopup, setNewTaskPopup] = useState(false);
   const { activeRepo } = useAuthUtils();
 
@@ -21,7 +23,10 @@ export default function ViewBacklog() {
         <div className="backlogHeader">
           {activeRepo}
           <div className="headerButtons">
-            <button className="btnNewSprint">
+            <button
+              className="btnNewSprint"
+              onClick={() => setStartSprintPopup(true)}
+            >
               <FontAwesomeIcon
                 icon={faPersonRunning}
                 style={{ paddingRight: "4px" }}
@@ -50,6 +55,10 @@ export default function ViewBacklog() {
           </div>
         </div>
       </div>
+      <PopupStartSprint
+        trigger={startSprintPopup}
+        setTrigger={setStartSprintPopup}
+      />
       <PopupNewTask trigger={newTaskPopup} setTrigger={setNewTaskPopup} />
     </>
   );

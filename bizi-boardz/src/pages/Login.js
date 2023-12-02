@@ -8,7 +8,7 @@ import FormInputError from '../components/FormInputError.js';
 import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
 
 const Login = () => {
-    const { pat, setPAT, activeRepo, setActiveRepo, setUserName, octokitAuth, octokitAuthRepo } = useAuthUtils(); 
+    const { pat, setPAT, activeRepo, setActiveRepo, setUserName, octokitAuth, octokitAuthRepo, setIsAuthenticated } = useAuthUtils(); 
     const [showUrlError, setShowUrlError] = useState(false);
     const [showPATError, setShowPATError] = useState(false);
     const navigate = useNavigate();
@@ -35,6 +35,7 @@ const Login = () => {
             localStorage.setItem("activeRepo", activeRepo);
             
             if (loggedInUser && validUrl) {
+                setIsAuthenticated(true);
                 navigate("/currentSprint");
             } else if (!validUrl) {
                 setShowUrlError(true);

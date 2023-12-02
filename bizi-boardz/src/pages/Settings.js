@@ -30,7 +30,7 @@ const Settings = () => {
         localStorage.setItem("pat", newPAT);
 
         
-        const validUrl = await octokitAuthRepo(newRepo); // Returns true if valid url
+        const validUrl = await octokitAuthRepo(newPAT, newRepo); // Returns true if valid url
         setActiveRepo(newRepo);
         localStorage.setItem("activeRepo", newRepo);
 

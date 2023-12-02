@@ -17,10 +17,10 @@ import { useAuthContext } from "../../providers/AuthProvider";
  * octokitAuthRepo:     returns true if valid activeRepo url 
  */
 const useAuthUtils = () => {
-    const {pat, setPAT, activeRepo, setActiveRepo, userName, setUserName} = useAuthContext(); // calls useContext hook in AuthProvider, returns value of AuthProvider 
-    const octokit = new Octokit({ auth: pat });
-
-    const octokitAuth = async () => {
+    const {pat, setPAT, activeRepo, setActiveRepo, userName, setUserName, isAuthenticated, setIsAuthenticated} = useAuthContext(); // calls useContext hook in AuthProvider, returns value of AuthProvider 
+    
+    const octokitAuth = async (PAT) => {
+        const octokit = new Octokit({ auth: PAT });
         try {
             const response = await octokit.request('GET /user');
             return response.data.login; // This will return the username of the authenticated user
@@ -30,7 +30,8 @@ const useAuthUtils = () => {
         }
     };
 
-    const octokitAuthRepo = async () => {
+    const octokitAuthRepo = async (PAT) => {
+        const octokit = new Octokit({ auth: PAT });
         const parts = activeRepo.replace(/\/$/, '').split('/');
         const repoName = parts[parts.length - 1];
         const userName = parts[parts.length - 2]; // Extract username from url because username in state may not be set yet
@@ -43,7 +44,7 @@ const useAuthUtils = () => {
         }
     };
 
-    return { pat, setPAT, activeRepo, setActiveRepo, userName, setUserName, octokitAuth, octokitAuthRepo };
+    return { pat, setPAT, activeRepo, setActiveRepo, userName, setUserName, isAuthenticated, setIsAuthenticated, octokitAuth, octokitAuthRepo };
 }
 
 export { useAuthUtils };

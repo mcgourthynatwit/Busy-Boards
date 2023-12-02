@@ -3,7 +3,7 @@ import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
 import "../styles/Settings.css";
 
 const Settings = () => {
-  const { pat, activeRepo, setPAT, setActiveRepo, userName} = useAuthUtils();
+  const { pat, activeRepo, setPAT, setActiveRepo, userName, setUserName, octokitAuth, octokitAuthRepo} = useAuthUtils();
   
   const [newRepo, setNewRepo] = useState("");  // New state for the input value
   const [newPAT, setNewPAT] = useState("");    // New state for the input value
@@ -16,15 +16,33 @@ const Settings = () => {
     setNewPAT(e.target.value);   // Update the newPAT state
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const oldPAT = pat;
+    const oldActiveRepo = activeRepo;
+    const oldUserName = userName;
+    try{
+        // Use setPAT and setActiveRepo to update the state with the new values   
+        const loggedInUser = await octokitAuth(newPAT); // Get logged in username from auth hook
+        setPAT(newPAT);
+        setUserName(loggedInUser); // Set in auth hook
+        localStorage.setItem("userName", loggedInUser);
+        localStorage.setItem("pat", pat);
 
-    // Use setPAT and setActiveRepo to update the state with the new values
-    setPAT(newPAT);
-    setActiveRepo(newRepo);
-    // Clear the input fields after the submission 
-    setNewRepo("");
-    setNewPAT("");
+        
+        const validUrl = await octokitAuthRepo(newRepo); // Returns true if valid url
+        setActiveRepo(newRepo);
+        localStorage.setItem("activeRepo", activeRepo);
+        
+        // Clear the input fields after the submission 
+        setNewRepo("");
+        setNewPAT("");
+    } catch (error) {
+      console.log("Settings err resetting to old", oldPAT, oldActiveRepo, oldUserName);
+        setPAT(oldPAT);
+        setActiveRepo(oldActiveRepo);
+        setUserName(oldUserName);
+    }
   };
 
   return (

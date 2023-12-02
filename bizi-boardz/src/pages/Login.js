@@ -8,7 +8,7 @@ import FormInputError from '../components/FormInputError.js';
 import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
 
 const Login = () => {
-    const { setPAT, setActiveRepo, setUserName, octokitAuth, octokitAuthRepo } = useAuthUtils(); 
+    const { pat, setPAT, activeRepo, setActiveRepo, setUserName, octokitAuth, octokitAuthRepo } = useAuthUtils(); 
     const [showUrlError, setShowUrlError] = useState(false);
     const [showPATError, setShowPATError] = useState(false);
     const navigate = useNavigate();
@@ -25,11 +25,14 @@ const Login = () => {
     const handleSubmit = async event => {
         event.preventDefault();
         try {
-            const loggedInUser = await octokitAuth(); // Get logged in username from auth hook
+            const loggedInUser = await octokitAuth(pat); // Get logged in username from auth hook
             setUserName(loggedInUser); // Set in auth hook
+            localStorage.setItem("userName", loggedInUser);
+            localStorage.setItem("pat", pat);
 
             setShowPATError(false);
-            const validUrl = await octokitAuthRepo(); // Returns true if valid url
+            const validUrl = await octokitAuthRepo(activeRepo); // Returns true if valid url
+            localStorage.setItem("activeRepo", activeRepo);
             
             if (loggedInUser && validUrl) {
                 navigate("/currentSprint");

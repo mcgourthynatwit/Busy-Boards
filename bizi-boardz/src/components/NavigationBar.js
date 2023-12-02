@@ -4,11 +4,14 @@ import "../styles/bizi-boardz-styles.css";
 import { Link, useLocation, useMatch, useResolvedPath } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { useAuthUtils } from "../backend/octokit/useAuthUtils";
 
 //currentSprint, View Backlog, My Tasks, Settings
 const NavigationBar = () => {
+
+  const { isAuthenticated } = useAuthUtils();
   //if on login page, dont show NavigationBar element
-  if (useLocation().pathname === "/") {
+  if (!isAuthenticated) {
     return <></>;
   }
 
@@ -18,18 +21,17 @@ const NavigationBar = () => {
       <nav className="nav">
         <div className="app-title">Bizi Boardz</div>
         <ul>
-          <li>
             <CustomLink to="/currentSprint">Current Sprint</CustomLink>
-          </li>
-          <li>
+  
+        
             <CustomLink to="/viewBacklog">View Backlog</CustomLink>
-          </li>
-          <li>
+        
+         
             <CustomLink to="/myTasks">My Tasks</CustomLink>
-          </li>
-          <li>
+        
+       
             <CustomLink to="/settings">Settings</CustomLink>
-          </li>
+      
         </ul>
       </nav>
     </>

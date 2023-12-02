@@ -9,44 +9,44 @@ import CurrentSprint from "./pages/CurrentSprint.js";
 import ViewBacklog from "./pages/ViewBacklog.js";
 import MyTasks from "./pages/MyTasks.js";
 import Settings from "./pages/Settings.js";
-//import reportWebVitals from './reportWebVitals';
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import AuthProvider from "./providers/AuthProvider.js";
-import TaskProvider from "./providers/TaskProvider.js"
+import TaskProvider from "./providers/TaskProvider.js";
+import { useAuthUtils } from "./backend/octokit/useAuthUtils.js";
 
-//<Route path='/contact' element={<Contact />} />
+const rootElement = document.getElementById("root");
 
-export default function App() {
-    return (
-        <>
-            <AuthProvider>
-                <TaskProvider>
-                    <NavigationBar />
-                    <Routes>
-                        <Route path="/">
-                            <Route index element={<Login />} />
-                            <Route path="/currentSprint" element={<CurrentSprint />} />
-                            <Route path="/viewBacklog" element={<ViewBacklog />} />
-                            <Route path="/myTasks" element={<MyTasks />} />
-                            <Route path="/settings" element={<Settings />} />
-                        </Route>
-                    </Routes>
-                </TaskProvider>
-            </AuthProvider>
-        </>
-    );
+
+const App = () => {
+  const { isAuthenticated } = useAuthUtils();
+
+  return (
+
+    <BrowserRouter>
+      <>
+        <NavigationBar />
+        <Routes>
+          <Route path="/">
+            <Route index element={isAuthenticated ? <CurrentSprint /> : <Login />} />
+            <Route path="/currentSprint" element={<CurrentSprint />} />
+            <Route path="/viewBacklog" element={<ViewBacklog />} />
+            <Route path="/myTasks" element={<MyTasks />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
+        </Routes>
+      </>
+    </BrowserRouter>
+
+
+  );
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-    //<React.StrictMode>
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
-    // </React.StrictMode>
+ReactDOM.createRoot(rootElement).render(
+  //<React.StrictMode>
+  <AuthProvider>
+    <TaskProvider>
+      <App />
+    </TaskProvider>
+  </AuthProvider>
+  // </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-//reportWebVitals();

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./styles/index.css";
 import "./styles/App.css";
 import NavigationBar from "./components/NavigationBar";
@@ -27,7 +27,7 @@ const App = () => {
         <NavigationBar />
         <Routes>
           <Route path="/">
-            <Route index element={isAuthenticated ? <CurrentSprint /> : <Login />} />
+            <Route index element={isAuthenticated ? <Navigate to="/currentSprint" replace /> : <Login />} />
             <Route path="/currentSprint" element={<CurrentSprint />} />
             <Route path="/viewBacklog" element={<ViewBacklog />} />
             <Route path="/myTasks" element={<MyTasks />} />

@@ -27,13 +27,13 @@ const Settings = () => {
         setPAT(newPAT);
         setUserName(loggedInUser); // Set in auth hook
         localStorage.setItem("userName", loggedInUser);
-        localStorage.setItem("pat", pat);
+        localStorage.setItem("pat", newPAT);
 
         
         const validUrl = await octokitAuthRepo(newRepo); // Returns true if valid url
         setActiveRepo(newRepo);
-        localStorage.setItem("activeRepo", activeRepo);
-        
+        localStorage.setItem("activeRepo", newRepo);
+
         // Clear the input fields after the submission 
         setNewRepo("");
         setNewPAT("");

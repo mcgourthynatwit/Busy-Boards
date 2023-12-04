@@ -34,6 +34,7 @@
 
 .whiteboard-toolbar{
     background-color: #E7E5DF44;
+    /* background-color: var(--bizi-dark); */
     color: black;
     /* width: 700px; */
     height: 36px;
@@ -120,9 +121,11 @@
 
 .whiteboard-body{
     background-color: #E7E5DF44;
+    background-color: var(--bizi-dark);
     width: 96%;
     height: calc(100% - 62px);
     margin: 0 20px 20px 20px;
+    border: 2px solid var(--bizi-yellow);
     /* border-radius: 10px; */
 
 }

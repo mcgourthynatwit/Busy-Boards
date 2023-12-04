@@ -17,8 +17,11 @@ import { create } from "lodash";
 
 const generator = rough.generator();
 
-function createElement(x1, y1, x2, y2) {
-  const roughElement = generator.line(x1, y1, x2, y2, { stroke: "white" });
+function createElement(x1, y1, x2, y2, type) {
+  const roughElement =
+    type === "line"
+      ? generator.line(x1, y1, x2, y2, { stroke: "white" })
+      : generator.rectangle(x1, y1, x2 - x1, y2 - y1, { stroke: "white" });
   return { x1, y1, x2, y2, roughElement };
 }
 
@@ -26,6 +29,7 @@ function createElement(x1, y1, x2, y2) {
 export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   const [elements, setElements] = useState([]);
   const [drawing, setDrawing] = useState(false);
+  const [elementType, setElementType] = useState("line");
 
   useLayoutEffect(() => {
     const canvas = document.getElementById("canvas");
@@ -45,7 +49,14 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     console.log("mouse down");
 
     const { offsetX, offsetY } = event.nativeEvent;
-    const element = createElement(offsetX, offsetY, offsetX, offsetY);
+
+    const element = createElement(
+      offsetX,
+      offsetY,
+      offsetX,
+      offsetY,
+      elementType
+    );
     setElements((prevState) => [...prevState, element]);
   };
 
@@ -55,7 +66,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     const { offsetX, offsetY } = event.nativeEvent;
     const index = elements.length - 1;
     const { x1, y1 } = elements[index];
-    const updatedElement = createElement(x1, y1, offsetX, offsetY);
+    const updatedElement = createElement(x1, y1, offsetX, offsetY, elementType);
 
     const elementsCopy = [...elements];
     elementsCopy[index] = updatedElement;
@@ -84,7 +95,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         <div className="whiteboard-header">
           <div className="whiteboard-task-name">{taskName}</div>
           <div className="whiteboard-toolbar">
-            <div className="tool-btn">
+            {/* <div className="tool-btn">
               <FontAwesomeIcon
                 icon={faArrowPointer}
                 style={{ height: "100%" }}
@@ -110,7 +121,22 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
             </div>
             <div className="tool-btn">
               <FontAwesomeIcon icon={faCircle} style={{ height: "100%" }} />
-            </div>
+              </div>
+  */}
+            <input
+              type="radio"
+              id="line"
+              checked={elementType === "line"}
+              onChange={() => setElementType("line")}
+            />
+            <label htmlFor="line">Line</label>
+            <input
+              type="radio"
+              id="rectangle"
+              checked={elementType === "rectangle"}
+              onChange={() => setElementType("rectangle")}
+            />
+            <label htmlFor="rectangle">Square</label>
             <div className="vertical-divider"></div>
             <div className="tool-btn">
               <FontAwesomeIcon

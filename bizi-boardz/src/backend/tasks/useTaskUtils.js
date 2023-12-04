@@ -72,13 +72,26 @@ const useTaskUtils = () => {
     useEffect(() => {
         //TODO: check if authenticated first because useEffect will run on login screen
         console.log("Use effect calling get tasks");
-        getTasks()
+
+        const fetchAndUpdateTasks = () => {
+            console.log("Fetching new tasks");
+            getTasks()
             .then(([taskData]) => {
                 setTasks(taskData);
             })
             .catch((error) => {
                  console.log("Useeffect failed to get tasks")
             });
+        }
+
+        const updateTimer = setInterval(() => {
+            fetchAndUpdateTasks();
+        }, 1000);
+        fetchAndUpdateTasks();
+        
+        return () => {
+            clearInterval(updateTimer);
+        }
 
     }, [pat, activeRepo, userName]);
 

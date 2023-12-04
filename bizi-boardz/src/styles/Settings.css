@@ -50,9 +50,17 @@
     margin-bottom: 10px ;
   }
   
-  h1 { 
+  h1, h2{ 
     text-align: center;
     color: var(--bizi-yellow)
   }
 
+  hr {
+    border: none;
+    border-top: 7px dotted var(--bizi-white);
+    width: 75%;
+    margin: auto;
+    padding-bottom: 7px;
+
+  }
   

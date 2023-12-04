@@ -51,7 +51,6 @@ const Settings = () => {
       <div className="solid-line"></div>
       <p className="form-label">GitHub Username: {userName} </p>
       <p className="form-label">Current GitHub Repo: {activeRepo} </p>
-      <p className="form-label"> Current Personal Access Token: {pat} </p>
       <form onSubmit={handleSubmit}>
         <label className="form-label">
           New GitHub Repo:

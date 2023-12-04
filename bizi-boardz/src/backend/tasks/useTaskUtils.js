@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid'
  * @returns 
  */
 const useTaskUtils = () => {
-    const { pat, activeRepo } = useAuthUtils();
+    const { pat, activeRepo, isAuthenticated } = useAuthUtils();
     const parts = activeRepo.replace(/\/$/, '').split('/');
     const repoName = parts[parts.length - 1];
     const userName = parts[parts.length - 2];
@@ -71,6 +71,7 @@ const useTaskUtils = () => {
     // Load task data on component mount, (set state so ViewBacklog page can render)
     useEffect(() => {
         //TODO: check if authenticated first because useEffect will run on login screen
+        if (!isAuthenticated) { return; }
         console.log("Use effect calling get tasks");
 
         const fetchAndUpdateTasks = () => {
@@ -93,7 +94,7 @@ const useTaskUtils = () => {
             clearInterval(updateTimer);
         }
 
-    }, [pat, activeRepo, userName]);
+    }, [pat, activeRepo, userName, isAuthenticated]);
 
 
     /**

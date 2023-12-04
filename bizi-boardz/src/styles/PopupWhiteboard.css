@@ -126,3 +126,9 @@
     /* border-radius: 10px; */
 
 }
+
+.whiteboard-body canvas{
+    /* background-color: red; */
+    /* width: 100%;
+    height: 100%; */
+}

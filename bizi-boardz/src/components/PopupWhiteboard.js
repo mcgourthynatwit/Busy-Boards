@@ -11,10 +11,63 @@ import {
   faFont,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import { React, useState } from "react";
+import { React, useLayoutEffect, useState } from "react";
+import rough from "roughjs/bundled/rough.esm";
+import { create } from "lodash";
+
+const generator = rough.generator();
+
+function createElement(x1, y1, x2, y2) {
+  const roughElement = generator.line(x1, y1, x2, y2, { stroke: "white" });
+  return { x1, y1, x2, y2, roughElement };
+}
 
 //trigger decides if the popup is visible
 export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
+  const [elements, setElements] = useState([]);
+  const [drawing, setDrawing] = useState(false);
+
+  useLayoutEffect(() => {
+    const canvas = document.getElementById("canvas");
+    console.log(canvas);
+    if (canvas) {
+      const context = canvas.getContext("2d");
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      const roughCanvas = rough.canvas(canvas);
+
+      elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
+    }
+  }, [elements]);
+
+  const handleMouseDown = (event) => {
+    setDrawing(true);
+    console.log("mouse down");
+
+    const { offsetX, offsetY } = event.nativeEvent;
+    const element = createElement(offsetX, offsetY, offsetX, offsetY);
+    setElements((prevState) => [...prevState, element]);
+  };
+
+  const handleMouseMove = (event) => {
+    if (!drawing) return;
+
+    const { offsetX, offsetY } = event.nativeEvent;
+    const index = elements.length - 1;
+    const { x1, y1 } = elements[index];
+    const updatedElement = createElement(x1, y1, offsetX, offsetY);
+
+    const elementsCopy = [...elements];
+    elementsCopy[index] = updatedElement;
+    setElements(elementsCopy);
+    console.log(offsetX, offsetY);
+  };
+
+  const handleMouseUp = () => {
+    setDrawing(false);
+    console.log("mouse up");
+  };
+
   function changeColor(color) {
     const tools = document.getElementsByClassName("tool-btn");
     const divider = document.getElementsByClassName("vertical-divider");
@@ -92,7 +145,18 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
             <FontAwesomeIcon icon={faXmark} style={{ height: "50%" }} />
           </button>
         </div>
-        <div className="whiteboard-body"></div>
+        <div className="whiteboard-body" id="whiteboardBody">
+          <canvas
+            id="canvas"
+            width={window.innerWidth * 0.96}
+            height={window.innerHeight - 62}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+          >
+            Canvas
+          </canvas>
+        </div>
       </div>
     </>
   ) : (

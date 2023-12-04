@@ -11,9 +11,10 @@ import { v4 as uuidv4 } from 'uuid'
  * @returns 
  */
 const useTaskUtils = () => {
-    const { pat, activeRepo, userName } = useAuthUtils();
+    const { pat, activeRepo } = useAuthUtils();
     const parts = activeRepo.replace(/\/$/, '').split('/');
     const repoName = parts[parts.length - 1];
+    const userName = parts[parts.length - 2];
     const [tasks, setTasks] = useState([]);
 
     /**

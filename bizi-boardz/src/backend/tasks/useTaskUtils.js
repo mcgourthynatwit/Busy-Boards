@@ -143,13 +143,14 @@ const useTaskUtils = () => {
             "description": description,
             "priority": priority,
             "length": length,
-            "currentProgress": currentProgress
+            "currentProgress": currentProgress,
+            "sprint" : 0, 
         }
         const newTaskState = [...existingTasks, newTaskData];
         return await syncTasks(newTaskState, fileSHA, `System pushed new task ${taskName} from user ${userName}`);
     }
 
-    const updateTask = async ({taskID, taskName, assignee, description, priority, length, currentProgress}) => {
+    const updateTask = async ({taskID, taskName, assignee, description, priority, length, currentProgress, sprintStatus}) => {
         // get current tasks array
         const [existingTasks, fileSHA] = await getTasks()
             .catch((error) => {
@@ -167,7 +168,8 @@ const useTaskUtils = () => {
             "description": description,
             "priority": priority,
             "length": length,
-            "currentProgress": currentProgress
+            "currentProgress": currentProgress,
+            "sprint": sprintStatus
         } 
         
         const newTaskState = [...updatedTasks, newTaskData];

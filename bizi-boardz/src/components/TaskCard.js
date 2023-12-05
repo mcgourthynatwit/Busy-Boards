@@ -17,6 +17,7 @@ export default function TaskCard({
   taskLength,
   description,
   currentProgress,
+  sprintStatus
 }) {
   const [editTaskPopup, setEditTaskPopup] = useState(false);
   const [whiteboardPopup, setWhiteboardPopup] = useState(false);
@@ -56,6 +57,7 @@ export default function TaskCard({
         ogTaskLength={taskLength}
         ogProgress={currentProgress}
         ogDescription={description}
+        sprint = {sprintStatus}
       />
       <PopupWhiteboard
         trigger={whiteboardPopup}

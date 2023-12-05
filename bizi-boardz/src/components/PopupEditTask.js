@@ -21,7 +21,8 @@ export default function PopupEditTask({
   ogProgress,
   ogPriority,
   ogTaskLength,
-  ogDescription
+  ogDescription,
+  sprint
 }) {
 
   const [taskName, setTaskName] = useState(ogTaskName);
@@ -43,6 +44,7 @@ export default function PopupEditTask({
       priority: priority,
       length: length,
       currentProgress: currentProgress,
+      sprintStatus: sprint,
       });
     setTrigger(false);
   }

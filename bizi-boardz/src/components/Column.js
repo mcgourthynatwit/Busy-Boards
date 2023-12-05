@@ -22,6 +22,7 @@ export default function Column({ columnHeader }) {
                   priority={task.priority}
                   description={task.description}
                   currentProgress={task.currentProgress}
+                  sprintStatus = {task.sprint}
                 />
               ) : (
                 ""

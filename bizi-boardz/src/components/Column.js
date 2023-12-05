@@ -11,8 +11,9 @@ export default function Column({ columnHeader }) {
       <div className="columnBody">
         <ul>
           {tasks &&
-            tasks.map((task) =>
-              task.currentProgress === columnHeader ? (
+            tasks.map((task) => {
+              if(task.currentProgress === columnHeader && task.sprint === 1) {
+              return (
                 <TaskCard
                   key={task.taskID}
                   taskID={task.taskID}
@@ -24,10 +25,11 @@ export default function Column({ columnHeader }) {
                   currentProgress={task.currentProgress}
                   sprintStatus = {task.sprint}
                 />
-              ) : (
-                ""
-              )
-            )}
+              ) 
+              } else {
+                return null
+              }
+            })}
           {/* <TaskCard
             taskName="THIS IS A TEST STORY NAME"
             assignee="Tim Magee"

@@ -17,19 +17,74 @@ import { create } from "lodash";
 
 const generator = rough.generator();
 
-function createElement(x1, y1, x2, y2, type) {
-  const roughElement =
-    type === "line"
-      ? generator.line(x1, y1, x2, y2, { stroke: "white" })
-      : generator.rectangle(x1, y1, x2 - x1, y2 - y1, { stroke: "white" });
-  return { x1, y1, x2, y2, roughElement };
-}
-
 //trigger decides if the popup is visible
 export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
+  const [color, setColor] = useState("white");
   const [elements, setElements] = useState([]);
-  const [drawing, setDrawing] = useState(false);
-  const [elementType, setElementType] = useState("line");
+  const [action, setAction] = useState("none");
+  const [tool, setTool] = useState("line");
+  const [selectedElement, setSelectedElement] = useState(null);
+
+  let colorToHex = {
+    white: "#E7E5DF",
+    red: "red",
+    blue: "dodgerblue",
+    green: "limegreen",
+  };
+
+  function createElement(id, x1, y1, x2, y2, type) {
+    let roughElement;
+    if (type === "line")
+      roughElement = generator.line(x1, y1, x2, y2, {
+        stroke: `${colorToHex[color]}`,
+      });
+    else if (type === "rectangle")
+      roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, {
+        stroke: `${colorToHex[color]}`,
+      });
+    else if (type === "ellipse")
+      roughElement = generator.ellipse(x1, y1, 2 * (x2 - x1), 2 * (y2 - y1), {
+        stroke: `${colorToHex[color]}`,
+      });
+    return { id, x1, y1, x2, y2, type, roughElement };
+  }
+
+  function isWithinElement(x, y, element) {
+    console.log("isWithinElement()");
+    const { type, x1, x2, y1, y2 } = element;
+    if (type === "rectangle") {
+      const minX = Math.min(x1, x2);
+      const maxX = Math.max(x1, x2);
+      const minY = Math.min(y1, y2);
+      const maxY = Math.max(y1, y2);
+      return x >= minX && x <= maxX && y >= minY && y <= maxY;
+    } else if (type === "line") {
+      const a = { x: x1, y: y1 };
+      const b = { x: x2, y: y2 };
+      const c = { x, y };
+      const offset = distance(a, b) - (distance(a, c) + distance(b, c));
+      return Math.abs(offset) < 1;
+    } else if (type === "ellipse") {
+      console.log(element);
+      const radiusX = x2 - x1;
+      const radiusY = y2 - y1;
+      const centerX = x2 - radiusX;
+      const centerY = y2 - radiusY;
+      return (
+        Math.pow(x - centerX, 2) / Math.pow(radiusX, 2) +
+          Math.pow(y - centerY, 2) / Math.pow(radiusY, 2) <=
+        1
+      );
+    }
+  }
+
+  const distance = (a, b) =>
+    Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+
+  function getElementAtPosition(x, y, elements) {
+    console.log("getElementsAtPosition()");
+    return elements.find((element) => isWithinElement(x, y, element));
+  }
 
   useLayoutEffect(() => {
     const canvas = document.getElementById("canvas");
@@ -44,42 +99,80 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     }
   }, [elements]);
 
+  function updateElement(id, x1, y1, x2, y2, type) {
+    console.log("updateElement()");
+    const updatedElement = createElement(id, x1, y1, x2, y2, type);
+
+    const elementsCopy = [...elements];
+    elementsCopy[id] = updatedElement;
+    setElements(elementsCopy);
+  }
+
   const handleMouseDown = (event) => {
-    setDrawing(true);
-    console.log("mouse down");
-
     const { offsetX, offsetY } = event.nativeEvent;
+    if (tool === "selection") {
+      console.log("before getElementAtPosition");
+      const element = getElementAtPosition(offsetX, offsetY, elements);
+      console.log(element);
+      if (element) {
+        const shapeOffsetX = offsetX - element.x1;
+        const shapeOffsetY = offsetY - element.y1;
+        setSelectedElement({ ...element, shapeOffsetX, shapeOffsetY });
+        setAction("moving");
+      }
+    } else {
+      console.log("mouse down");
 
-    const element = createElement(
-      offsetX,
-      offsetY,
-      offsetX,
-      offsetY,
-      elementType
-    );
-    setElements((prevState) => [...prevState, element]);
+      const id = elements.length;
+      const element = createElement(
+        id,
+        offsetX,
+        offsetY,
+        offsetX,
+        offsetY,
+        tool
+      );
+      setElements((prevState) => [...prevState, element]);
+
+      setAction("drawing");
+    }
   };
 
   const handleMouseMove = (event) => {
-    if (!drawing) return;
-
     const { offsetX, offsetY } = event.nativeEvent;
-    const index = elements.length - 1;
-    const { x1, y1 } = elements[index];
-    const updatedElement = createElement(x1, y1, offsetX, offsetY, elementType);
 
-    const elementsCopy = [...elements];
-    elementsCopy[index] = updatedElement;
-    setElements(elementsCopy);
-    console.log(offsetX, offsetY);
+    if (tool === "selection") {
+      event.target.style.cursor = getElementAtPosition(
+        offsetX,
+        offsetY,
+        elements
+      )
+        ? "grab"
+        : "default";
+    }
+    if (action === "drawing") {
+      const index = elements.length - 1;
+      const { x1, y1 } = elements[index];
+      updateElement(index, x1, y1, offsetX, offsetY, tool);
+      console.log(offsetX, offsetY);
+    } else if (action === "moving") {
+      const { id, x1, x2, y1, y2, type, shapeOffsetX, shapeOffsetY } =
+        selectedElement;
+      const width = x2 - x1;
+      const height = y2 - y1;
+      const newX1 = offsetX - shapeOffsetX;
+      const newY1 = offsetY - shapeOffsetY;
+      updateElement(id, newX1, newY1, newX1 + width, newY1 + height, type);
+    }
   };
 
   const handleMouseUp = () => {
-    setDrawing(false);
+    setAction("none");
     console.log("mouse up");
   };
 
   function changeColor(color) {
+    setColor(color);
     const tools = document.getElementsByClassName("tool-btn");
     const divider = document.getElementsByClassName("vertical-divider");
     for (let i = 0; i < tools.length; i++) {
@@ -125,41 +218,67 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   */}
             <input
               type="radio"
-              id="line"
-              checked={elementType === "line"}
-              onChange={() => setElementType("line")}
+              id="selection"
+              checked={tool === "selection"}
+              onChange={() => setTool("selection")}
             />
-            <label htmlFor="line">Line</label>
+            <label htmlFor="selection" className="tool-btn">
+              <FontAwesomeIcon
+                icon={faArrowPointer}
+                style={{ height: "80%" }}
+              />
+            </label>
+            <input
+              type="radio"
+              id="line"
+              checked={tool === "line"}
+              onChange={() => setTool("line")}
+            />
+            <label htmlFor="line" className="tool-btn">
+              <FontAwesomeIcon icon={faMinus} style={{ height: "100%" }} />
+            </label>
+
             <input
               type="radio"
               id="rectangle"
-              checked={elementType === "rectangle"}
-              onChange={() => setElementType("rectangle")}
+              checked={tool === "rectangle"}
+              onChange={() => setTool("rectangle")}
             />
-            <label htmlFor="rectangle">Square</label>
+            <label htmlFor="rectangle" className="tool-btn">
+              <FontAwesomeIcon icon={faSquareFull} style={{ height: "80%" }} />
+            </label>
+            <input
+              type="radio"
+              id="ellipse"
+              checked={tool === "ellipse"}
+              onChange={() => setTool("ellipse")}
+            />
+            <label htmlFor="ellipse" className="tool-btn">
+              <FontAwesomeIcon icon={faCircle} style={{ height: "80%" }} />
+            </label>
             <div className="vertical-divider"></div>
-            <div className="tool-btn">
+            <div className="color-btn">
               <FontAwesomeIcon
                 icon={faCircle}
                 style={{ color: "#E7E5DF", height: "100%" }}
                 onClick={() => changeColor("white")}
               />
             </div>
-            <div className="tool-btn">
+            <div className="color-btn">
               <FontAwesomeIcon
                 icon={faCircle}
                 style={{ color: "red", height: "100%" }}
                 onClick={() => changeColor("red")}
               />
             </div>
-            <div className="tool-btn">
+            <div className="color-btn">
               <FontAwesomeIcon
                 icon={faCircle}
                 style={{ color: "dodgerblue", height: "100%" }}
                 onClick={() => changeColor("blue")}
               />
             </div>
-            <div className="tool-btn">
+            <div className="color-btn">
               <FontAwesomeIcon
                 icon={faCircle}
                 style={{ color: "limegreen", height: "100%" }}

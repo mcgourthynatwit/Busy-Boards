@@ -54,7 +54,18 @@ export default function TaskLine({
           ogDescription={description}
           sprint = {sprintStatus}
       />
-      <PopupLocation trigger={locationPopup} setTrigger={setLocationPopup} />
+      <PopupLocation 
+      trigger={locationPopup} 
+      setTrigger={setLocationPopup} 
+      taskID={taskID}
+      ogTaskName={taskName}
+      ogAssignee={assignee}
+      ogPriority={priority}
+      ogTaskLength={taskLength}
+      ogProgress={currentProgress}
+      ogDescription={description}
+      sprint = {sprintStatus}
+      />
     </>
   );
 }

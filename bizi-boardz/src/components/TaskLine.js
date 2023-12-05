@@ -7,10 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function TaskLine({
-  taskName = "Aliqua ut mollit laborum deserunt in.Occaecat ea occaecat ullamco labore.",
-  assignee = "Hubert Wolfeschlegelsteinhausenbergerdorff",
-  priority = "-",
-  taskLength = 1,
+  taskID ,
+  taskName ,
+  assignee,
+  priority,
+  taskLength,
+  description,
+  currentProgress,
+  sprintStatus
 }) {
   const [editTaskPopup, setEditTaskPopup] = useState(false);
   const [locationPopup, setLocationPopup] = useState(false);
@@ -39,12 +43,16 @@ export default function TaskLine({
         </div>
       </div>
       <PopupEditTask
-        trigger={editTaskPopup}
-        setTrigger={setEditTaskPopup}
-        taskName={taskName}
-        assignee={assignee}
-        priority={priority}
-        taskLength={taskLength}
+          trigger={editTaskPopup}
+          setTrigger={setEditTaskPopup}
+          taskID={taskID}
+          ogTaskName={taskName}
+          ogAssignee={assignee}
+          ogPriority={priority}
+          ogTaskLength={taskLength}
+          ogProgress={currentProgress}
+          ogDescription={description}
+          sprint = {sprintStatus}
       />
       <PopupLocation trigger={locationPopup} setTrigger={setLocationPopup} />
     </>
@@ -62,6 +70,6 @@ function decidePriority(priority) {
 }
 
 function decideTaskLength(taskLength) {
-  if (taskLength <= 0) return "-";
-  else return taskLength.toFixed(1).replace(".0", "");
+  if (isNaN(parseInt(taskLength))) return "-";
+  else return taskLength;
 }

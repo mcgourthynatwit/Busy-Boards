@@ -35,14 +35,17 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   function createElement(id, x1, y1, x2, y2, type) {
     let roughElement;
     if (type === "line")
+      //startX, startY, endX, endY
       roughElement = generator.line(x1, y1, x2, y2, {
         stroke: `${colorToHex[color]}`,
       });
     else if (type === "rectangle")
+      //startX, startY, width, height
       roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, {
         stroke: `${colorToHex[color]}`,
       });
     else if (type === "ellipse")
+      //centerX, centerY, width, height
       roughElement = generator.ellipse(x1, y1, 2 * (x2 - x1), 2 * (y2 - y1), {
         stroke: `${colorToHex[color]}`,
       });
@@ -50,7 +53,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   }
 
   function isWithinElement(x, y, element) {
-    console.log("isWithinElement()");
     const { type, x1, x2, y1, y2 } = element;
     if (type === "rectangle") {
       const minX = Math.min(x1, x2);
@@ -73,7 +75,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       return (
         Math.pow(x - centerX, 2) / Math.pow(radiusX, 2) +
           Math.pow(y - centerY, 2) / Math.pow(radiusY, 2) <=
-        1
+        1.05
       );
     }
   }
@@ -82,10 +84,11 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 
   function getElementAtPosition(x, y, elements) {
-    console.log("getElementsAtPosition()");
+    //finds the first element at position clicked
     return elements.find((element) => isWithinElement(x, y, element));
   }
 
+  //canvas "main" (initializes canvas and draws each element)
   useLayoutEffect(() => {
     const canvas = document.getElementById("canvas");
     console.log(canvas);
@@ -99,8 +102,8 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     }
   }, [elements]);
 
+  //replaces the element at the wanted index with a newer version
   function updateElement(id, x1, y1, x2, y2, type) {
-    console.log("updateElement()");
     const updatedElement = createElement(id, x1, y1, x2, y2, type);
 
     const elementsCopy = [...elements];
@@ -109,11 +112,10 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   }
 
   const handleMouseDown = (event) => {
+    // x and y values based on the top left of the canvas
     const { offsetX, offsetY } = event.nativeEvent;
     if (tool === "selection") {
-      console.log("before getElementAtPosition");
       const element = getElementAtPosition(offsetX, offsetY, elements);
-      console.log(element);
       if (element) {
         const shapeOffsetX = offsetX - element.x1;
         const shapeOffsetY = offsetY - element.y1;
@@ -139,8 +141,10 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   };
 
   const handleMouseMove = (event) => {
+    // x and y values based on the top left of the canvas
     const { offsetX, offsetY } = event.nativeEvent;
 
+    //change cursor image
     if (tool === "selection") {
       event.target.style.cursor = getElementAtPosition(
         offsetX,
@@ -156,10 +160,12 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       updateElement(index, x1, y1, offsetX, offsetY, tool);
       console.log(offsetX, offsetY);
     } else if (action === "moving") {
+      //grabbing from state variable
       const { id, x1, x2, y1, y2, type, shapeOffsetX, shapeOffsetY } =
         selectedElement;
       const width = x2 - x1;
       const height = y2 - y1;
+      //keeps shape in place when initially moved
       const newX1 = offsetX - shapeOffsetX;
       const newY1 = offsetY - shapeOffsetY;
       updateElement(id, newX1, newY1, newX1 + width, newY1 + height, type);

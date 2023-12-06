@@ -71,6 +71,7 @@ export default function PopupLocation({
                 name="wanted-backlog-section"
                 value="Backlog"
                 onChange={() => setTaskLocation(0)}
+                defaultChecked={sprint === 0}
                 />
               <label for="backlog">Backlog</label>
               <input
@@ -79,6 +80,7 @@ export default function PopupLocation({
                 name="wanted-backlog-section"
                 value="This Sprint"
                 onChange={() => setTaskLocation(1)}
+                defaultChecked={sprint === 1}
                 />
               <label for="this-sprint">This Sprint</label>
               <input
@@ -87,6 +89,7 @@ export default function PopupLocation({
                 name="wanted-backlog-section"
                 value="Upcoming Sprint"
                 onChange={() => setTaskLocation(2)}
+                defaultChecked={sprint === 2}
                 />
               <label for="upcoming-sprint">Upcoming Sprint</label>
             </div>

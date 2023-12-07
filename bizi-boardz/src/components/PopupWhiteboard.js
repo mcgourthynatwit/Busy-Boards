@@ -9,21 +9,27 @@ import {
   faArrowRight,
   faSquareFull,
   faFont,
+  faCropSimple,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import { React, useLayoutEffect, useState } from "react";
+import { React, useEffect, useLayoutEffect, useState, useReducer } from "react";
 import rough from "roughjs/bundled/rough.esm";
-import { create } from "lodash";
 
 const generator = rough.generator();
 
 //trigger decides if the popup is visible
 export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
+  const [emptyState, setEmptyState] = useState(1);
   const [color, setColor] = useState("white");
   const [elements, setElements] = useState([]);
   const [action, setAction] = useState("none");
   const [tool, setTool] = useState("line");
   const [selectedElement, setSelectedElement] = useState(null);
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [startPanMousePosition, setStartPanMousePosition] = useState({
+    x: 0,
+    y: 0,
+  });
 
   let colorToHex = {
     white: "#E7E5DF",
@@ -80,8 +86,9 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     }
   }
 
-  const distance = (a, b) =>
+  const distance = (a, b) => {
     Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  };
 
   function getElementAtPosition(x, y, elements) {
     //finds the first element at position clicked
@@ -91,16 +98,36 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   //canvas "main" (initializes canvas and draws each element)
   useLayoutEffect(() => {
     const canvas = document.getElementById("canvas");
-    console.log(canvas);
     if (canvas) {
       const context = canvas.getContext("2d");
-      context.clearRect(0, 0, canvas.width, canvas.height);
-
       const roughCanvas = rough.canvas(canvas);
 
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      context.save();
+      context.translate(panOffset.x, panOffset.y);
+
+      context.fillRect(50, 50, 100, 100);
+
       elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
+      context.restore();
     }
-  }, [elements]);
+  }, [elements, panOffset]);
+
+  useEffect(() => {
+    const panFunction = (event) => {
+      console.log(event);
+      setPanOffset((prevState) => ({
+        x: prevState.x - event.deltaX,
+        y: prevState.y - event.deltaY,
+      }));
+    };
+
+    document.addEventListener("wheel", panFunction);
+    return () => {
+      document.removeEventListener("wheel", panFunction);
+    };
+  }, []);
 
   //replaces the element at the wanted index with a newer version
   function updateElement(id, x1, y1, x2, y2, type) {
@@ -111,9 +138,22 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     setElements(elementsCopy);
   }
 
+  const getMouseCoordinates = (event) => {
+    const offsetX = event.nativeEvent.offsetX - panOffset.x;
+    const offsetY = event.nativeEvent.offsetY - panOffset.y;
+    return { offsetX, offsetY };
+  };
+
   const handleMouseDown = (event) => {
     // x and y values based on the top left of the canvas
-    const { offsetX, offsetY } = event.nativeEvent;
+    const { offsetX, offsetY } = getMouseCoordinates(event);
+
+    if (event.button === 2) {
+      setAction("panning");
+      setStartPanMousePosition({ x: offsetX, y: offsetY });
+      return;
+    }
+
     if (tool === "selection") {
       const element = getElementAtPosition(offsetX, offsetY, elements);
       if (element) {
@@ -142,7 +182,17 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
 
   const handleMouseMove = (event) => {
     // x and y values based on the top left of the canvas
-    const { offsetX, offsetY } = event.nativeEvent;
+    const { offsetX, offsetY } = getMouseCoordinates(event);
+
+    if (action === "panning") {
+      const deltaX = offsetX - startPanMousePosition.x;
+      const deltaY = offsetY - startPanMousePosition.y;
+      setPanOffset((prevStats) => ({
+        x: prevStats.x + deltaX,
+        y: prevStats.y + deltaY,
+      }));
+      return;
+    }
 
     //change cursor image
     if (tool === "selection") {

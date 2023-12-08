@@ -17,12 +17,6 @@ const useTaskUtils = () => {
     const userName = parts[parts.length - 2];
     const [tasks, setTasks] = useState([]);
 
-    /**
-     * Creates file task.JSON in repository
-     * If request returns error 422, task.JSON already exists
-     * @param {*} path should be = "task.JSON"
-     * @returns [taskData[], sha]
-     */
     const getRepoUsers = async () => {
         const octokit = new Octokit({ auth: pat })
         const users = await octokit.request(`GET /repos/${userName}/${repoName}/collaborators`)
@@ -30,6 +24,12 @@ const useTaskUtils = () => {
         return loginValues;
     }
 
+    /**
+     * Creates file task.JSON in repository
+     * If request returns error 422, task.JSON already exists
+     * @param {*} path should be = "task.JSON"
+     * @returns [taskData[], sha]
+     */
     const createTaskJSONFile = async (path) => {
         const initialContent = [];
         try {
@@ -94,7 +94,6 @@ const useTaskUtils = () => {
 
         const updateTimer = setInterval(() => {
             fetchAndUpdateTasks();
-            getRepoUsers();
         }, 1000);
         fetchAndUpdateTasks();
         

@@ -95,7 +95,7 @@ const useTaskUtils = () => {
         const updateTimer = setInterval(() => {
             fetchAndUpdateTasks();
             getRepoUsers();
-        }, 5000);
+        }, 1000);
         fetchAndUpdateTasks();
         
         return () => {

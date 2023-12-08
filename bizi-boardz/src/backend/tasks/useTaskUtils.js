@@ -131,7 +131,7 @@ const useTaskUtils = () => {
             // Successful sync, set task state
             let t = setTimeout(() => {
                 setSyncing(false);
-            }, 3000) 
+            }, 1500) 
             setTimer(t);
             return true;
         } catch (error) {

@@ -133,7 +133,7 @@ const useTaskUtils = () => {
             return true;
         } catch (error) {
             console.log(error);
-
+            setSyncing(false);
             // Sync failed, file sha may have changed
             setTasks(tasks);
             return false;

@@ -121,9 +121,6 @@ const useTaskUtils = () => {
         const path = "task.JSON";
         // Push newTaskState to github
         try {
-            if(timer){
-                clearTimeout(timer);
-            }
             console.log("Sync tasks calling create...");
             setTasks(newTaskState);
             await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(newTaskState, null, 2)), syncMessage, task_JSON_sha);
@@ -150,6 +147,9 @@ const useTaskUtils = () => {
      * @returns true if task creation successful, false if otherwise
      */
     const createTask = async ({ taskName, assignee, description, priority, length, currentProgress }) => {
+        if(timer){
+            clearTimeout(timer);
+        }
         setSyncing(true);
         const [existingTasks, fileSHA] = await getTasks() // Must pull most recent changes first
             .catch((error) => {
@@ -175,6 +175,9 @@ const useTaskUtils = () => {
 
     const updateTask = async ({ taskID, taskName, assignee, description, priority, length, currentProgress, sprintStatus }) => {
         // get current tasks array
+        if(timer){
+            clearTimeout(timer);
+        }
         setSyncing(true);
         const [existingTasks, fileSHA] = await getTasks()
             .catch((error) => {
@@ -203,6 +206,9 @@ const useTaskUtils = () => {
     }
 
     const delTask = async (taskUUID) => {
+        if(timer){
+            clearTimeout(timer);
+        }
         setSyncing(true);
         console.log('deleting task ', taskUUID)
         const [existingTasks, fileSHA] = await getTasks()

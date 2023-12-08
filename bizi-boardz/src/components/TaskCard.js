@@ -23,6 +23,7 @@ export default function TaskCard({
 }) {
   const [editTaskPopup, setEditTaskPopup] = useState(false);
   const [whiteboardPopup, setWhiteboardPopup] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   //stops whiteboard click from activating the Edit Task Popup
   const ignoreParentOnClick = (e) => {
@@ -48,6 +49,17 @@ export default function TaskCard({
       currentProgress,
       sprintStatus 
     },
+    end: (item, monitor) => {
+      setIsVisible(false);
+      const getResult = async () => {
+        let { updateSuccess } = monitor.getDropResult();
+        updateSuccess = await updateSuccess;
+        if (!updateSuccess){
+          setIsVisible(true); //Reset visible in update failure
+        }
+      }
+     getResult();
+    },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -55,6 +67,9 @@ export default function TaskCard({
 
 
   console.log({ taskName, taskLength });
+  if(!isVisible){
+    return null;
+  }
   return (
     <>
       <div className="taskCard" onClick={() => setEditTaskPopup(true)} ref={drag} style={{

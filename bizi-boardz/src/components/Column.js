@@ -8,7 +8,7 @@ export default function Column({ columnHeader }) {
   const { tasks, updateTask } = useTaskContext();
 
   const saveTaskChanges = async (taskID, taskName, assignee, description, priority, length, sprintStatus) => {
-    const updateError = await updateTask({
+    const success = await updateTask({
       taskID: taskID,
       taskName: taskName,
       assignee: assignee,
@@ -18,6 +18,7 @@ export default function Column({ columnHeader }) {
       currentProgress: columnHeader,
       sprintStatus: sprintStatus,
       });
+      return success;
   }
 
   //Drag and drop functionality
@@ -33,6 +34,7 @@ export default function Column({ columnHeader }) {
         length,
         sprintStatus
       )
+      return { updateSuccess }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

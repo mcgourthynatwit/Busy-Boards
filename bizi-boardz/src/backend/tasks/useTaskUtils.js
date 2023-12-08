@@ -92,9 +92,9 @@ const useTaskUtils = () => {
             });
         }
 
-        const updateTimer = setInterval(() => {
-            fetchAndUpdateTasks();
-        }, 1000);
+         const updateTimer = setInterval(() => {
+             fetchAndUpdateTasks();
+         }, 1000);
         fetchAndUpdateTasks();
         
         return () => {
@@ -116,15 +116,17 @@ const useTaskUtils = () => {
         // Push newTaskState to github
         try {
             console.log("Sync tasks calling create...");
+            setTasks(newTaskState);
             await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(newTaskState, null, 2)), syncMessage, task_JSON_sha);
 
             // Successful sync, set task state
-            setTasks(newTaskState);
+            
             return true;
         } catch (error) {
             console.log(error);
 
             // Sync failed, file sha may have changed
+            setTasks(tasks);
             return false;
         }
     }

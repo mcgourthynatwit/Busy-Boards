@@ -9,7 +9,7 @@ import { useTaskContext } from "../providers/TaskProvider";
 //trigger decides if the popup is visible
 //setTrigger takes in setEditTaskPopup from TaskCard.js, which changes the trigger variable
 export default function PopupNewTask({ trigger, setTrigger }) {
-  const { createTask } = useTaskContext();
+  const { createTask, getRepoUsers } = useTaskContext();
   const [taskName, setTaskName] = useState("");
   const [assignee, setAssignee] = useState("");
   const [description, setDescription] = useState("");

@@ -23,6 +23,13 @@ const useTaskUtils = () => {
      * @param {*} path should be = "task.JSON"
      * @returns [taskData[], sha]
      */
+    const getRepoUsers = async () => {
+        const octokit = new Octokit({ auth: pat })
+        const users = await octokit.request(`GET /repos/${userName}/${repoName}/collaborators`)
+        const loginValues = users.data.map(user => user.login);
+        return loginValues;
+    }
+
     const createTaskJSONFile = async (path) => {
         const initialContent = [];
         try {
@@ -87,7 +94,8 @@ const useTaskUtils = () => {
 
         const updateTimer = setInterval(() => {
             fetchAndUpdateTasks();
-        }, 1000);
+            getRepoUsers();
+        }, 5000);
         fetchAndUpdateTasks();
         
         return () => {
@@ -195,7 +203,10 @@ const useTaskUtils = () => {
         }
         return await syncTasks(updatedTasks, fileSHA, `System removed task with UUID ${taskUUID} by user ${userName}`);
     }
-    return { createTask, delTask, updateTask, tasks };
+    return { createTask, delTask, updateTask, getRepoUsers, tasks };
+
+    
+    
 }
 
 export default useTaskUtils;

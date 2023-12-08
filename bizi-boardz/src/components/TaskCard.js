@@ -67,7 +67,7 @@ export default function TaskCard({
   });
 
 
-  console.log({ taskName, taskLength });
+  //console.log({ taskName, taskLength });
   if(!isVisible){
     return null;
   }
@@ -124,8 +124,8 @@ function decidePriority(priority) {
 }
 
 function decideTaskLength(taskLength) {
-  console.log(parseInt(taskLength));
-  console.log(typeof parseInt(taskLength));
+  //console.log(parseInt(taskLength));
+  //console.log(typeof parseInt(taskLength));
   if (isNaN(parseInt(taskLength))) return "-";
   else return taskLength;
 }

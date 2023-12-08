@@ -16,6 +16,7 @@ const useTaskUtils = () => {
     const repoName = parts[parts.length - 1];
     const userName = parts[parts.length - 2];
     const [tasks, setTasks] = useState([]);
+    const [lastSync, setLastSync] = useState(new Date().getTime());
 
     const getRepoUsers = async () => {
         const octokit = new Octokit({ auth: pat })
@@ -84,24 +85,28 @@ const useTaskUtils = () => {
         const fetchAndUpdateTasks = () => {
             console.log("Fetching new tasks");
             getTasks()
-            .then(([taskData]) => {
-                setTasks(taskData);
-            })
-            .catch((error) => {
-                 console.log("Useeffect failed to get tasks")
-            });
+                .then(([taskData]) => {
+                    if (new Date().getTime() - lastSync >= 1000) { //To prevent timer update from over-writing a user's manual sync with a cached response
+                        setTasks(taskData);
+                    }
+                })
+                .catch((error) => {
+                    console.log("Useeffect failed to get tasks")
+                });
         }
 
-         const updateTimer = setInterval(() => {
-             fetchAndUpdateTasks();
-         }, 1000);
+        const updateTimer = setInterval(() => {
+            if (new Date().getTime() - lastSync >= 1000) {
+                fetchAndUpdateTasks();
+            }
+        }, 1000);
         fetchAndUpdateTasks();
-        
+
         return () => {
             clearInterval(updateTimer);
         }
 
-    }, [pat, activeRepo, userName, isAuthenticated]);
+    }, [pat, activeRepo, userName, isAuthenticated, lastSync]);
 
 
     /**
@@ -120,7 +125,7 @@ const useTaskUtils = () => {
             await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(newTaskState, null, 2)), syncMessage, task_JSON_sha);
 
             // Successful sync, set task state
-            
+
             return true;
         } catch (error) {
             console.log(error);
@@ -138,6 +143,7 @@ const useTaskUtils = () => {
      * @returns true if task creation successful, false if otherwise
      */
     const createTask = async ({ taskName, assignee, description, priority, length, currentProgress }) => {
+        setLastSync(new Date().getTime());
         const [existingTasks, fileSHA] = await getTasks() // Must pull most recent changes first
             .catch((error) => {
                 console.log("Create task failed to get current tasks!", error);
@@ -153,14 +159,15 @@ const useTaskUtils = () => {
             "priority": priority,
             "length": length,
             "currentProgress": currentProgress,
-            "sprint" : 0, 
+            "sprint": 0,
         }
         const newTaskState = [...existingTasks, newTaskData];
         return await syncTasks(newTaskState, fileSHA, `System pushed new task ${taskName} from user ${userName}`);
     }
 
-    const updateTask = async ({taskID, taskName, assignee, description, priority, length, currentProgress, sprintStatus}) => {
+    const updateTask = async ({ taskID, taskName, assignee, description, priority, length, currentProgress, sprintStatus }) => {
         // get current tasks array
+        setLastSync(new Date().getTime());
         const [existingTasks, fileSHA] = await getTasks()
             .catch((error) => {
                 console.log("Update task failed to get current tasks!", error);
@@ -169,9 +176,9 @@ const useTaskUtils = () => {
 
         // filter out old task create new array 
         const updatedTasks = existingTasks.filter(task => task.taskID !== taskID);
-        
+
         const newTaskData = {
-            "taskID": taskID, 
+            "taskID": taskID,
             "name": taskName,
             "assignee": assignee,
             "description": description,
@@ -179,14 +186,15 @@ const useTaskUtils = () => {
             "length": length,
             "currentProgress": currentProgress,
             "sprint": sprintStatus
-        } 
-        
+        }
+
         const newTaskState = [...updatedTasks, newTaskData];
         console.log("Update task calling sync task with sha", fileSHA);
         return await syncTasks(newTaskState, fileSHA, `System pushed updated task ${taskName} from user ${userName}`);
     }
 
     const delTask = async (taskUUID) => {
+        setLastSync(new Date().getTime());
         console.log('deleting task ', taskUUID)
         const [existingTasks, fileSHA] = await getTasks()
             .catch((error) => {
@@ -206,8 +214,8 @@ const useTaskUtils = () => {
     }
     return { createTask, delTask, updateTask, getRepoUsers, tasks };
 
-    
-    
+
+
 }
 
 export default useTaskUtils;

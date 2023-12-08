@@ -1,15 +1,103 @@
 import "../styles/MyTasksSection.css";
 import { useTaskContext } from "../providers/TaskProvider";
+import MyTaskLine from "../components/MyTaskLine.js";
+import { useAuthUtils } from "../backend/octokit/useAuthUtils.js";
 
 export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
+  const { userName } = useAuthUtils();
   const { tasks } = useTaskContext();
   return (
     <>
-      <div className="mytasks-section-header">{sectionHeader}</div>
-      <div className="mytasks-section-body">
-        <ul>
-          <li>{tasks.map((task) => `${task.name}\n`)}</li>
-        </ul>
+      <div className="my-tasks-section">
+        <div className="my-tasks-section-header">{sectionHeader}</div>
+        <div className="my-tasks-section-body">
+          <ul>
+            {
+              //First = In Progress, In Sprint
+              tasks.map((task) =>
+                task.assignee === userName &&
+                task.currentProgress === "In Progress" &&
+                task.sprint === 1 ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
+              )
+            }
+            {
+              //Second = To Do, In Sprint
+              tasks.map((task) =>
+                task.assignee === userName &&
+                task.currentProgress === "To Do" &&
+                task.sprint === 1 ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
+              )
+            }
+            {
+              //Third = In Progress, not in sprint
+              tasks.map((task) =>
+                task.assignee === userName &&
+                task.currentProgress === "In Progress" &&
+                task.sprint != 1 ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
+              )
+            }
+            {
+              //Fourth = To Do, not in sprint
+              tasks.map((task) =>
+                task.assignee === userName &&
+                task.currentProgress === "To Do" &&
+                task.sprint != 1 ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
+              )
+            }
+          </ul>
+        </div>
       </div>
     </>
   );

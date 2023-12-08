@@ -1,17 +1,19 @@
 import "../styles/TaskCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChalkboardUser } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PopupEditTask from "./PopupEditTask";
 import React from "react";
 import PopupWhiteboard from "./PopupWhiteboard";
 import { take } from "lodash";
+import { useDrag } from "react-dnd";
+import { getEmptyImage } from 'react-dnd-html5-backend'
 
 //display task name, assignee, story/task, priority (!, !!, !!!), length
 export default function TaskCard({
-  key ,
-  taskID ,
-  taskName ,
+  key,
+  taskID,
+  taskName,
   assignee,
   priority,
   taskLength,
@@ -27,10 +29,37 @@ export default function TaskCard({
     e.stopPropagation();
     setWhiteboardPopup(true);
   };
+
+
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true })
+  }, [])
+
+  //Drag and drop functionality
+  const [{ isDragging }, drag, preview] = useDrag({
+    type: "task-card",
+    item: { 
+      taskID,
+      taskName,
+      assignee,
+      priority,
+      taskLength,
+      description,
+      currentProgress,
+      sprintStatus 
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+
   console.log({ taskName, taskLength });
   return (
     <>
-      <div className="taskCard" onClick={() => setEditTaskPopup(true)}>
+      <div className="taskCard" onClick={() => setEditTaskPopup(true)} ref={drag} style={{
+        opacity: isDragging ? "0.5" : "1",
+      }}>
         <div className="taskCardHeader">
           <div className="taskName">{taskName}</div>
           <div className="assignee">{assignee}</div>
@@ -57,7 +86,7 @@ export default function TaskCard({
         ogTaskLength={taskLength}
         ogProgress={currentProgress}
         ogDescription={description}
-        sprint = {sprintStatus}
+        sprint={sprintStatus}
       />
       <PopupWhiteboard
         trigger={whiteboardPopup}

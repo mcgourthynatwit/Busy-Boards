@@ -16,7 +16,7 @@ const useTaskUtils = () => {
     const repoName = parts[parts.length - 1];
     const userName = parts[parts.length - 2];
     const [tasks, setTasks] = useState([]);
-    const [lastSync, setLastSync] = useState(new Date().getTime());
+    const [syncing, setSyncing] = useState(false);
 
     const getRepoUsers = async () => {
         const octokit = new Octokit({ auth: pat })
@@ -86,7 +86,7 @@ const useTaskUtils = () => {
             console.log("Fetching new tasks");
             getTasks()
                 .then(([taskData]) => {
-                    if (new Date().getTime() - lastSync >= 1000) { //To prevent timer update from over-writing a user's manual sync with a cached response
+                    if (!syncing) { //To prevent timer update from over-writing a user's manual sync with a cached response
                         setTasks(taskData);
                     }
                 })
@@ -96,7 +96,7 @@ const useTaskUtils = () => {
         }
 
         const updateTimer = setInterval(() => {
-            if (new Date().getTime() - lastSync >= 1000) {
+            if (!syncing) {
                 fetchAndUpdateTasks();
             }
         }, 1000);
@@ -106,7 +106,7 @@ const useTaskUtils = () => {
             clearInterval(updateTimer);
         }
 
-    }, [pat, activeRepo, userName, isAuthenticated, lastSync]);
+    }, [pat, activeRepo, userName, isAuthenticated, syncing]);
 
 
     /**
@@ -116,16 +116,23 @@ const useTaskUtils = () => {
      * @param {*} syncMessage commit message 
      * @returns true if sync successful, false if otherwise (task.JSON maybe modified in time between get and sync)
      */
+    const [timer, setTimer] = useState();
     const syncTasks = async (newTaskState, task_JSON_sha, syncMessage = `System synced tasks from user ${userName}`) => {
         const path = "task.JSON";
         // Push newTaskState to github
         try {
+            if(timer){
+                clearTimeout(timer);
+            }
             console.log("Sync tasks calling create...");
             setTasks(newTaskState);
             await createOrUpdateFile(pat, userName, repoName, path, btoa(JSON.stringify(newTaskState, null, 2)), syncMessage, task_JSON_sha);
 
             // Successful sync, set task state
-
+            let t = setTimeout(() => {
+                setSyncing(false);
+            }, 3000) 
+            setTimer(t);
             return true;
         } catch (error) {
             console.log(error);
@@ -143,9 +150,10 @@ const useTaskUtils = () => {
      * @returns true if task creation successful, false if otherwise
      */
     const createTask = async ({ taskName, assignee, description, priority, length, currentProgress }) => {
-        setLastSync(new Date().getTime());
+        setSyncing(true);
         const [existingTasks, fileSHA] = await getTasks() // Must pull most recent changes first
             .catch((error) => {
+                setSyncing(false);
                 console.log("Create task failed to get current tasks!", error);
                 return false
             });
@@ -167,9 +175,10 @@ const useTaskUtils = () => {
 
     const updateTask = async ({ taskID, taskName, assignee, description, priority, length, currentProgress, sprintStatus }) => {
         // get current tasks array
-        setLastSync(new Date().getTime());
+        setSyncing(true);
         const [existingTasks, fileSHA] = await getTasks()
             .catch((error) => {
+                setSyncing(false);
                 console.log("Update task failed to get current tasks!", error);
                 return false
             });
@@ -194,10 +203,11 @@ const useTaskUtils = () => {
     }
 
     const delTask = async (taskUUID) => {
-        setLastSync(new Date().getTime());
+        setSyncing(true);
         console.log('deleting task ', taskUUID)
         const [existingTasks, fileSHA] = await getTasks()
             .catch((error) => {
+                setSyncing(false);
                 console.log("Delete task failed to get current tasks!", error);
                 return false
             });

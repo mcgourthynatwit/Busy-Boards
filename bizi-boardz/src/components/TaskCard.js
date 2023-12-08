@@ -50,6 +50,7 @@ export default function TaskCard({
       sprintStatus 
     },
     end: (item, monitor) => {
+      if (!monitor.getDropResult()) { return; }
       setIsVisible(false);
       const getResult = async () => {
         let { updateSuccess } = monitor.getDropResult();

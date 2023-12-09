@@ -8,7 +8,7 @@ import {
   faFont,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import { React, useEffect, useLayoutEffect, useState, useRef } from "react";
+import { React, useEffect, useLayoutEffect, useState, useReducer } from "react";
 import rough from "roughjs/bundled/rough.esm";
 import axios from "axios";
 import { useAuthUtils } from "../backend/octokit/useAuthUtils";
@@ -297,6 +297,7 @@ export default function PopupWhiteboard({
 
     if (tool === "selection") {
       const element = getElementAtPosition(offsetX, offsetY, elements);
+      console.log(element);
       if (element) {
         const shapeOffsetX = offsetX - element.x1;
         const shapeOffsetY = offsetY - element.y1;
@@ -502,13 +503,21 @@ export default function PopupWhiteboard({
         <div className="whiteboard-body" id="whiteboardBody">
           {action === "writing" ? (
             <textarea
+<<<<<<< HEAD
               onChange={(e) => setText(e.target.value)}
+=======
+>>>>>>> e250c66 (whiteboard text)
               ref={textAreaRef}
               onBlur={handleBlur}
               style={{
                 position: "fixed",
+<<<<<<< HEAD
                 top: selectedElement.y1 + panOffset.y + 50,
                 left: canvasMargin + selectedElement.x1 + panOffset.x + 2,
+=======
+                top: selectedElement.y1 + 50,
+                left: canvasMargin + selectedElement.x1 + 2,
+>>>>>>> e250c66 (whiteboard text)
                 font: "24px sans-serif",
                 margin: 0,
                 padding: 0,

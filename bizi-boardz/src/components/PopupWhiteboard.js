@@ -503,10 +503,7 @@ export default function PopupWhiteboard({
         <div className="whiteboard-body" id="whiteboardBody">
           {action === "writing" ? (
             <textarea
-<<<<<<< HEAD
               onChange={(e) => setText(e.target.value)}
-=======
->>>>>>> e250c66 (whiteboard text)
               ref={textAreaRef}
               onBlur={handleBlur}
               style={{

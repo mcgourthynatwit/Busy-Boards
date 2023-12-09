@@ -3,33 +3,31 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faXmark,
   faArrowPointer,
-  faPencil,
-  faEraser,
   faMinus,
-  faArrowRight,
   faSquareFull,
   faFont,
-  faCropSimple,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import { React, useEffect, useLayoutEffect, useState, useReducer } from "react";
+import { React, useEffect, useLayoutEffect, useState, useRef } from "react";
 import rough from "roughjs/bundled/rough.esm";
 
 const generator = rough.generator();
 
 //trigger decides if the popup is visible
 export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
-  const [emptyState, setEmptyState] = useState(1);
   const [color, setColor] = useState("white");
   const [elements, setElements] = useState([]);
   const [action, setAction] = useState("none");
-  const [tool, setTool] = useState("line");
+  const [tool, setTool] = useState("line"); //line originally
   const [selectedElement, setSelectedElement] = useState(null);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [startPanMousePosition, setStartPanMousePosition] = useState({
     x: 0,
     y: 0,
   });
+  const textAreaRef = useRef();
+
+  const canvasMargin = window.innerWidth * 0.02;
 
   let colorToHex = {
     white: "#E7E5DF",
@@ -55,11 +53,15 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       roughElement = generator.ellipse(x1, y1, 2 * (x2 - x1), 2 * (y2 - y1), {
         stroke: `${colorToHex[color]}`,
       });
+    else if (type === "text") {
+      return { id, type, x1, y1, x2, y2, text: "" };
+    }
     return { id, x1, y1, x2, y2, type, roughElement };
   }
 
   function isWithinElement(x, y, element) {
     const { type, x1, x2, y1, y2 } = element;
+
     if (type === "rectangle") {
       const minX = Math.min(x1, x2);
       const maxX = Math.max(x1, x2);
@@ -83,6 +85,9 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
           Math.pow(y - centerY, 2) / Math.pow(radiusY, 2) <=
         1.05
       );
+    } else if (type === "text") {
+      console.log(type);
+      return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
   }
 
@@ -107,12 +112,41 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       context.save();
       context.translate(panOffset.x, panOffset.y);
 
-      context.fillRect(50, 50, 100, 100);
-
-      elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
+      elements.forEach((element) => {
+        if (action === "writing" && selectedElement.id === element.id) return;
+        drawElement(roughCanvas, context, element);
+      });
       context.restore();
     }
-  }, [elements, panOffset]);
+  }, [trigger, elements, action, selectedElement, panOffset]);
+
+  function drawElement(roughCanvas, context, element) {
+    switch (element.type) {
+      case "line":
+      case "rectangle":
+      case "ellipse":
+        roughCanvas.draw(element.roughElement);
+        break;
+      case "text":
+        context.font = `24px sans-serif`;
+        context.fillStyle = "#E7E5DF";
+        context.textBaseline = "top";
+        context.fillText(element.text, element.x1, element.y1);
+        break;
+      default:
+        throw new Error(`Type not recognised: ${element.type}`);
+    }
+  }
+
+  useEffect(() => {
+    const textArea = textAreaRef.current;
+    if (action === "writing") {
+      setTimeout(() => {
+        textArea.focus();
+        textArea.value = selectedElement.text;
+      }, 0);
+    }
+  }, [action, selectedElement]);
 
   useEffect(() => {
     const panFunction = (event) => {
@@ -123,18 +157,38 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       }));
     };
 
-    document.addEventListener("wheel", panFunction);
-    return () => {
-      document.removeEventListener("wheel", panFunction);
-    };
+    // document.addEventListener("wheel", panFunction);
+    // return () => {
+    //   document.removeEventListener("wheel", panFunction);
+    // };
   }, []);
 
   //replaces the element at the wanted index with a newer version
-  function updateElement(id, x1, y1, x2, y2, type) {
-    const updatedElement = createElement(id, x1, y1, x2, y2, type);
-
+  function updateElement(id, x1, y1, x2, y2, type, options) {
     const elementsCopy = [...elements];
-    elementsCopy[id] = updatedElement;
+
+    switch (type) {
+      case "line":
+      case "rectangle":
+      case "ellipse":
+        elementsCopy[id] = createElement(id, x1, y1, x2, y2, type);
+        break;
+      case "text":
+        const textWidth =
+          document
+            .getElementById("canvas")
+            .getContext("2d")
+            .measureText(options.text).width * 2.4;
+        const textHeight = 24;
+        elementsCopy[id] = {
+          ...createElement(id, x1, y1, x1 + textWidth, y1 + textHeight, type),
+          text: options.text,
+        };
+        break;
+      default:
+        throw new Error(`Type not recognised: ${type}`);
+    }
+
     setElements(elementsCopy);
   }
 
@@ -154,8 +208,11 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       return;
     }
 
+    if (action === "writing") return;
+
     if (tool === "selection") {
       const element = getElementAtPosition(offsetX, offsetY, elements);
+      console.log(element);
       if (element) {
         const shapeOffsetX = offsetX - element.x1;
         const shapeOffsetY = offsetY - element.y1;
@@ -175,8 +232,9 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         tool
       );
       setElements((prevState) => [...prevState, element]);
+      setSelectedElement(element);
 
-      setAction("drawing");
+      setAction(tool === "text" ? "writing" : "drawing");
     }
   };
 
@@ -218,13 +276,45 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       //keeps shape in place when initially moved
       const newX1 = offsetX - shapeOffsetX;
       const newY1 = offsetY - shapeOffsetY;
-      updateElement(id, newX1, newY1, newX1 + width, newY1 + height, type);
+      const options = type === "text" ? { text: selectedElement.text } : {};
+      updateElement(
+        id,
+        newX1,
+        newY1,
+        newX1 + width,
+        newY1 + height,
+        type,
+        options
+      );
     }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (event) => {
+    // x and y values based on the top left of the canvas
+    const { offsetX, offsetY } = getMouseCoordinates(event);
+
+    if (selectedElement) {
+      if (
+        selectedElement.type === "text" &&
+        offsetX - selectedElement.shapeOffsetX === selectedElement.x1 &&
+        offsetY - selectedElement.shapeOffsetY === selectedElement.y1
+      ) {
+        setAction("writing");
+        return;
+      }
+    }
+    if (action === "writing") return;
     setAction("none");
+    setSelectedElement(null);
     console.log("mouse up");
+  };
+
+  const handleBlur = (event) => {
+    console.log("commit changes!");
+    const { id, x1, y1, type } = selectedElement;
+    setAction("none");
+    setSelectedElement(null);
+    updateElement(id, x1, y1, null, null, type, { text: event.target.value });
   };
 
   function changeColor(color) {
@@ -244,34 +334,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         <div className="whiteboard-header">
           <div className="whiteboard-task-name">{taskName}</div>
           <div className="whiteboard-toolbar">
-            {/* <div className="tool-btn">
-              <FontAwesomeIcon
-                icon={faArrowPointer}
-                style={{ height: "100%" }}
-              />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faFont} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faPencil} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faEraser} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faMinus} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faArrowRight} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faSquareFull} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faCircle} style={{ height: "100%" }} />
-              </div>
-  */}
             <input
               type="radio"
               id="selection"
@@ -283,6 +345,15 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
                 icon={faArrowPointer}
                 style={{ height: "80%" }}
               />
+            </label>
+            <input
+              type="radio"
+              id="text"
+              checked={tool === "text"}
+              onChange={() => setTool("text")}
+            />
+            <label htmlFor="text" className="tool-btn">
+              <FontAwesomeIcon icon={faFont} style={{ height: "80%" }} />
             </label>
             <input
               type="radio"
@@ -347,6 +418,27 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
           </button>
         </div>
         <div className="whiteboard-body" id="whiteboardBody">
+          {action === "writing" ? (
+            <textarea
+              ref={textAreaRef}
+              onBlur={handleBlur}
+              style={{
+                position: "fixed",
+                top: selectedElement.y1 + panOffset.y + 50,
+                left: canvasMargin + selectedElement.x1 + panOffset.x + 2,
+                font: "24px sans-serif",
+                margin: 0,
+                padding: 0,
+                border: 0,
+                outline: 0,
+                resize: "none",
+                overflow: "hidden",
+                whiteSpace: "pre",
+                background: "transparent",
+                color: "#E7E5DF",
+              }}
+            />
+          ) : null}
           <canvas
             id="canvas"
             width={window.innerWidth * 0.96}

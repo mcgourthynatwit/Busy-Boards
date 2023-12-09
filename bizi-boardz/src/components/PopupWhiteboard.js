@@ -3,35 +3,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faXmark,
   faArrowPointer,
-  faPencil,
-  faEraser,
   faMinus,
-  faArrowRight,
   faSquareFull,
   faFont,
-  faCropSimple,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import {
-  React,
-  useEffect,
-  useLayoutEffect,
-  useState,
-  useReducer,
-  useRef,
-} from "react";
+import { React, useEffect, useLayoutEffect, useState, useRef } from "react";
 import rough from "roughjs/bundled/rough.esm";
-import { camelCase } from "lodash";
 
 const generator = rough.generator();
 
 //trigger decides if the popup is visible
 export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
-  const [emptyState, setEmptyState] = useState(1);
   const [color, setColor] = useState("white");
   const [elements, setElements] = useState([]);
   const [action, setAction] = useState("none");
-  const [tool, setTool] = useState("text"); //line originally
+  const [tool, setTool] = useState("line"); //line originally
   const [selectedElement, setSelectedElement] = useState(null);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [startPanMousePosition, setStartPanMousePosition] = useState({
@@ -131,7 +118,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       });
       context.restore();
     }
-  }, [elements, action, selectedElement, panOffset]);
+  }, [trigger, elements, action, selectedElement, panOffset]);
 
   function drawElement(roughCanvas, context, element) {
     switch (element.type) {
@@ -347,34 +334,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         <div className="whiteboard-header">
           <div className="whiteboard-task-name">{taskName}</div>
           <div className="whiteboard-toolbar">
-            {/* <div className="tool-btn">
-              <FontAwesomeIcon
-                icon={faArrowPointer}
-                style={{ height: "100%" }}
-              />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faFont} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faPencil} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faEraser} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faMinus} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faArrowRight} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faSquareFull} style={{ height: "100%" }} />
-            </div>
-            <div className="tool-btn">
-              <FontAwesomeIcon icon={faCircle} style={{ height: "100%" }} />
-              </div>
-  */}
             <input
               type="radio"
               id="selection"

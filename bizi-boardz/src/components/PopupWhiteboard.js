@@ -170,10 +170,10 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       }));
     };
 
-    document.addEventListener("wheel", panFunction);
-    return () => {
-      document.removeEventListener("wheel", panFunction);
-    };
+    // document.addEventListener("wheel", panFunction);
+    // return () => {
+    //   document.removeEventListener("wheel", panFunction);
+    // };
   }, []);
 
   //replaces the element at the wanted index with a newer version
@@ -465,8 +465,8 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
               onBlur={handleBlur}
               style={{
                 position: "fixed",
-                top: selectedElement.y1 + 50,
-                left: canvasMargin + selectedElement.x1 + 2,
+                top: selectedElement.y1 + panOffset.y + 50,
+                left: canvasMargin + selectedElement.x1 + panOffset.x + 2,
                 font: "24px sans-serif",
                 margin: 0,
                 padding: 0,

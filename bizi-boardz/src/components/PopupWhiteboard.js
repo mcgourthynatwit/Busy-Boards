@@ -511,13 +511,8 @@ export default function PopupWhiteboard({
               onBlur={handleBlur}
               style={{
                 position: "fixed",
-<<<<<<< HEAD
                 top: selectedElement.y1 + panOffset.y + 50,
                 left: canvasMargin + selectedElement.x1 + panOffset.x + 2,
-=======
-                top: selectedElement.y1 + 50,
-                left: canvasMargin + selectedElement.x1 + 2,
->>>>>>> e250c66 (whiteboard text)
                 font: "24px sans-serif",
                 margin: 0,
                 padding: 0,

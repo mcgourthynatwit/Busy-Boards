@@ -16,7 +16,7 @@ const useTaskUtils = () => {
     const repoName = parts[parts.length - 1];
     const userName = parts[parts.length - 2];
     const [tasks, setTasks] = useState([]);
-    const [lastSync, setLastSync] = useState(new Date().getTime());
+    const [lastSync, setLastSync] = useState(0);
 
     const getRepoUsers = async () => {
         const octokit = new Octokit({ auth: pat })

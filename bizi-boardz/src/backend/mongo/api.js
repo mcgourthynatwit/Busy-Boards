@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const Whiteboard = require('./whiteboardModel.js')
+const getWhiteboardModel = require('./whiteboardModel.js')
 
 router.post('/save', (req, res) => {
-    console.log('trying to save')
-    const data = req.body;
-    
+    const { data, collectionName } = req.body; 
+    console.log('trying to save', collectionName)
+
+    const Whiteboard = getWhiteboardModel(collectionName);
     const newWhiteboardData = new Whiteboard(data);
 
     newWhiteboardData.save()

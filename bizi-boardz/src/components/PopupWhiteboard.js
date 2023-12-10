@@ -15,14 +15,14 @@ import { useAuthUtils } from "../backend/octokit/useAuthUtils";
 
 const generator = rough.generator();
 
-const callAxios = (whiteboardData) => {
-  axios({
-    url: 'http://localhost:8080/api/save',
-    method: 'POST',
-    data: whiteboardData
-  })
+const callAxios = (whiteboardData, repoName) => {
+  axios.post('http://localhost:8080/api/save', {
+    data: whiteboardData,
+    collectionName: repoName
+})
+
   .then(() => {
-    console.log('Data has been sent to the server');
+    console.log('Data has been sent to the server', repoName);
   })
   .catch((err) => {
     console.log('Internal server error', err);
@@ -252,7 +252,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
         // would save right when you click down to type text saved nothing to db 
         console.log('do nothing')
       } else{
-        callAxios(element)
+        callAxios(element, activeRepo)
       }
 
       setElements((prevState) => [...prevState, element]);

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
 import "../styles/Settings.css";
+import '../styles/CustomInput.css'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import CustomInput from '../components/CustomInput.js';
+import { BsFillKeyFill } from 'react-icons/bs';
 
 const Settings = () => {
   const { pat, activeRepo, setPAT, setActiveRepo, userName, setUserName, octokitAuth, octokitAuthRepo} = useAuthUtils();
@@ -65,8 +69,9 @@ const Settings = () => {
         <label className="form-label">
           New Personal Access Token: 
           <input
+            icon = {BsFillKeyFill}
             className="form-input"
-            type="text"
+            type="password"
             value={newPAT}
             onChange={handlePATChange}
             placeholder="Enter Personal Access Token (PAT)"

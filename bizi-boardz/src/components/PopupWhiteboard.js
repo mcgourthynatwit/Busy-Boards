@@ -11,6 +11,7 @@ import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { React, useEffect, useLayoutEffect, useState, useRef } from "react";
 import rough from "roughjs/bundled/rough.esm";
 import axios from 'axios'
+import { useAuthUtils } from "../backend/octokit/useAuthUtils";
 
 const generator = rough.generator();
 
@@ -29,7 +30,7 @@ const callAxios = (whiteboardData) => {
 }
 
 //trigger decides if the popup is visible
-export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
+export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID }) {
   const [color, setColor] = useState("white");
   const [elements, setElements] = useState([]);
   const [action, setAction] = useState("none");
@@ -42,7 +43,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     y: 0,
   });
   const textAreaRef = useRef();
-
+  const {activeRepo} = useAuthUtils()
   const canvasMargin = window.innerWidth * 0.02;
 
   useEffect(() => {
@@ -247,7 +248,12 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         tool
       );
 
-      callAxios(element)
+      if(element.text == '' && element.type == "text"){
+        // would save right when you click down to type text saved nothing to db 
+        console.log('do nothing')
+      } else{
+        callAxios(element)
+      }
 
       setElements((prevState) => [...prevState, element]);
       setSelectedElement(element);

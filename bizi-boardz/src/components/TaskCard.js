@@ -108,6 +108,7 @@ export default function TaskCard({
         trigger={whiteboardPopup}
         setTrigger={setWhiteboardPopup}
         taskName={taskName}
+        taskID={taskID}
       />
     </>
   );

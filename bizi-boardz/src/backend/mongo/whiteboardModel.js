@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const whiteboardSchema = new mongoose.Schema({
+    taskID: String,
     id: String,
     type: String,
     x1: Number,

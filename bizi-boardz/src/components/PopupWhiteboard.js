@@ -34,6 +34,7 @@ const getWhiteboard = (taskID, collectionName) => {
 };
 
 const callAxios = (whiteboardData, repoName) => {
+  console.log("calling axios");
   console.log("data", whiteboardData);
   axios
     .post("http://localhost:8080/api/save", {
@@ -77,6 +78,7 @@ export default function PopupWhiteboard({
       setIsLoading(true);
       getWhiteboard(taskID, activeRepo)
         .then((responseData) => {
+          console.log("response data", responseData);
           const transformedData = transformResponseData(responseData);
           setElements(transformedData);
           setIsLoading(false);
@@ -90,7 +92,7 @@ export default function PopupWhiteboard({
 
   const transformResponseData = (responseData) => {
     return responseData.map((item) =>
-      createElement(item.id, item.x1, item.y1, item.x2, item.y2, item.type)
+      createElement(item.id, item.x1, item.y1, item.x2, item.y2, item.type, item.strokeColor, item.text)
     );
   };
 
@@ -101,7 +103,8 @@ export default function PopupWhiteboard({
     green: "limegreen",
   };
 
-  function createElement(id, x1, y1, x2, y2, type, strokeColor) {
+  function createElement(id, x1, y1, x2, y2, type, strokeColor, text) {
+    console.log("Creating element type", type, "id", id, "text", text);
     let roughElement;
     if (type === "line") {
       //startX, startY, endX, endY
@@ -120,9 +123,9 @@ export default function PopupWhiteboard({
         stroke: `${strokeColor}`,
       });
     else if (type === "text") {
-      return { id, type, x1, y1, x2, y2, text: "" };
+      return { taskID, id, type, x1, y1, x2, y2, text: text ? text : "" };
     }
-    return { id, x1, y1, x2, y2, type, strokeColor, roughElement };
+    return { taskID, id, x1, y1, x2, y2, type, strokeColor, roughElement };
   }
 
   function isWithinElement(x, y, element) {
@@ -176,8 +179,11 @@ export default function PopupWhiteboard({
       context.save();
       context.translate(panOffset.x, panOffset.y);
       elements.forEach((element) => {
-        if (action === "writing" && selectedElement.id === element.id) return;
+        console.log(element);
+        if ((action === "writing" && !(selectedElement.id === element.id)) || action !== "writing"){
+          console.log("Drawing element", element);
         drawElement(roughCanvas, context, element);
+        }
       });
 
       context.restore();
@@ -304,7 +310,7 @@ export default function PopupWhiteboard({
         setAction("moving");
       }
     } else {
-      const id = taskID;
+      const id = elements.length;
       const element = createElement(
         id,
         offsetX,
@@ -314,7 +320,7 @@ export default function PopupWhiteboard({
         tool,
         colorToHex[color]
       );
-
+        console.log("created new text");
       setElements((prevState) => [...prevState, element]);
       setSelectedElement(element);
 
@@ -375,7 +381,8 @@ export default function PopupWhiteboard({
   const handleMouseUp = (event) => {
     // x and y values based on the top left of the canvas
     const { offsetX, offsetY } = getMouseCoordinates(event);
-    if (selectedElement) {
+    console.log("Canvas mouse up selected elem", selectedElement);
+    if (selectedElement && selectedElement.type !== "text") {
       selectedElement.x2 = offsetX;
       selectedElement.y2 = offsetY;
       callAxios(selectedElement, activeRepo);
@@ -395,9 +402,10 @@ export default function PopupWhiteboard({
 
   const handleBlur = (event) => {
     const { id, x1, y1, type } = selectedElement;
-    setAction("none");
-    setSelectedElement(null);
+    callAxios({...selectedElement, text: event.target.value }, activeRepo);
     updateElement(id, x1, y1, null, null, type, { text: event.target.value });
+    setSelectedElement(null);
+    setAction("none");
   };
 
   function changeColor(color) {

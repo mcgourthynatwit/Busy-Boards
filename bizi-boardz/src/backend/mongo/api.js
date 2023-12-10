@@ -31,7 +31,7 @@ router.get('/whiteboard', (req, res) => {
 
     const Whiteboard = getWhiteboardModel(collectionName);
     
-    Whiteboard.find({ id: taskID })
+    Whiteboard.find({ taskID: taskID })
         .then((whiteboardData) => {
             if (!whiteboardData || whiteboardData.length === 0) {
                 console.log("no whiteboards found with task id")

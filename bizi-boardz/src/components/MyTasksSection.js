@@ -1,5 +1,6 @@
 import "../styles/MyTasksSection.css";
 import { useTaskContext } from "../providers/TaskProvider";
+
 import { useAuthUtils } from "../backend/octokit/useAuthUtils.js";
 import MyTaskLine from "./MyTaskLine";
 
@@ -123,6 +124,7 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
                     ) : (
                       ""
                     ))
+
               )
             }
           </ul>

@@ -1,42 +1,33 @@
-.mytasks-section{
-    /* background-color: red; */
-    width: 96%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 
+.my-tasks-section{
+    /* background-color: pink; */
+    width: 94%;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: center; */
 }
 
-.mytasks-section-header{
-    /* background-color: green; */
+.my-tasks-section-header{
+    /* background-color: aquamarine; */
     color: var(--bizi-yellow);
-    width: 94%;
-    margin: 10px 5px 0 10px;
+    margin: 10px 5px 0 5px;
     padding: 5px 5px;
     display: flex;
-    /* justify-content: center; */
-    align-items: center;
+    justify-content: left;
     font-size: 24px;
     font-weight: 700;
 }
 
-.mytasks-section-body{
+.my-tasks-section-body{
     background-color: var(--bizi-yellow);
-    width: 94%;
     border-radius: 10px;
-    margin: 0 5px 15px 5px;
-    /* padding: 4px 2px 4px 2px; */
-    box-shadow: -2px 0 8px 0 rgba(0,0,0,.4);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    box-shadow: -2px -2px 4px 0 rgba(0,0,0,.5);
 }
 
-.mytasks-section-body ul{
-    /* background-color: var(--bizi-white); */
+.my-tasks-section-body ul{
+    /* background-color: blue; */
     padding: 0;
-    width: 100%;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
     list-style-type: none;
     flex: 1;
     display: flex;

@@ -2,9 +2,10 @@ import "../styles/PopupNewTask.css";
 import PopupDeleteTask from "./PopupDeleteTask";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faBullseye } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { React } from "react";
 import { useTaskContext } from "../providers/TaskProvider";
+import useTaskUtils from "../backend/tasks/useTaskUtils";
 
 //trigger decides if the popup is visible
 //setTrigger takes in setEditTaskPopup from TaskCard.js, which changes the trigger variable
@@ -17,6 +18,20 @@ export default function PopupNewTask({ trigger, setTrigger }) {
   const [priority, setPriority] = useState("-");
   const [length, setLength] = useState("-");
   const [taskCreateError, setTaskCreateError] = useState(false); // Can use this to show some type of error div if backend returns error
+  const [repoUsers, setRepoUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const users = await getRepoUsers();
+        setRepoUsers(users);
+      } catch (error) {
+        console.error('Error fetching repo users:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const createTaskHandler = async () => {
     //closes popup; at start so there is no delay when closing
@@ -102,12 +117,14 @@ export default function PopupNewTask({ trigger, setTrigger }) {
             </div>
             <div className="new-assignee-section">
               Assignee:
-              <input
-                type="text"
-                onChange={(e) => {
-                  setAssignee(e.target.value);
-                }}
-              ></input>
+              <select value={assignee} onChange={(e) => setAssignee(e.target.value)}>
+                <option value="">Select Assignee</option>
+                  {repoUsers.map((user) => (
+                <option key={user} value={user}>
+                  {user}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="dropdowns-row">
               <div className="progress-section">

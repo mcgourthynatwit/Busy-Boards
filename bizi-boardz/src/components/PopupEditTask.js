@@ -6,7 +6,7 @@ import {
   faFloppyDisk,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { React } from "react";
 import { useTaskContext } from "../providers/TaskProvider";
 
@@ -31,6 +31,21 @@ export default function PopupEditTask({
   const [currentProgress, setCurrentProgress] = useState(ogProgress);
   const [priority, setPriority] = useState(ogPriority);
   const [length, setLength] = useState(ogTaskLength);
+  const [repoUsers, setRepoUsers] = useState([]);
+  const {getRepoUsers } = useTaskContext();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const users = await getRepoUsers();
+        setRepoUsers(users);
+      } catch (error) {
+        console.error('Error fetching repo users:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const { updateTask } = useTaskContext();
 
@@ -127,11 +142,14 @@ export default function PopupEditTask({
             </div>
             <div className="assignee-section">
               Assignee:
-              <input 
-                type="text" 
-                defaultValue={ogAssignee}
-                onChange={(e) => setAssignee(e.target.value)}
-              />
+              <select value={assignee} onChange={(e) => setAssignee(e.target.value)}>
+                <option value="">Select Assignee</option>
+                  {repoUsers.map((user) => (
+                <option key={user} value={user}>
+                  {user}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="dropdowns-row">
               <div className="progress-section">

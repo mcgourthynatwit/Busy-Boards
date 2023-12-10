@@ -10,6 +10,7 @@ import {
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { React, useEffect, useLayoutEffect, useState, useRef } from "react";
 import rough from "roughjs/bundled/rough.esm";
+import axios from 'axios'
 
 const generator = rough.generator();
 
@@ -75,7 +76,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       const offset = distance(a, b) - (distance(a, c) + distance(b, c));
       return Math.abs(offset) < 1;
     } else if (type === "ellipse") {
-      console.log(element);
       const radiusX = x2 - x1;
       const radiusY = y2 - y1;
       const centerX = x2 - radiusX;
@@ -86,7 +86,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         1.05
       );
     } else if (type === "text") {
-      console.log(type);
       return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
   }
@@ -150,7 +149,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
 
   useEffect(() => {
     const panFunction = (event) => {
-      console.log(event);
       setPanOffset((prevState) => ({
         x: prevState.x - event.deltaX,
         y: prevState.y - event.deltaY,
@@ -212,7 +210,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
 
     if (tool === "selection") {
       const element = getElementAtPosition(offsetX, offsetY, elements);
-      console.log(element);
       if (element) {
         const shapeOffsetX = offsetX - element.x1;
         const shapeOffsetY = offsetY - element.y1;
@@ -220,7 +217,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         setAction("moving");
       }
     } else {
-      console.log("mouse down");
 
       const id = elements.length;
       const element = createElement(
@@ -231,6 +227,19 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         offsetY,
         tool
       );
+
+      axios({
+        url: 'http://localhost:8080/api/save',
+        method: 'POST',
+        data: element
+      })
+      .then(() => {
+        console.log('Data has been sent to the server');
+      })
+      .catch((err) => {
+        console.log('Internal server error', err);
+      });;
+
       setElements((prevState) => [...prevState, element]);
       setSelectedElement(element);
 
@@ -266,7 +275,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       const index = elements.length - 1;
       const { x1, y1 } = elements[index];
       updateElement(index, x1, y1, offsetX, offsetY, tool);
-      console.log(offsetX, offsetY);
     } else if (action === "moving") {
       //grabbing from state variable
       const { id, x1, x2, y1, y2, type, shapeOffsetX, shapeOffsetY } =
@@ -306,11 +314,9 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     if (action === "writing") return;
     setAction("none");
     setSelectedElement(null);
-    console.log("mouse up");
   };
 
   const handleBlur = (event) => {
-    console.log("commit changes!");
     const { id, x1, y1, type } = selectedElement;
     setAction("none");
     setSelectedElement(null);
@@ -323,7 +329,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
     const divider = document.getElementsByClassName("vertical-divider");
     for (let i = 0; i < tools.length; i++) {
       tools[i].className = `tool-btn color-${color}`;
-      console.log(tools[i].className);
     }
     divider[0].className = `vertical-divider bg-${color}`;
   }

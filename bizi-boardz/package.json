@@ -39,7 +39,7 @@
     "test": "react-scripts test",
     "server": "node src/backend/mongo/index.js",
     "eject": "react-scripts eject",
-    "electron:serve": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm run server\" \"npm run electron:start\"",
+    "electron:serve": "concurrently -k \"cross-env BROWSER=none npm start\"  \"npm run electron:start\" \"npm run server\"",
     "electron:build": "",
     "electron:start": "wait-on tcp:127.0.0.1:3000 && electron ."
   },

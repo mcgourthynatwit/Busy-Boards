@@ -12,9 +12,12 @@ const whiteboardSchema = new mongoose.Schema({
 }, { strict: false }); // 'strict: false' allows the schema to accept fields not defined in the schema
 
 const getWhiteboardModel = (collectionName = 'defaultCollection') => {
+    
     const modelName = `Whiteboard_${collectionName}`;
+
     if (!mongoose.models[modelName]) { // check if collection exists with their repoURL
         mongoose.model(modelName, whiteboardSchema, collectionName); // if not create one
+        
     }
     return mongoose.models[modelName]; // else return the model with the repoURL
 };

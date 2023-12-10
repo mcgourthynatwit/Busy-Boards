@@ -15,7 +15,25 @@ import { useAuthUtils } from "../backend/octokit/useAuthUtils";
 
 const generator = rough.generator();
 
+const getWhiteboard = (taskID, collectionName) => {
+  return axios.get(`http://localhost:8080/api/whiteboard`, {
+    params: {
+      taskID: taskID,
+      collectionName: collectionName
+    }
+  })
+  .then(response => {
+    console.log('Whiteboard data received:', response.data);
+    return response.data; 
+  })
+  .catch(error => {
+    console.error('Error fetching whiteboard data', error);
+    throw error; 
+  });
+};
+
 const callAxios = (whiteboardData, repoName) => {
+  console.log('data', whiteboardData)
   axios.post('http://localhost:8080/api/save', {
     data: whiteboardData,
     collectionName: repoName
@@ -38,6 +56,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
   const [selectedElement, setSelectedElement] = useState(null);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [text, setText] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [startPanMousePosition, setStartPanMousePosition] = useState({
     x: 0,
     y: 0,
@@ -47,9 +66,26 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
   const canvasMargin = window.innerWidth * 0.02;
 
   useEffect(() => {
-    console.log(text);
-  }, [text]);
+    if (trigger) {
+        setIsLoading(true);
+        getWhiteboard(taskID, activeRepo)
+            .then(responseData => {
+                const transformedData = transformResponseData(responseData);
+                setElements(transformedData);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error(error);
+                setIsLoading(false);
+            });
+    }
+}, [trigger, taskID, activeRepo]);
+
   
+  const transformResponseData = (responseData) => {
+    return responseData.map(item => createElement(item.id, item.x1, item.y1, item.x2, item.y2, item.type));
+  };
+
   let colorToHex = {
     white: "#E7E5DF",
     red: "red",
@@ -59,11 +95,14 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
 
   function createElement(id, x1, y1, x2, y2, type) {
     let roughElement;
-    if (type === "line")
+    if (type === "line"){
       //startX, startY, endX, endY
+      
       roughElement = generator.line(x1, y1, x2, y2, {
+        
         stroke: `${colorToHex[color]}`,
       });
+    }
     else if (type === "rectangle")
       //startX, startY, width, height
       roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, {
@@ -122,27 +161,32 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
   //canvas "main" (initializes canvas and draws each element)
   useLayoutEffect(() => {
     const canvas = document.getElementById("canvas");
-    if (canvas) {
-      const context = canvas.getContext("2d");
-      const roughCanvas = rough.canvas(canvas);
+    if (canvas && !isLoading) {
+        const context = canvas.getContext("2d");
+        const roughCanvas = rough.canvas(canvas);
 
-      context.clearRect(0, 0, canvas.width, canvas.height);
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-      context.save();
-      context.translate(panOffset.x, panOffset.y);
+        context.save();
+        context.translate(panOffset.x, panOffset.y);
+        elements.forEach((element) => {
+            if (action === "writing" && selectedElement.id === element.id) return;
+            drawElement(roughCanvas, context, element);
+        });
 
-      elements.forEach((element) => {
-        if (action === "writing" && selectedElement.id === element.id) return;
-        drawElement(roughCanvas, context, element);
-      });
-      context.restore();
+        context.restore();
     }
-  }, [trigger, elements, action, selectedElement, panOffset]);
+}, [elements, action, selectedElement, panOffset, isLoading]);
+
 
   function drawElement(roughCanvas, context, element) {
     switch (element.type) {
       case "line":
+        roughCanvas.draw(element.roughElement);
+        break;
       case "rectangle":
+        roughCanvas.draw(element.roughElement);
+        break;
       case "ellipse":
         roughCanvas.draw(element.roughElement);
         break;
@@ -187,6 +231,8 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
 
     switch (type) {
       case "line":
+        console.log('new line', x1, x2)
+        elementsCopy[id] = createElement(id, x1, y1, x2, y2, type);
       case "rectangle":
       case "ellipse":
         elementsCopy[id] = createElement(id, x1, y1, x2, y2, type);
@@ -219,7 +265,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
   const handleMouseDown = (event) => {
     // x and y values based on the top left of the canvas
     const { offsetX, offsetY } = getMouseCoordinates(event);
-
+    console.log('x ', offsetX)
     if (event.button === 2) {
       setAction("panning");
       setStartPanMousePosition({ x: offsetX, y: offsetY });
@@ -238,7 +284,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
       }
     } else {
 
-      const id = elements.length;
+      const id = taskID;
       const element = createElement(
         id,
         offsetX,
@@ -247,13 +293,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
         offsetY,
         tool
       );
-
-      if(element.text == '' && element.type == "text"){
-        // would save right when you click down to type text saved nothing to db 
-        console.log('do nothing')
-      } else{
-        callAxios(element, activeRepo)
-      }
 
       setElements((prevState) => [...prevState, element]);
       setSelectedElement(element);
@@ -315,8 +354,10 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
   const handleMouseUp = (event) => {
     // x and y values based on the top left of the canvas
     const { offsetX, offsetY } = getMouseCoordinates(event);
-
     if (selectedElement) {
+      selectedElement.x2  = offsetX
+      selectedElement.y2 = offsetY
+      callAxios(selectedElement, activeRepo)
       if (
         selectedElement.type === "text" &&
         offsetX - selectedElement.shapeOffsetX === selectedElement.x1 &&

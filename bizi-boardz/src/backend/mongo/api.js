@@ -18,7 +18,34 @@ router.post('/save', (req, res) => {
             res.status(500).json({ msg: 'Sorry, internal server errors', error: error.message });
             console.log('not good ', error)
         });
+
 });
+
+router.get('/whiteboard', (req, res) => {
+
+    const { taskID, collectionName } = req.query;
+    console.log(taskID, "server", collectionName)
+    if (!taskID || !collectionName) {
+        return res.status(400).json({ msg: 'Missing taskID or collection name' });
+    }
+
+    const Whiteboard = getWhiteboardModel(collectionName);
+    
+    Whiteboard.find({ id: taskID })
+        .then((whiteboardData) => {
+            if (!whiteboardData || whiteboardData.length === 0) {
+                console.log("no whiteboards found with task id")
+                return res.status(404).json({ msg: 'No whiteboards found with the given taskID' });
+            }
+            console.log('all good here!')
+            res.status(200).json(whiteboardData);
+        })
+        .catch((error) => {
+            console.log('internal err ', error)
+            res.status(500).json({ msg: 'Sorry, internal server errors', error: error.message });
+        });
+});
+
 
 
 module.exports = router

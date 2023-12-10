@@ -60,7 +60,6 @@
     color: var(--bizi-white);
     height: 24px;
     width: 85%;
-    border-bottom: 2px solid var(--bizi-yellow);
     font-size: 18px;  
     font-weight: 600;
     padding-bottom: 0;
@@ -68,6 +67,11 @@
     display: flex;
     align-items: center;
 } 
+
+.task-name-section{
+
+    border-bottom: 2px solid var(--bizi-yellow);
+}
 
 
 .popup-body input{
@@ -88,7 +92,7 @@
     margin: 20px 0;
 }
 
-.dropdowns-row select{
+ select{
     margin-left: 8px;
     padding: 0 2px;
     background-color: var(--bizi-dark);

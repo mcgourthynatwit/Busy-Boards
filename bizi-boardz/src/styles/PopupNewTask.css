@@ -60,7 +60,7 @@
     color: var(--bizi-white);
     height: 24px;
     width: 85%;
-    border-bottom: 2px solid var(--bizi-yellow);
+    /* border-bottom: 2px solid var(--bizi-yellow); */
     font-size: 18px;  
     font-weight: 600;
     padding-bottom: 0;
@@ -68,6 +68,11 @@
     display: flex;
     align-items: center;
 } 
+
+.new-task-name-section{
+
+    border-bottom: 2px solid var(--bizi-yellow);
+}
 
 
 .new-popup-body input{

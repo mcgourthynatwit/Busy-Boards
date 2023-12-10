@@ -7,9 +7,11 @@ router.post('/save', (req, res) => {
     console.log('trying to save', collectionName)
 
     const Whiteboard = getWhiteboardModel(collectionName);
-    const newWhiteboardData = new Whiteboard(data);
 
-    newWhiteboardData.save()
+    Whiteboard.findOneAndUpdate({id: data.id }, data, {
+        new: true,
+        upsert: true // Make this update into an upsert
+      })
         .then(() => {
             res.status(200).json({ msg: 'Data saved successfully' });
             console.log('good')

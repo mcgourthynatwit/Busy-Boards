@@ -8,7 +8,14 @@ import {
   faFont,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import { React, useEffect, useLayoutEffect, useState, useRef } from "react";
+import {
+  React,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useReducer,
+  useRef,
+} from "react";
 import rough from "roughjs/bundled/rough.esm";
 import axios from "axios";
 import { useAuthUtils } from "../backend/octokit/useAuthUtils";
@@ -303,6 +310,7 @@ export default function PopupWhiteboard({
 
     if (tool === "selection") {
       const element = getElementAtPosition(offsetX, offsetY, elements);
+      console.log(element);
       if (element) {
         const shapeOffsetX = offsetX - element.x1;
         const shapeOffsetY = offsetY - element.y1;

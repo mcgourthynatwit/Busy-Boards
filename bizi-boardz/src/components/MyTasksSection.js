@@ -17,7 +17,7 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
               //First = In Progress, In Sprint
               tasks.map(
                 (task) =>
-                  (userName =
+                  (userName ==
                     task.assignee &&
                     task.currentProgress === "In Progress" &&
                     task.sprint === 1 ? (
@@ -40,7 +40,7 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
               //Second = To Do,  In Sprint
               tasks.map(
                 (task) =>
-                  (userName =
+                  (userName ==
                     task.assignee &&
                     task.currentProgress === "To Do" &&
                     task.sprint === 1 ? (
@@ -63,7 +63,7 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
               //Third = In Progress, Not In Sprint
               tasks.map(
                 (task) =>
-                  (userName =
+                  (userName ==
                     task.assignee &&
                     task.currentProgress === "In Progress" &&
                     task.sprint != 1 ? (
@@ -86,7 +86,7 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
               //Fourth = To Do, Not In Sprint
               tasks.map(
                 (task) =>
-                  (userName =
+                  (userName ==
                     task.assignee &&
                     task.currentProgress === "To Do" &&
                     task.sprint != 1 ? (
@@ -109,7 +109,7 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
               //Fifth = Done Tasks
               tasks.map(
                 (task) =>
-                  (userName =
+                  (userName ==
                     task.assignee && task.currentProgress === "Done" ? (
                       <MyTaskLine
                         taskID={task.taskID}

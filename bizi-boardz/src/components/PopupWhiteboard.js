@@ -8,7 +8,14 @@ import {
   faFont,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import { React, useEffect, useLayoutEffect, useState, useReducer } from "react";
+import {
+  React,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useReducer,
+  useRef,
+} from "react";
 import rough from "roughjs/bundled/rough.esm";
 import axios from "axios";
 import { useAuthUtils } from "../backend/octokit/useAuthUtils";

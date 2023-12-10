@@ -127,6 +127,26 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
 
               )
             }
+            {
+              //Fourth = To Do, not in sprint
+              tasks.map((task) =>
+                task.assignee === userName &&
+                task.currentProgress === "Done" ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
+              )
+            }
           </ul>
         </div>
       </div>

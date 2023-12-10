@@ -25,8 +25,8 @@ export default function MyTaskLine({
       <div className="my-task-line" onClick={() => setEditTaskPopup(true)}>
         <div className="myTaskLineMain">
           <div className="myTaskName">{taskName}</div>
-          <div className="isInProgress">{currentProgress}</div>
           <div className="isInSprint">{sprintToString[sprintStatus]}</div>
+          <div className="isInProgress">{currentProgress}</div>
         </div>
 
         <div className="myTaskLineBubbles">

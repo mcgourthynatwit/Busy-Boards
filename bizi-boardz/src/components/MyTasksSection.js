@@ -9,9 +9,9 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
   const { tasks } = useTaskContext();
   return (
     <>
-      <div className="mytasks-section">
-        <div className="mytasks-section-header">{sectionHeader}</div>
-        <div className="mytasks-section-body">
+      <div className="my-tasks-section">
+        <div className="my-tasks-section-header">{sectionHeader}</div>
+        <div className="my-tasks-section-body">
           <ul>
             {
               //First = In Progress, In Sprint
@@ -124,7 +124,6 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
                     ) : (
                       ""
                     ))
-
               )
             }
             {

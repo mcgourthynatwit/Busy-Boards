@@ -1,0 +1,64 @@
+.myTaskLine{
+    background-color: var(--bizi-dark);
+    width: 98%;
+    height: 40px;
+    margin: 6px 4px;
+    padding: 5px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: -2px -2px 4px 0 rgba(0,0,0,.5);
+}
+
+.myTaskLine:hover{
+    cursor: pointer;
+}
+
+.myTaskLine:first-child{
+    margin-top: 12px;
+}
+.myTaskLine:last-child{
+    margin-bottom: 12px;
+}
+
+.myTaskLine .myTaskLineMain{
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    /* width: 75%; */
+    height: 24px;
+    gap: 20px;
+}
+
+.myTaskLineMain .myTaskName{
+    /* background-color: red; */
+    color: var(--bizi-white);
+    /* min-height: 24px;
+    max-height: 48px; */
+    /* height: 2px; */
+    /* width: 400px;; */
+    width: 500px;
+    margin: 0 auto;
+    font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    align-items: center;   
+    justify-content: start;
+}
+
+.myTaskLineMain .isInProgress{
+    color: #E7E5DF88;
+    width: 80px;
+    text-align: center;
+}
+
+.myTaskLineMain .isInSprint{
+    color: #E7E5DF88;
+    width: 120px;
+    text-align: center;
+}
+

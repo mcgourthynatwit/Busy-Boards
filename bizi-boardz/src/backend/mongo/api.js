@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Whiteboard = require('./whiteboardModel.js')
+
 router.post('/save', (req, res) => {
     console.log('trying to save')
     const data = req.body;

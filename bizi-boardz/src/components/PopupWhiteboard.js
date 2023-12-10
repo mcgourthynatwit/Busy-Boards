@@ -14,6 +14,20 @@ import axios from 'axios'
 
 const generator = rough.generator();
 
+const callAxios = (whiteboardData) => {
+  axios({
+    url: 'http://localhost:8080/api/save',
+    method: 'POST',
+    data: whiteboardData
+  })
+  .then(() => {
+    console.log('Data has been sent to the server');
+  })
+  .catch((err) => {
+    console.log('Internal server error', err);
+  });;
+}
+
 //trigger decides if the popup is visible
 export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   const [color, setColor] = useState("white");
@@ -22,6 +36,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
   const [tool, setTool] = useState("line"); //line originally
   const [selectedElement, setSelectedElement] = useState(null);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [text, setText] = useState('');
   const [startPanMousePosition, setStartPanMousePosition] = useState({
     x: 0,
     y: 0,
@@ -30,6 +45,10 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
 
   const canvasMargin = window.innerWidth * 0.02;
 
+  useEffect(() => {
+    console.log(text);
+  }, [text]);
+  
   let colorToHex = {
     white: "#E7E5DF",
     red: "red",
@@ -228,17 +247,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         tool
       );
 
-      axios({
-        url: 'http://localhost:8080/api/save',
-        method: 'POST',
-        data: element
-      })
-      .then(() => {
-        console.log('Data has been sent to the server');
-      })
-      .catch((err) => {
-        console.log('Internal server error', err);
-      });;
+      callAxios(element)
 
       setElements((prevState) => [...prevState, element]);
       setSelectedElement(element);
@@ -284,7 +293,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
       //keeps shape in place when initially moved
       const newX1 = offsetX - shapeOffsetX;
       const newY1 = offsetY - shapeOffsetY;
-      const options = type === "text" ? { text: selectedElement.text } : {};
+      const options = type === "text" ? { text: selectedElement.text} : {};
       updateElement(
         id,
         newX1,
@@ -425,6 +434,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName }) {
         <div className="whiteboard-body" id="whiteboardBody">
           {action === "writing" ? (
             <textarea
+              onChange={(e) => setText(e.target.value)}
               ref={textAreaRef}
               onBlur={handleBlur}
               style={{

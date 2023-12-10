@@ -15,122 +15,92 @@ export default function MyTasksSection({ sectionHeader = "<<EMPTY_HEADER>>" }) {
           <ul>
             {
               //First = In Progress, In Sprint
-              tasks.map(
-                (task) =>
-                  (userName ==
-                    task.assignee &&
-                    task.currentProgress === "In Progress" &&
-                    task.sprint === 1 ? (
-                      <MyTaskLine
-                        taskID={task.taskID}
-                        taskName={task.name}
-                        taskLength={task.length}
-                        assignee={task.assignee}
-                        priority={task.priority}
-                        description={task.description}
-                        currentProgress={task.currentProgress}
-                        sprintStatus={task.sprint}
-                      />
-                    ) : (
-                      ""
-                    ))
+              tasks.map((task) =>
+                userName == task.assignee &&
+                task.currentProgress === "In Progress" &&
+                task.sprint === 1 ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
               )
             }
             {
               //Second = To Do,  In Sprint
-              tasks.map(
-                (task) =>
-                  (userName ==
-                    task.assignee &&
-                    task.currentProgress === "To Do" &&
-                    task.sprint === 1 ? (
-                      <MyTaskLine
-                        taskID={task.taskID}
-                        taskName={task.name}
-                        taskLength={task.length}
-                        assignee={task.assignee}
-                        priority={task.priority}
-                        description={task.description}
-                        currentProgress={task.currentProgress}
-                        sprintStatus={task.sprint}
-                      />
-                    ) : (
-                      ""
-                    ))
+              tasks.map((task) =>
+                userName == task.assignee &&
+                task.currentProgress === "To Do" &&
+                task.sprint === 1 ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
               )
             }
             {
               //Third = In Progress, Not In Sprint
-              tasks.map(
-                (task) =>
-                  (userName ==
-                    task.assignee &&
-                    task.currentProgress === "In Progress" &&
-                    task.sprint != 1 ? (
-                      <MyTaskLine
-                        taskID={task.taskID}
-                        taskName={task.name}
-                        taskLength={task.length}
-                        assignee={task.assignee}
-                        priority={task.priority}
-                        description={task.description}
-                        currentProgress={task.currentProgress}
-                        sprintStatus={task.sprint}
-                      />
-                    ) : (
-                      ""
-                    ))
+              tasks.map((task) =>
+                userName == task.assignee &&
+                task.currentProgress === "In Progress" &&
+                task.sprint != 1 ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
               )
             }
             {
               //Fourth = To Do, Not In Sprint
-              tasks.map(
-                (task) =>
-                  (userName ==
-                    task.assignee &&
-                    task.currentProgress === "To Do" &&
-                    task.sprint != 1 ? (
-                      <MyTaskLine
-                        taskID={task.taskID}
-                        taskName={task.name}
-                        taskLength={task.length}
-                        assignee={task.assignee}
-                        priority={task.priority}
-                        description={task.description}
-                        currentProgress={task.currentProgress}
-                        sprintStatus={task.sprint}
-                      />
-                    ) : (
-                      ""
-                    ))
+              tasks.map((task) =>
+                userName == task.assignee &&
+                task.currentProgress === "To Do" &&
+                task.sprint != 1 ? (
+                  <MyTaskLine
+                    taskID={task.taskID}
+                    taskName={task.name}
+                    taskLength={task.length}
+                    assignee={task.assignee}
+                    priority={task.priority}
+                    description={task.description}
+                    currentProgress={task.currentProgress}
+                    sprintStatus={task.sprint}
+                  />
+                ) : (
+                  ""
+                )
               )
             }
             {
               //Fifth = Done Tasks
-              tasks.map(
-                (task) =>
-                  (userName ==
-                    task.assignee && task.currentProgress === "Done" ? (
-                      <MyTaskLine
-                        taskID={task.taskID}
-                        taskName={task.name}
-                        taskLength={task.length}
-                        assignee={task.assignee}
-                        priority={task.priority}
-                        description={task.description}
-                        currentProgress={task.currentProgress}
-                        sprintStatus={task.sprint}
-                      />
-                    ) : (
-                      ""
-                    ))
-              )
-            }
-            {
-              //Fourth = To Do, not in sprint
               tasks.map((task) =>
-                task.assignee === userName &&
-                task.currentProgress === "Done" ? (
+                userName == task.assignee && task.currentProgress === "Done" ? (
                   <MyTaskLine
                     taskID={task.taskID}
                     taskName={task.name}

@@ -7,14 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function TaskLine({
-  taskID ,
-  taskName ,
+  taskID,
+  taskName,
   assignee,
   priority,
   taskLength,
   description,
   currentProgress,
-  sprintStatus
+  sprintStatus,
 }) {
   const [editTaskPopup, setEditTaskPopup] = useState(false);
   const [locationPopup, setLocationPopup] = useState(false);
@@ -43,39 +43,38 @@ export default function TaskLine({
         </div>
       </div>
       <PopupEditTask
-          trigger={editTaskPopup}
-          setTrigger={setEditTaskPopup}
-          taskID={taskID}
-          ogTaskName={taskName}
-          ogAssignee={assignee}
-          ogPriority={priority}
-          ogTaskLength={taskLength}
-          ogProgress={currentProgress}
-          ogDescription={description}
-          sprint = {sprintStatus}
+        trigger={editTaskPopup}
+        setTrigger={setEditTaskPopup}
+        taskID={taskID}
+        ogTaskName={taskName}
+        ogAssignee={assignee}
+        ogPriority={priority}
+        ogTaskLength={taskLength}
+        ogProgress={currentProgress}
+        ogDescription={description}
+        sprint={sprintStatus}
       />
-      <PopupLocation 
-      trigger={locationPopup} 
-      setTrigger={setLocationPopup} 
-      taskID={taskID}
-      ogTaskName={taskName}
-      ogAssignee={assignee}
-      ogPriority={priority}
-      ogTaskLength={taskLength}
-      ogProgress={currentProgress}
-      ogDescription={description}
-      sprint = {sprintStatus}
+      <PopupLocation
+        trigger={locationPopup}
+        setTrigger={setLocationPopup}
+        taskID={taskID}
+        ogTaskName={taskName}
+        ogAssignee={assignee}
+        ogPriority={priority}
+        ogTaskLength={taskLength}
+        ogProgress={currentProgress}
+        ogDescription={description}
+        sprint={sprintStatus}
       />
     </>
   );
 }
 
 function decidePriority(priority) {
-  if (priority === 1)
-    return <div className="bubblePriority priorityLow">!</div>;
-  else if (priority === 2)
+  if (priority == 1) return <div className="bubblePriority priorityLow">!</div>;
+  else if (priority == 2)
     return <div className="bubblePriority priorityModerate">! !</div>;
-  else if (priority === 3)
+  else if (priority == 3)
     return <div className="bubblePriority priorityHigh">! ! !</div>;
   else return <div className="bubblePriority priorityNA">-</div>;
 }

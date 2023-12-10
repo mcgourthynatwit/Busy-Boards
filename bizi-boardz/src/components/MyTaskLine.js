@@ -53,12 +53,13 @@ export default function MyTaskLine({
 }
 
 function decidePriority(priority) {
-  if (priority === 1)
+  console.log(priority);
+  if (priority == 1)
     return <div className="bubbleMyPriority priorityLow">!</div>;
-  else if (priority === 2)
+  else if (priority == 2)
     return <div className="bubbleMyPriority priorityModerate">! !</div>;
-  else if (priority === 3)
-    return <div className="bubblemyPriority priorityHigh">! ! !</div>;
+  else if (priority == 3)
+    return <div className="bubbleMyPriority priorityHigh">! ! !</div>;
   else return <div className="bubbleMyPriority priorityNA">-</div>;
 }
 

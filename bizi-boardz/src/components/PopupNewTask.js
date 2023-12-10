@@ -26,7 +26,7 @@ export default function PopupNewTask({ trigger, setTrigger }) {
         const users = await getRepoUsers();
         setRepoUsers(users);
       } catch (error) {
-        console.error('Error fetching repo users:', error);
+        console.error("Error fetching repo users:", error);
       }
     };
 
@@ -117,11 +117,14 @@ export default function PopupNewTask({ trigger, setTrigger }) {
             </div>
             <div className="new-assignee-section">
               Assignee:
-              <select value={assignee} onChange={(e) => setAssignee(e.target.value)}>
-                <option value="">Select Assignee</option>
-                  {repoUsers.map((user) => (
-                <option key={user} value={user}>
-                  {user}
+              <select
+                value={assignee}
+                onChange={(e) => setAssignee(e.target.value)}
+              >
+                <option value="">-</option>
+                {repoUsers.map((user) => (
+                  <option key={user} value={user}>
+                    {user}
                   </option>
                 ))}
               </select>

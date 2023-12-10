@@ -64,7 +64,7 @@
     align-items: center;
 }
 
-.myTaskLineBubbles .bubbleMyPriority{
+.taskLineBubbles .bubblePriority{
     background-color: var(--bizi-white);
     border-radius: 100px;
     height: 24px;
@@ -93,7 +93,7 @@
     color: crimson;
 }
 
-.myTaskLineBubbles .bubbleTaskLength{
+.taskLineBubbles .bubbleTaskLength{
     background-color: var(--bizi-white);
     color: var(--bizi-dark);
     border-radius: 100px;
@@ -105,4 +105,26 @@
     align-items: center;
     font-weight: 700;
     font-size: 16px;
+}
+
+
+.taskLineBubbles .bubbleLocation{
+    background-color: var(--bizi-white);
+    color: var(--bizi-dark);
+    border-radius: 100px;
+    height: 24px;
+    width: 40px;
+    margin: 0 0 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    box-shadow: 0 2px 0 rgba(231,229,223,.6);
+}
+
+.taskLineBubbles .bubbleLocation:active{
+    box-shadow: none;
+    transform: translateY(2px);
 }

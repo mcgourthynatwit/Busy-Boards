@@ -1,33 +1,38 @@
-.my-task-line{
+
+.myTaskLine{
     background-color: var(--bizi-dark);
-    width: 99%;
+    width: 98%;
+
     height: 40px;
     margin: 6px 4px;
     padding: 5px;
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
+
+    align-items: center;
     box-shadow: -2px -2px 4px 0 rgba(0,0,0,.5);
 }
 
-.my-task-line:first-child{
-    margin-top: 12px;
-}
-
-.my-task-line:last-child{
-    margin-bottom: 12px;
-}
-
-.my-task-line:hover{
+.myTaskLine:hover{
     cursor: pointer;
 }
 
-.myTaskLineMain{
+.myTaskLine:first-child{
+    margin-top: 12px;
+}
+.myTaskLine:last-child{
+    margin-bottom: 12px;
+}
+
+.myTaskLine .myTaskLineMain{
     display: flex;
     align-items: center;
-    gap: 20px;
     /* justify-content: center; */
     /* width: 75%; */
+    height: 24px;
+    gap: 20px;
+
 }
 
 .myTaskLineMain .myTaskName{
@@ -35,7 +40,9 @@
     color: var(--bizi-white);
     /* min-height: 24px;
     max-height: 48px; */
+
     height: 24px;
+
     /* width: 400px;; */
     width: 500px;
     margin: 0 auto;
@@ -48,6 +55,7 @@
     align-items: center;   
     justify-content: start;
 }
+
 
 .isInProgress {
     color: #E7E5DF88;
@@ -112,3 +120,4 @@
     font-weight: 700;
     font-size: 16px;
 }
+

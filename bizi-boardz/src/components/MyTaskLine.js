@@ -1,5 +1,6 @@
 import "../styles/MyTaskLine.css";
-import PopupEditTask from "./PopupEditTask";
+import PopupEditTask from "./PopupEditTask.js";
+
 import { useState } from "react";
 
 export default function MyTaskLine({
@@ -15,6 +16,7 @@ export default function MyTaskLine({
   const [editTaskPopup, setEditTaskPopup] = useState(false);
   const sprintToString = {
     0: "Backlog",
+
     1: "This Sprint",
     2: "Upcoming Sprint",
   };
@@ -52,12 +54,14 @@ export default function MyTaskLine({
 
 function decidePriority(priority) {
   if (priority === 1)
-    return <div className="bubbleMyPriority priorityLow">!</div>;
+
+    return <div className="bubblePriority priorityLow">!</div>;
   else if (priority === 2)
-    return <div className="bubbleMyPriority priorityModerate">! !</div>;
+    return <div className="bubblePriority priorityModerate">! !</div>;
   else if (priority === 3)
-    return <div className="bubbleMyPriority priorityHigh">! ! !</div>;
-  else return <div className="bubbleMyPriority priorityNA">-</div>;
+    return <div className="bubblePriority priorityHigh">! ! !</div>;
+  else return <div className="bubblePriority priorityNA">-</div>;
+
 }
 
 function decideTaskLength(taskLength) {

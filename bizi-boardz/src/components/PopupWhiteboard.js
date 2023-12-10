@@ -10,80 +10,88 @@ import {
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { React, useEffect, useLayoutEffect, useState, useRef } from "react";
 import rough from "roughjs/bundled/rough.esm";
-import axios from 'axios'
+import axios from "axios";
 import { useAuthUtils } from "../backend/octokit/useAuthUtils";
 
 const generator = rough.generator();
 
 const getWhiteboard = (taskID, collectionName) => {
-  return axios.get(`http://localhost:8080/api/whiteboard`, {
-    params: {
-      taskID: taskID,
-      collectionName: collectionName
-    }
-  })
-  .then(response => {
-    console.log('Whiteboard data received:', response.data);
-    return response.data; 
-  })
-  .catch(error => {
-    console.error('Error fetching whiteboard data', error);
-    throw error; 
-  });
+  return axios
+    .get(`http://localhost:8080/api/whiteboard`, {
+      params: {
+        taskID: taskID,
+        collectionName: collectionName,
+      },
+    })
+    .then((response) => {
+      console.log("Whiteboard data received:", response.data);
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error fetching whiteboard data", error);
+      throw error;
+    });
 };
 
 const callAxios = (whiteboardData, repoName) => {
-  console.log('data', whiteboardData)
-  axios.post('http://localhost:8080/api/save', {
-    data: whiteboardData,
-    collectionName: repoName
-})
+  console.log("data", whiteboardData);
+  axios
+    .post("http://localhost:8080/api/save", {
+      data: whiteboardData,
+      collectionName: repoName,
+    })
 
-  .then(() => {
-    console.log('Data has been sent to the server', repoName);
-  })
-  .catch((err) => {
-    console.log('Internal server error', err);
-  });;
-}
+    .then(() => {
+      console.log("Data has been sent to the server", repoName);
+    })
+    .catch((err) => {
+      console.log("Internal server error", err);
+    });
+};
 
 //trigger decides if the popup is visible
-export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID }) {
+export default function PopupWhiteboard({
+  trigger,
+  setTrigger,
+  taskName,
+  taskID,
+}) {
   const [color, setColor] = useState("white");
   const [elements, setElements] = useState([]);
   const [action, setAction] = useState("none");
   const [tool, setTool] = useState("line"); //line originally
   const [selectedElement, setSelectedElement] = useState(null);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [startPanMousePosition, setStartPanMousePosition] = useState({
     x: 0,
     y: 0,
   });
   const textAreaRef = useRef();
-  const {activeRepo} = useAuthUtils()
+  const { activeRepo } = useAuthUtils();
   const canvasMargin = window.innerWidth * 0.02;
 
   useEffect(() => {
     if (trigger) {
-        setIsLoading(true);
-        getWhiteboard(taskID, activeRepo)
-            .then(responseData => {
-                const transformedData = transformResponseData(responseData);
-                setElements(transformedData);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error(error);
-                setIsLoading(false);
-            });
+      setIsLoading(true);
+      getWhiteboard(taskID, activeRepo)
+        .then((responseData) => {
+          const transformedData = transformResponseData(responseData);
+          setElements(transformedData);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
     }
-}, [trigger, taskID, activeRepo]);
+  }, [trigger, taskID, activeRepo]);
 
-  
   const transformResponseData = (responseData) => {
-    return responseData.map(item => createElement(item.id, item.x1, item.y1, item.x2, item.y2, item.type));
+    return responseData.map((item) =>
+      createElement(item.id, item.x1, item.y1, item.x2, item.y2, item.type)
+    );
   };
 
   let colorToHex = {
@@ -93,30 +101,28 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
     green: "limegreen",
   };
 
-  function createElement(id, x1, y1, x2, y2, type) {
+  function createElement(id, x1, y1, x2, y2, type, strokeColor) {
     let roughElement;
-    if (type === "line"){
+    if (type === "line") {
       //startX, startY, endX, endY
-      
+
       roughElement = generator.line(x1, y1, x2, y2, {
-        
-        stroke: `${colorToHex[color]}`,
+        stroke: `${strokeColor}`,
       });
-    }
-    else if (type === "rectangle")
+    } else if (type === "rectangle")
       //startX, startY, width, height
       roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, {
-        stroke: `${colorToHex[color]}`,
+        stroke: `${strokeColor}`,
       });
     else if (type === "ellipse")
       //centerX, centerY, width, height
       roughElement = generator.ellipse(x1, y1, 2 * (x2 - x1), 2 * (y2 - y1), {
-        stroke: `${colorToHex[color]}`,
+        stroke: `${strokeColor}`,
       });
     else if (type === "text") {
       return { id, type, x1, y1, x2, y2, text: "" };
     }
-    return { id, x1, y1, x2, y2, type, roughElement };
+    return { id, x1, y1, x2, y2, type, strokeColor, roughElement };
   }
 
   function isWithinElement(x, y, element) {
@@ -162,22 +168,21 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
   useLayoutEffect(() => {
     const canvas = document.getElementById("canvas");
     if (canvas && !isLoading) {
-        const context = canvas.getContext("2d");
-        const roughCanvas = rough.canvas(canvas);
+      const context = canvas.getContext("2d");
+      const roughCanvas = rough.canvas(canvas);
 
-        context.clearRect(0, 0, canvas.width, canvas.height);
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
-        context.save();
-        context.translate(panOffset.x, panOffset.y);
-        elements.forEach((element) => {
-            if (action === "writing" && selectedElement.id === element.id) return;
-            drawElement(roughCanvas, context, element);
-        });
+      context.save();
+      context.translate(panOffset.x, panOffset.y);
+      elements.forEach((element) => {
+        if (action === "writing" && selectedElement.id === element.id) return;
+        drawElement(roughCanvas, context, element);
+      });
 
-        context.restore();
+      context.restore();
     }
-}, [elements, action, selectedElement, panOffset, isLoading]);
-
+  }, [elements, action, selectedElement, panOffset, isLoading]);
 
   function drawElement(roughCanvas, context, element) {
     switch (element.type) {
@@ -231,11 +236,27 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
 
     switch (type) {
       case "line":
-        console.log('new line', x1, x2)
-        elementsCopy[id] = createElement(id, x1, y1, x2, y2, type);
+        console.log("new line", x1, x2);
+        elementsCopy[id] = createElement(
+          id,
+          x1,
+          y1,
+          x2,
+          y2,
+          type,
+          colorToHex[color]
+        );
       case "rectangle":
       case "ellipse":
-        elementsCopy[id] = createElement(id, x1, y1, x2, y2, type);
+        elementsCopy[id] = createElement(
+          id,
+          x1,
+          y1,
+          x2,
+          y2,
+          type,
+          colorToHex[color]
+        );
         break;
       case "text":
         const textWidth =
@@ -265,7 +286,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
   const handleMouseDown = (event) => {
     // x and y values based on the top left of the canvas
     const { offsetX, offsetY } = getMouseCoordinates(event);
-    console.log('x ', offsetX)
+    console.log("x ", offsetX);
     if (event.button === 2) {
       setAction("panning");
       setStartPanMousePosition({ x: offsetX, y: offsetY });
@@ -283,7 +304,6 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
         setAction("moving");
       }
     } else {
-
       const id = taskID;
       const element = createElement(
         id,
@@ -291,7 +311,8 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
         offsetY,
         offsetX,
         offsetY,
-        tool
+        tool,
+        colorToHex[color]
       );
 
       setElements((prevState) => [...prevState, element]);
@@ -338,7 +359,7 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
       //keeps shape in place when initially moved
       const newX1 = offsetX - shapeOffsetX;
       const newY1 = offsetY - shapeOffsetY;
-      const options = type === "text" ? { text: selectedElement.text} : {};
+      const options = type === "text" ? { text: selectedElement.text } : {};
       updateElement(
         id,
         newX1,
@@ -355,9 +376,9 @@ export default function PopupWhiteboard({ trigger, setTrigger, taskName, taskID 
     // x and y values based on the top left of the canvas
     const { offsetX, offsetY } = getMouseCoordinates(event);
     if (selectedElement) {
-      selectedElement.x2  = offsetX
-      selectedElement.y2 = offsetY
-      callAxios(selectedElement, activeRepo)
+      selectedElement.x2 = offsetX;
+      selectedElement.y2 = offsetY;
+      callAxios(selectedElement, activeRepo);
       if (
         selectedElement.type === "text" &&
         offsetX - selectedElement.shapeOffsetX === selectedElement.x1 &&

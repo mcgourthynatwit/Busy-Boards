@@ -6,7 +6,7 @@ import {
   faFloppyDisk,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { React } from "react";
 import { useTaskContext } from "../providers/TaskProvider";
 
@@ -22,9 +22,8 @@ export default function PopupEditTask({
   ogPriority,
   ogTaskLength,
   ogDescription,
-  sprint
+  sprint,
 }) {
-
   const [taskName, setTaskName] = useState(ogTaskName);
   const [assignee, setAssignee] = useState(ogAssignee);
   const [description, setDescription] = useState(ogDescription);
@@ -32,7 +31,7 @@ export default function PopupEditTask({
   const [priority, setPriority] = useState(ogPriority);
   const [length, setLength] = useState(ogTaskLength);
   const [repoUsers, setRepoUsers] = useState([]);
-  const {getRepoUsers } = useTaskContext();
+  const { getRepoUsers } = useTaskContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +39,7 @@ export default function PopupEditTask({
         const users = await getRepoUsers();
         setRepoUsers(users);
       } catch (error) {
-        console.error('Error fetching repo users:', error);
+        console.error("Error fetching repo users:", error);
       }
     };
 
@@ -50,7 +49,7 @@ export default function PopupEditTask({
   const { updateTask } = useTaskContext();
 
   const saveTaskChanges = async () => {
-    console.log('updating task... ', ogTaskName, 'to', taskName)
+    console.log("updating task... ", ogTaskName, "to", taskName);
     const updateError = await updateTask({
       taskID: taskID,
       taskName: taskName,
@@ -60,9 +59,9 @@ export default function PopupEditTask({
       length: length,
       currentProgress: currentProgress,
       sprintStatus: sprint,
-      });
+    });
     setTrigger(false);
-  }
+  };
 
   //sets up options for progress dropdown
   const progressValues = ["To Do", "In Progress", "Done"];
@@ -134,19 +133,22 @@ export default function PopupEditTask({
           <div className="popup-body">
             <div className="task-name-section">
               Task Name:
-              <input 
-                type="text" 
+              <input
+                type="text"
                 defaultValue={ogTaskName}
                 onChange={(e) => setTaskName(e.target.value)}
               />
             </div>
             <div className="assignee-section">
               Assignee:
-              <select value={assignee} onChange={(e) => setAssignee(e.target.value)}>
-                <option value="">Select Assignee</option>
-                  {repoUsers.map((user) => (
-                <option key={user} value={user}>
-                  {user}
+              <select
+                value={assignee}
+                onChange={(e) => setAssignee(e.target.value)}
+              >
+                <option value="">-</option>
+                {repoUsers.map((user) => (
+                  <option key={user} value={user}>
+                    {user}
                   </option>
                 ))}
               </select>
@@ -181,10 +183,11 @@ export default function PopupEditTask({
               </div>
             </div>
             <div className="description-section">
-              Description:<br />
-              <textarea 
-                rows="3" 
-                defaultValue={description} 
+              Description:
+              <br />
+              <textarea
+                rows="3"
+                defaultValue={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
@@ -211,10 +214,10 @@ export default function PopupEditTask({
         </div>
       </div>
       <PopupDeleteTask
-        taskID = {taskID}
+        taskID={taskID}
         trigger={deleteTaskPopup}
         setTrigger={setDeleteTaskPopup}
-        taskName = {taskName}
+        taskName={taskName}
       />
     </>
   ) : (

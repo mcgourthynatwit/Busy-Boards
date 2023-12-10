@@ -393,7 +393,9 @@ export default function PopupWhiteboard({
     if (selectedElement && selectedElement.type !== "text") {
       selectedElement.x2 = offsetX;
       selectedElement.y2 = offsetY;
-      callAxios(selectedElement, activeRepo);
+      if(selectedElement.x2 != selectedElement.x1){
+        callAxios(selectedElement, activeRepo);
+      }
       if (
         selectedElement.type === "text" &&
         offsetX - selectedElement.shapeOffsetX === selectedElement.x1 &&

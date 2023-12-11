@@ -33,7 +33,6 @@ const getWhiteboard = (taskID, collectionName) => {
       },
     })
     .then((response) => {
-      console.log("Whiteboard data received:", response.data);
       return response.data;
     })
     .catch((error) => {
@@ -107,7 +106,6 @@ export default function PopupWhiteboard({
       const syncWhiteboardWithMongo = () => {
         getWhiteboard(taskID, activeRepo)
         .then((responseData) => {
-          console.log("response data", responseData);
           const transformedData = transformResponseData(responseData);
           setElements(transformedData);
           setIsLoading(false);
@@ -124,9 +122,7 @@ export default function PopupWhiteboard({
 
        const tick = () => {
          if(new Date().getTime() - lastSync >= 250){
-           console.log("i am here")
            if (selectedElement == null){
-             console.log("not good josh")
              syncWhiteboardWithMongo();
            } else if ((selectedElement && selectedElement.type !== "text")) {
              if(selectedElement.x2 !== selectedElement.x1){
@@ -136,7 +132,6 @@ export default function PopupWhiteboard({
            }
            setLastSync(new Date().getTime());
         } else {
-          console.log("timer still waiting", new Date().getTime() - lastSync)
         }
        }
        tick();
@@ -149,7 +144,6 @@ export default function PopupWhiteboard({
     }
 
     return () => {
-      console.log("clearing interval and state")
       clearInterval(inter);
     }
   }, [trigger, taskID, activeRepo, action, elements, selectedElement]);
@@ -172,7 +166,6 @@ export default function PopupWhiteboard({
   const [seed, setSeed] = useState(rough.newSeed()); // Keeps the outlines from jittering during each rerender
   function createElement(id, x1, y1, x2, y2, type, strokeColor, text) {
     
-    console.log("Creating element type", type, "id", id, "text", text);
     let roughElement;
     if (type === "line") {
       //startX, startY, endX, endY
@@ -253,7 +246,6 @@ export default function PopupWhiteboard({
       elements.forEach((element) => {
         try {
           if ((action === "writing" && !(selectedElement && selectedElement.id === element.id)) || action !== "writing") {
-            console.log("drawing elem")
             drawElement(roughCanvas, context, element);
           }
         } catch (error) {

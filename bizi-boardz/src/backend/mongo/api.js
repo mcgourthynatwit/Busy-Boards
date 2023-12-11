@@ -8,7 +8,7 @@ router.post('/save', (req, res) => {
 
     const Whiteboard = getWhiteboardModel(collectionName);
 
-    Whiteboard.findOneAndUpdate({id: data.id }, data, {
+    Whiteboard.findOneAndUpdate({id: data.id , taskID: data.taskID}, data, {
         new: true,
         upsert: true // Make this update into an upsert
       })
@@ -48,6 +48,8 @@ router.get('/whiteboard', (req, res) => {
         });
 });
 
-
+router.delete('/delete', (req, res) => {
+ 
+})
 
 module.exports = router

@@ -190,9 +190,8 @@ export default function PopupWhiteboard({
       context.save();
       context.translate(panOffset.x, panOffset.y);
       elements.forEach((element) => {
-        console.log(element);
         if ((action === "writing" && !(selectedElement.id === element.id)) || action !== "writing"){
-         // console.log("Drawing element", element);
+        console.log("Drawing element", element);
         drawElement(roughCanvas, context, element);
         }
       });

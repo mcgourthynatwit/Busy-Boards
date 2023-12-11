@@ -90,6 +90,7 @@ const useTaskUtils = () => {
                     }
                 })
                 .catch((error) => {
+                    console.log(pat)
                     console.log("Useeffect failed to get tasks")
                 });
         }

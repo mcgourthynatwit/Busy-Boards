@@ -25,6 +25,7 @@ export default function Column({ columnHeader }) {
   const [{ canDrop, isOver }, dropref] = useDrop({
     accept: "task-card",
     drop: ({taskID, taskName, assignee, description, priority, length, currentProgress, sprintStatus}) => {
+      if (currentProgress === columnHeader) { return; }; // Prevent cards from being dropped into their own column
       let updateSuccess = saveTaskChanges(
         taskID,
         taskName,

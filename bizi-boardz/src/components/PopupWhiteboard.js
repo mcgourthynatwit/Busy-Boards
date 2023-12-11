@@ -101,6 +101,7 @@ export default function PopupWhiteboard({
   const [lastSync, setLastSync] = useState(0);
   const [inter, setInter] = useState();
   useEffect(() => {
+    let update = 0;
     if (trigger) {
   
       const syncWhiteboardWithMongo = () => {
@@ -121,6 +122,7 @@ export default function PopupWhiteboard({
       }
 
        const tick = () => {
+        console.log("ticking...")
          if(new Date().getTime() - lastSync >= 250){
            if (selectedElement == null){
              syncWhiteboardWithMongo();
@@ -136,7 +138,7 @@ export default function PopupWhiteboard({
        }
        tick();
 
-    const update = setInterval(()=>{
+    update = setInterval(()=>{
       tick();
     }, 250);
     setInter(update);
@@ -144,7 +146,8 @@ export default function PopupWhiteboard({
     }
 
     return () => {
-      clearInterval(inter);
+      console.log("clearing interval")
+      clearInterval(update);
     }
   }, [trigger, taskID, activeRepo, action, elements, selectedElement]);
 

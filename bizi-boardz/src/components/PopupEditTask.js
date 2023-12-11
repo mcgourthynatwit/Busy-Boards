@@ -31,7 +31,7 @@ export default function PopupEditTask({
   const [priority, setPriority] = useState(ogPriority);
   const [length, setLength] = useState(ogTaskLength);
   const [repoUsers, setRepoUsers] = useState([]);
-  const { getRepoUsers } = useTaskContext();
+  const { updateTask, getRepoUsers } = useTaskContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,8 +45,6 @@ export default function PopupEditTask({
 
     fetchData();
   }, []);
-
-  const { updateTask } = useTaskContext();
 
   const saveTaskChanges = async () => {
     console.log("updating task... ", ogTaskName, "to", taskName);

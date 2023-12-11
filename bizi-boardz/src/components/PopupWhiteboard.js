@@ -466,7 +466,7 @@ export default function PopupWhiteboard({
 
   const handleBlur = (event) => {
     const { id, x1, y1, type } = selectedElement;
-    if (event.target.length != 0){
+    if (event.target.value.length != 0){
       callAxios({...selectedElement, text: event.target.value }, activeRepo);
       updateElement(id, x1, y1, null, null, type, { text: event.target.value });
     }

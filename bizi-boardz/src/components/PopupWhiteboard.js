@@ -114,7 +114,7 @@ export default function PopupWhiteboard({
         })
         .catch((error) => {
           console.error(error);
-          setIsLoading(false);
+          //setIsLoading(false);
         });
       }
       if (!elements){

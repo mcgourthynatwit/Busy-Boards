@@ -167,6 +167,7 @@ export default function PopupWhiteboard({
       const a = { x: x1, y: y1 };
       const b = { x: x2, y: y2 };
       const c = { x, y };
+      
       const offset = distance(a, b) - (distance(a, c) + distance(b, c));
       return Math.abs(offset) < 1;
     } else if (type === "ellipse") {
@@ -185,7 +186,7 @@ export default function PopupWhiteboard({
   }
 
   const distance = (a, b) => {
-    Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
   };
 
   function getElementAtPosition(x, y, elements) {
@@ -442,7 +443,6 @@ export default function PopupWhiteboard({
     const { offsetX, offsetY } = getMouseCoordinates(event);
     console.log("Canvas mouse up selected elem", selectedElement);
     if (selectedElement && selectedElement.type !== "text") {
-      // no clue where id is set for things other then text so set here
 
       if(selectedElement.x2 != selectedElement.x1){
         console.log('saving element with id ', selectedElement.id)
@@ -467,7 +467,13 @@ export default function PopupWhiteboard({
   const handleBlur = (event) => {
     const { id, x1, y1, type } = selectedElement;
     if (event.target.value.length != 0){
-      callAxios({...selectedElement, text: event.target.value }, activeRepo);
+      const textWidth =
+          document
+            .getElementById("canvas")
+            .getContext("2d")
+            .measureText(event.target.value).width * 2.4;
+        const textHeight = 24;
+      callAxios({...selectedElement, text: event.target.value, x2: x1 + textWidth, y2: y1 + textHeight }, activeRepo);
       updateElement(id, x1, y1, null, null, type, { text: event.target.value });
     } else {
       //Remove the emtpy text element from state

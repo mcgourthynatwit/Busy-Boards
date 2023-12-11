@@ -152,6 +152,10 @@ export default function PopupWhiteboard({
     } else {
       setElements(null)
     }
+
+    return () => {
+      clearInterval(inter);
+    }
   }, [trigger, taskID, activeRepo, action, elements, selectedElement, lastSync]);
 
   

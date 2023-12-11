@@ -20,6 +20,7 @@ import {
 import rough from "roughjs/bundled/rough.esm";
 import axios from "axios";
 import { useAuthUtils } from "../backend/octokit/useAuthUtils";
+import { v4 as uuidv4 } from 'uuid'
 
 const generator = rough.generator();
 
@@ -43,7 +44,6 @@ const getWhiteboard = (taskID, collectionName) => {
 
 const callAxios = (whiteboardData, repoName) => {
   console.log("calling axios");
-  console.log("data", whiteboardData);
   axios
     .post("http://localhost:8080/api/save", {
       data: whiteboardData,
@@ -205,9 +205,13 @@ export default function PopupWhiteboard({
       context.save();
       context.translate(panOffset.x, panOffset.y);
       elements.forEach((element) => {
-        if ((action === "writing" && !(selectedElement.id === element.id)) || action !== "writing"){
-        console.log("Drawing element", element);
-        drawElement(roughCanvas, context, element);
+        try {
+          if ((action === "writing" && !(selectedElement && selectedElement.id === element.id)) || action !== "writing") {
+            drawElement(roughCanvas, context, element);
+          }
+        } catch (error) {
+          console.error('Error processing element:', error);
+          // Handle element-specific errors here
         }
       });
 
@@ -351,7 +355,7 @@ export default function PopupWhiteboard({
         setAction("moving");
       }
     } else {
-      const id = elements.length;
+      const id = uuidv4()
       const element = createElement(
         id,
         offsetX,
@@ -438,7 +442,12 @@ export default function PopupWhiteboard({
     const { offsetX, offsetY } = getMouseCoordinates(event);
     console.log("Canvas mouse up selected elem", selectedElement);
     if (selectedElement && selectedElement.type !== "text") {
+      // no clue where id is set for things other then text so set here
+      const UUID = uuidv4()
+      selectedElement.id = UUID
+
       if(selectedElement.x2 != selectedElement.x1){
+        console.log('saving element with id ', selectedElement.id)
         callAxios(selectedElement, activeRepo);
       } else {
         console.log("Element was at the same pos")

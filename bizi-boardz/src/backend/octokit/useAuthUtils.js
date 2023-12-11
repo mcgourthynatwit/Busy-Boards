@@ -37,7 +37,7 @@ const useAuthUtils = () => {
         const userName = parts[parts.length - 2]; // Extract username from url because username in state may not be set yet
 
         try {
-            const response = await octokit.request(`GET /repos/${userName}/${repoName}`);
+            const response = await octokit.request(`GET /repos/${userName}/${repoName}/collaborators`);
             return response.status === 200
         } catch (error) {
             return false;

@@ -17,10 +17,7 @@ const decryptData = (encryptedPat) => {
     const bytes = CryptoJS.AES.decrypt(encryptedPat, secretKey);
     let decryptedData = bytes.toString(CryptoJS.enc.Utf8);
 
-    console.log(secretKey)
-    console.log('Decrypted:', decryptedData);
     decryptedData = decryptedData.replace(/"([^"]+)"/, '$1');
-    console.log('Decrypted:', decryptedData);
     return decryptedData;
 }
 

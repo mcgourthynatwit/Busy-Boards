@@ -29,27 +29,30 @@ const Settings = () => {
     try{
         // Use setPAT and setActiveRepo to update the state with the new values   
         const loggedInUser = await octokitAuth(newPAT); // Get logged in username from auth hook
-        setPAT(newPAT);
-        setUserName(loggedInUser); // Set in auth hook
-
-        const encryptedPat = encryptData(newPAT)
-        
-        localStorage.setItem("userName", loggedInUser);
-        localStorage.setItem("pat", encryptedPat);
-
-        
         const validUrl = await octokitAuthRepo(newPAT, newRepo); // Returns true if valid url
-        setActiveRepo(newRepo);
-        localStorage.setItem("activeRepo", newRepo);
 
+        console.log(loggedInUser, validUrl)
+        if(loggedInUser && validUrl){
+          setPAT(newPAT);
+          setUserName(loggedInUser); // Set in auth hook
+          setActiveRepo(newRepo);
+
+          const encryptedPat = encryptData(newPAT)
+          
+          localStorage.setItem("userName", loggedInUser);
+          localStorage.setItem("pat", encryptedPat);
+          localStorage.setItem("activeRepo", newRepo);
+          console.log('changed!')
+        } else{
+          console.log("Settings err resetting to old")
+        }
+       
         // Clear the input fields after the submission 
         setNewRepo("");
         setNewPAT("");
     } catch (error) {
       console.log("Settings err resetting to old", oldPAT, oldActiveRepo, oldUserName);
-        setPAT(oldPAT);
-        setActiveRepo(oldActiveRepo);
-        setUserName(oldUserName);
+        
     }
   };
 

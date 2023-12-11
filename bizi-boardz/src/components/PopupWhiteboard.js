@@ -99,10 +99,13 @@ export default function PopupWhiteboard({
   useEffect(() => {
     console.log(tool)
   }, [tool])
+  const [lastSync, setLastSync] = useState(0);
+  const [inter, setInter] = useState();
   useEffect(() => {
     if (trigger) {
-      setIsLoading(true);
-      getWhiteboard(taskID, activeRepo)
+  
+      const syncWhiteboardWithMongo = () => {
+        getWhiteboard(taskID, activeRepo)
         .then((responseData) => {
           console.log("response data", responseData);
           const transformedData = transformResponseData(responseData);
@@ -113,8 +116,45 @@ export default function PopupWhiteboard({
           console.error(error);
           setIsLoading(false);
         });
+      }
+      if (!elements){
+          setIsLoading(true);
+          syncWhiteboardWithMongo();
+      }
+      if(inter){
+        clearInterval(inter);
+      }
+
+       const tick = () => {
+         if(new Date().getTime() - lastSync >= 250){
+           console.log("i am here")
+           if (selectedElement == null){
+             console.log("not good josh")
+             syncWhiteboardWithMongo();
+           } else if ((selectedElement && selectedElement.type !== "text")) {
+             if(selectedElement.x2 !== selectedElement.x1){
+               console.log('saving element with id ', selectedElement.id)
+               callAxios(selectedElement, activeRepo);
+             }
+           }
+           setLastSync(new Date().getTime());
+        } else {
+          console.log("timer still waiting", new Date().getTime() - lastSync)
+        }
+       }
+       tick();
+
+    const update = setInterval(()=>{
+      tick();
+    }, 250);
+    setInter(update);
+      
+    } else {
+      setElements(null)
     }
-  }, [trigger, taskID, activeRepo]);
+  }, [trigger, taskID, activeRepo, action, elements, selectedElement, lastSync]);
+
+  
 
   const transformResponseData = (responseData) => {
     return responseData.map((item) =>
@@ -208,6 +248,7 @@ export default function PopupWhiteboard({
       elements.forEach((element) => {
         try {
           if ((action === "writing" && !(selectedElement && selectedElement.id === element.id)) || action !== "writing") {
+            console.log("drawing elem")
             drawElement(roughCanvas, context, element);
           }
         } catch (error) {
@@ -342,6 +383,7 @@ export default function PopupWhiteboard({
         deleteElement(elementToDelete.taskID, elementToDelete.id, activeRepo)
 
         setElements(newElements)
+        setAction("deleting");
       }
 
       return;

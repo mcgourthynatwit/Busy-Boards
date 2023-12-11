@@ -45,7 +45,7 @@ export const CustomDragLayer = (props) => {
                 {/* Dummy task card rendered when dragging */}
                 <TaskCard
                     taskName={item.taskName}
-                    taskLength={item.length}
+                    taskLength={item.taskLength}
                     assignee={item.assignee}
                     priority={item.priority}
                     description={item.description}

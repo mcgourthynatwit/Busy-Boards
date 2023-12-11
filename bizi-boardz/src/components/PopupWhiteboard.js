@@ -481,8 +481,7 @@ export default function PopupWhiteboard({
     // x and y values based on the top left of the canvas
     const { offsetX, offsetY } = getMouseCoordinates(event);
     console.log("Canvas mouse up selected elem", selectedElement);
-    if (selectedElement && selectedElement.type !== "text") {
-
+    if (selectedElement && action !== "writing") {
       if(selectedElement.x2 != selectedElement.x1){
         console.log('saving element with id ', selectedElement.id)
         callAxios(selectedElement, activeRepo);

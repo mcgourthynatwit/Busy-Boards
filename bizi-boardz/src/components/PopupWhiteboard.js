@@ -117,7 +117,7 @@ export default function PopupWhiteboard({
           //setIsLoading(false);
         });
       }
-      
+
       if(inter){
         clearInterval(inter);
       }
@@ -169,7 +169,9 @@ export default function PopupWhiteboard({
     green: "limegreen",
   };
 
+  const [seed, setSeed] = useState(rough.newSeed()); // Keeps the outlines from jittering during each rerender
   function createElement(id, x1, y1, x2, y2, type, strokeColor, text) {
+    
     console.log("Creating element type", type, "id", id, "text", text);
     let roughElement;
     if (type === "line") {
@@ -177,16 +179,19 @@ export default function PopupWhiteboard({
 
       roughElement = generator.line(x1, y1, x2, y2, {
         stroke: `${strokeColor}`,
+        seed
       });
     } else if (type === "rectangle")
       //startX, startY, width, height
       roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, {
         stroke: `${strokeColor}`,
+        seed
       });
     else if (type === "ellipse")
       //centerX, centerY, width, height
       roughElement = generator.ellipse(x1, y1, 2 * (x2 - x1), 2 * (y2 - y1), {
         stroke: `${strokeColor}`,
+        seed
       });
     else if (type === "text") {
       return { taskID, id, type, x1, y1, x2, y2, text: text ? text : "" };

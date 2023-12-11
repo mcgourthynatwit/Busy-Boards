@@ -58,6 +58,21 @@ const callAxios = (whiteboardData, repoName) => {
     });
 };
 
+const deleteElement = (taskID, id, collectionName) => {
+  console.log('deleting something', taskID, id)
+  axios
+    .delete(`http://localhost:8080/api/delete`, {
+      data: {taskID, id , collectionName}
+    })
+    .then((response) => {
+      console.log("Element deleted successfully");
+    })
+    .catch((error) => {
+      console.error("Error deleting element");
+      throw error;
+    });
+};
+
 //trigger decides if the popup is visible
 export default function PopupWhiteboard({
   trigger,
@@ -318,6 +333,9 @@ export default function PopupWhiteboard({
       const elementToDelete = getElementAtPosition(offsetX, offsetY, elements);
       if (elementToDelete) {
         const newElements = elements.filter(el => el.id !== elementToDelete.id);
+        console.log('deleting element', elementToDelete)
+        deleteElement(elementToDelete.taskID, elementToDelete.id, activeRepo)
+
         setElements(newElements)
       }
 

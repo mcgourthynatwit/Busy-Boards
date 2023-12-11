@@ -49,7 +49,26 @@ router.get('/whiteboard', (req, res) => {
 });
 
 router.delete('/delete', (req, res) => {
- 
+    const {taskID, id, collectionName} = req.body
+
+    const Whiteboard = getWhiteboardModel(collectionName);
+    console.log('deleting something here')
+    if(!taskID || !id || !collectionName) {
+        console.log('bad', taskID, id, collectionName)
+        return // bad response
+    }
+    
+    Whiteboard.deleteOne({ taskID: taskID, id: id})
+        .then((result) => {
+            if(result.deletedCount === 0){
+                console.log('nothing found to delete')
+                return
+            }
+            console.log('deleted from db!')
+        })
+        .catch((error) => {
+            console.log('internal error deleting ', error)
+        });
 })
 
 module.exports = router

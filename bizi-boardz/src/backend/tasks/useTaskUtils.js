@@ -83,7 +83,6 @@ const useTaskUtils = () => {
         console.log("Use effect calling get tasks");
 
         const fetchAndUpdateTasks = () => {
-            console.log("Fetching new tasks");
             getTasks()
                 .then(([taskData]) => {
                     if (!syncing) { //To prevent timer update from over-writing a user's manual sync with a cached response

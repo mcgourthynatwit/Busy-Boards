@@ -9,7 +9,6 @@ const getFileContent = async(pat, owner, repo, path) => {
         const response = await octokit.request(`GET /repos/${owner}/${repo}/contents/${path}?timestamp=${new Date().getTime()}`)
         const content = atob(response.data.content);
         const jsonData = JSON.parse(content);
-        console.log("DATA from GETFILECONTENT", response); // Log the parsed JSON data
         return [jsonData, response.data.sha];
     } catch (error) {
         console.error('Error fetching file:', error);

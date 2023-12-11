@@ -6,6 +6,7 @@ import {
   faMinus,
   faSquareFull,
   faFont,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -80,6 +81,9 @@ export default function PopupWhiteboard({
   const { activeRepo } = useAuthUtils();
   const canvasMargin = window.innerWidth * 0.02;
 
+  useEffect(() => {
+    console.log(tool)
+  }, [tool])
   useEffect(() => {
     if (trigger) {
       setIsLoading(true);
@@ -186,7 +190,7 @@ export default function PopupWhiteboard({
       context.save();
       context.translate(panOffset.x, panOffset.y);
       elements.forEach((element) => {
-        //console.log(element);
+        console.log(element);
         if ((action === "writing" && !(selectedElement.id === element.id)) || action !== "writing"){
          // console.log("Drawing element", element);
         drawElement(roughCanvas, context, element);
@@ -311,6 +315,15 @@ export default function PopupWhiteboard({
 
     if (action === "writing") return;
 
+    if (tool === "trash") {
+      const elementToDelete = getElementAtPosition(offsetX, offsetY, elements);
+      if (elementToDelete) {
+        const newElements = elements.filter(el => el.id !== elementToDelete.id);
+        setElements(newElements)
+      }
+
+      return;
+    }
     if (tool === "selection") {
       const element = getElementAtPosition(offsetX, offsetY, elements);
       console.log(element);
@@ -362,6 +375,17 @@ export default function PopupWhiteboard({
       )
         ? "grab"
         : "default";
+    }
+
+    if (tool === "trash") {
+      event.target.style.cursor = getElementAtPosition(
+        offsetX,
+        offsetY,
+        elements,
+      )
+      ? "grab"
+      : "default"
+      console.log('something something something')
     }
     if (action === "drawing") {
       const index = elements.length - 1;
@@ -442,6 +466,19 @@ export default function PopupWhiteboard({
           <div className="whiteboard-toolbar">
             <input
               type="radio"
+              id="trash"
+              checked={tool === "trash"}
+              onChange={() => setTool("trash")}
+            />
+            <label htmlFor="trash" className="tool-btn">
+              <FontAwesomeIcon
+                icon={faTrash}
+                style={{ height: "80%" }}
+              />
+            </label>
+
+            <input
+              type="radio"
               id="selection"
               checked={tool === "selection"}
               onChange={() => setTool("selection")}
@@ -452,6 +489,7 @@ export default function PopupWhiteboard({
                 style={{ height: "80%" }}
               />
             </label>
+           
             <input
               type="radio"
               id="text"

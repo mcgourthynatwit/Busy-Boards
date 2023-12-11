@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { createPath, useNavigate } from "react-router-dom";
 import CustomInput from '../components/CustomInput.js';
 import { AiFillGithub } from 'react-icons/ai'
 import { BsFillKeyFill } from 'react-icons/bs'
 import BiziLogo from '../icons/Bizi_Boardz-logos.jpeg'
 import FormInputError from '../components/FormInputError.js';
 import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
-
+import { encryptData } from '../backend/octokit/encrypt.js';
 const Login = () => {
     const { pat, setPAT, activeRepo, setActiveRepo, setUserName, octokitAuth, octokitAuthRepo, setIsAuthenticated } = useAuthUtils(); 
     const [showUrlError, setShowUrlError] = useState(false);
@@ -21,6 +21,7 @@ const Login = () => {
         setPAT(event.target.value); 
         setShowPATError(false); // Hide error messages when re-focusing text
     }
+
     
     const handleSubmit = async event => {
         event.preventDefault();
@@ -30,12 +31,13 @@ const Login = () => {
             
             setShowPATError(false);
             const validUrl = await octokitAuthRepo(pat, activeRepo); // Returns true if valid url
-            
             if (loggedInUser && validUrl) {
+                // encrypt
+                const encryptedPat = encryptData(pat)
+                
                 localStorage.setItem("userName", loggedInUser);
-                localStorage.setItem("pat", pat);
+                localStorage.setItem("pat", encryptedPat);
                 localStorage.setItem("activeRepo", activeRepo);
-
                 setIsAuthenticated(true);
                 navigate("/currentSprint");
             } else if (!validUrl) {

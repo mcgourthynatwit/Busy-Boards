@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect } from "react";
 import { useState } from "react";
-
+import { decryptData } from "../backend/octokit/encrypt";
 const AuthContext = createContext();
 
 const AuthProvider = (props) => {
@@ -12,7 +12,10 @@ const AuthProvider = (props) => {
   // checks if user is authenticated on app boot up
   useEffect(() => {
     if (localStorage.getItem("pat") && localStorage.getItem("activeRepo") && localStorage.getItem("userName")) {
-      setPAT(localStorage.getItem("pat"));
+
+      const decryptedData = decryptData(localStorage.getItem("pat"))
+    
+      setPAT(decryptedData);
       setActiveRepo(localStorage.getItem("activeRepo"));
       setUserName(localStorage.getItem("userName"));
       setIsAuthenticated(true);

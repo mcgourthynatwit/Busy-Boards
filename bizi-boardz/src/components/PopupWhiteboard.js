@@ -469,6 +469,11 @@ export default function PopupWhiteboard({
     if (event.target.value.length != 0){
       callAxios({...selectedElement, text: event.target.value }, activeRepo);
       updateElement(id, x1, y1, null, null, type, { text: event.target.value });
+    } else {
+      //Remove the emtpy text element from state
+      console.log("Removing empty text from state")
+      const deletedEmptyText = [...elements].filter((element) => element.id !== id);
+      setElements(deletedEmptyText);
     }
     setSelectedElement(null);
     setAction("none");

@@ -186,9 +186,9 @@ export default function PopupWhiteboard({
       context.save();
       context.translate(panOffset.x, panOffset.y);
       elements.forEach((element) => {
-        console.log(element);
+        //console.log(element);
         if ((action === "writing" && !(selectedElement.id === element.id)) || action !== "writing"){
-          console.log("Drawing element", element);
+         // console.log("Drawing element", element);
         drawElement(roughCanvas, context, element);
         }
       });
@@ -244,13 +244,13 @@ export default function PopupWhiteboard({
   }, []);
 
   //replaces the element at the wanted index with a newer version
-  function updateElement(id, x1, y1, x2, y2, type, options) {
+  function updateElement(id, x1, y1, x2, y2, type, options, shapeOffsetX, shapeOffsetY) {
     const elementsCopy = [...elements];
 
     switch (type) {
       case "line":
         console.log("new line", x1, x2);
-        elementsCopy[id] = createElement(
+        elementsCopy[parseInt(id)] = createElement(
           id,
           x1,
           y1,
@@ -261,7 +261,7 @@ export default function PopupWhiteboard({
         );
       case "rectangle":
       case "ellipse":
-        elementsCopy[id] = createElement(
+        elementsCopy[parseInt(id)] = createElement(
           id,
           x1,
           y1,
@@ -278,7 +278,7 @@ export default function PopupWhiteboard({
             .getContext("2d")
             .measureText(options.text).width * 2.4;
         const textHeight = 24;
-        elementsCopy[id] = {
+        elementsCopy[parseInt(id)] = {
           ...createElement(id, x1, y1, x1 + textWidth, y1 + textHeight, type),
           text: options.text,
         };
@@ -286,7 +286,10 @@ export default function PopupWhiteboard({
       default:
         throw new Error(`Type not recognised: ${type}`);
     }
-
+    console.log(elementsCopy);
+    elementsCopy[parseInt(id)].shapeOffsetX = shapeOffsetX
+    elementsCopy[parseInt(id)].shapeOffsetY = shapeOffsetY
+    setSelectedElement(elementsCopy[parseInt(id)]);
     setElements(elementsCopy);
   }
 
@@ -363,17 +366,18 @@ export default function PopupWhiteboard({
     if (action === "drawing") {
       const index = elements.length - 1;
       const { x1, y1 } = elements[index];
+      console.log("Draw updating element, orig coords", x1, y1, "curr coords", offsetX, offsetY);
       updateElement(index, x1, y1, offsetX, offsetY, tool);
     } else if (action === "moving") {
       //grabbing from state variable
-      const { id, x1, x2, y1, y2, type, shapeOffsetX, shapeOffsetY } =
-        selectedElement;
+      const { id, x1, x2, y1, y2, type, shapeOffsetX, shapeOffsetY } = selectedElement;
       const width = x2 - x1;
       const height = y2 - y1;
       //keeps shape in place when initially moved
       const newX1 = offsetX - shapeOffsetX;
       const newY1 = offsetY - shapeOffsetY;
       const options = type === "text" ? { text: selectedElement.text } : {};
+      console.log("move updating element", newX1, newY1, shapeOffsetX, shapeOffsetY);
       updateElement(
         id,
         newX1,
@@ -381,7 +385,9 @@ export default function PopupWhiteboard({
         newX1 + width,
         newY1 + height,
         type,
-        options
+        options,
+        shapeOffsetX,
+        shapeOffsetY
       );
     }
   };
@@ -391,10 +397,10 @@ export default function PopupWhiteboard({
     const { offsetX, offsetY } = getMouseCoordinates(event);
     console.log("Canvas mouse up selected elem", selectedElement);
     if (selectedElement && selectedElement.type !== "text") {
-      selectedElement.x2 = offsetX;
-      selectedElement.y2 = offsetY;
       if(selectedElement.x2 != selectedElement.x1){
         callAxios(selectedElement, activeRepo);
+      } else {
+        console.log("Element was at the same pos")
       }
       if (
         selectedElement.type === "text" &&

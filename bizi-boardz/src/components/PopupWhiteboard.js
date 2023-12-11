@@ -238,7 +238,7 @@ export default function PopupWhiteboard({
   //canvas "main" (initializes canvas and draws each element)
   useLayoutEffect(() => {
     const canvas = document.getElementById("canvas");
-    if (canvas && !isLoading) {
+    if (canvas && elements.length !== 0) {
       const context = canvas.getContext("2d");
       const roughCanvas = rough.canvas(canvas);
 

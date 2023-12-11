@@ -268,11 +268,11 @@ export default function PopupWhiteboard({
   //replaces the element at the wanted index with a newer version
   function updateElement(id, x1, y1, x2, y2, type, options, shapeOffsetX, shapeOffsetY) {
     const elementsCopy = [...elements];
-
+    const index = elements.findIndex((element) => element.id === id);
     switch (type) {
       case "line":
         console.log("new line", x1, x2);
-        elementsCopy[parseInt(id)] = createElement(
+        elementsCopy[index] = createElement(
           id,
           x1,
           y1,
@@ -283,7 +283,7 @@ export default function PopupWhiteboard({
         );
       case "rectangle":
       case "ellipse":
-        elementsCopy[parseInt(id)] = createElement(
+        elementsCopy[index] = createElement(
           id,
           x1,
           y1,
@@ -300,7 +300,7 @@ export default function PopupWhiteboard({
             .getContext("2d")
             .measureText(options.text).width * 2.4;
         const textHeight = 24;
-        elementsCopy[parseInt(id)] = {
+        elementsCopy[index] = {
           ...createElement(id, x1, y1, x1 + textWidth, y1 + textHeight, type),
           text: options.text,
         };
@@ -309,9 +309,9 @@ export default function PopupWhiteboard({
         throw new Error(`Type not recognised: ${type}`);
     }
     console.log(elementsCopy);
-    elementsCopy[parseInt(id)].shapeOffsetX = shapeOffsetX
-    elementsCopy[parseInt(id)].shapeOffsetY = shapeOffsetY
-    setSelectedElement(elementsCopy[parseInt(id)]);
+    elementsCopy[index].shapeOffsetX = shapeOffsetX
+    elementsCopy[index].shapeOffsetY = shapeOffsetY
+    setSelectedElement(elementsCopy[index]);
     setElements(elementsCopy);
   }
 
@@ -410,9 +410,9 @@ export default function PopupWhiteboard({
     }
     if (action === "drawing") {
       const index = elements.length - 1;
-      const { x1, y1 } = elements[index];
+      const { x1, y1, id } = elements[index];
       console.log("Draw updating element, orig coords", x1, y1, "curr coords", offsetX, offsetY);
-      updateElement(index, x1, y1, offsetX, offsetY, tool);
+      updateElement(id, x1, y1, offsetX, offsetY, tool);
     } else if (action === "moving") {
       //grabbing from state variable
       const { id, x1, x2, y1, y2, type, shapeOffsetX, shapeOffsetY } = selectedElement;
@@ -466,8 +466,10 @@ export default function PopupWhiteboard({
 
   const handleBlur = (event) => {
     const { id, x1, y1, type } = selectedElement;
-    callAxios({...selectedElement, text: event.target.value }, activeRepo);
-    updateElement(id, x1, y1, null, null, type, { text: event.target.value });
+    if (event.target.length != 0){
+      callAxios({...selectedElement, text: event.target.value }, activeRepo);
+      updateElement(id, x1, y1, null, null, type, { text: event.target.value });
+    }
     setSelectedElement(null);
     setAction("none");
   };

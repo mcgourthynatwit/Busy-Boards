@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect } from "react";
 import { useState } from "react";
-import CryptoJS from "crypto-js";
-
+import { decryptData } from "../backend/octokit/encrypt";
 const AuthContext = createContext();
 
 const AuthProvider = (props) => {
@@ -13,15 +12,9 @@ const AuthProvider = (props) => {
   // checks if user is authenticated on app boot up
   useEffect(() => {
     if (localStorage.getItem("pat") && localStorage.getItem("activeRepo") && localStorage.getItem("userName")) {
-      const secretKey = process.env.REACT_APP_SECRET_KEY
 
-      const bytes = CryptoJS.AES.decrypt(localStorage.getItem("pat"), secretKey);
-      let decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-      console.log(secretKey)
-      console.log('Decrypted:', decryptedData);
-      decryptedData = decryptedData.replace(/"([^"]+)"/, '$1');
-      console.log('Decrypted:', decryptedData);
-
+      const decryptedData = decryptData(localStorage.getItem("pat"))
+    
       setPAT(decryptedData);
       setActiveRepo(localStorage.getItem("activeRepo"));
       setUserName(localStorage.getItem("userName"));

@@ -6,8 +6,7 @@ import { BsFillKeyFill } from 'react-icons/bs'
 import BiziLogo from '../icons/Bizi_Boardz-logos.jpeg'
 import FormInputError from '../components/FormInputError.js';
 import { useAuthUtils } from '../backend/octokit/useAuthUtils.js';
-import CryptoJS from "crypto-js";
-
+import { encryptData } from '../backend/octokit/encrypt.js';
 const Login = () => {
     const { pat, setPAT, activeRepo, setActiveRepo, setUserName, octokitAuth, octokitAuthRepo, setIsAuthenticated } = useAuthUtils(); 
     const [showUrlError, setShowUrlError] = useState(false);
@@ -23,20 +22,6 @@ const Login = () => {
         setShowPATError(false); // Hide error messages when re-focusing text
     }
 
-    const encryptData = (pat) => {
-        console.log('orginal', pat)
-        const secretKey = process.env.REACT_APP_SECRET_KEY
-        console.log('key', secretKey)
-        const data = CryptoJS.AES.encrypt(
-            JSON.stringify(pat),
-            secretKey
-          ).toString();
-        console.log('encrypted', data)
-
-        
-        return data;
-
-    }
     
     const handleSubmit = async event => {
         event.preventDefault();
@@ -46,14 +31,13 @@ const Login = () => {
             
             setShowPATError(false);
             const validUrl = await octokitAuthRepo(pat, activeRepo); // Returns true if valid url
-            console.log('here ', CryptoJS)
             if (loggedInUser && validUrl) {
-                console.log('what happen')
+                // encrypt
                 const encryptedPat = encryptData(pat)
+                
                 localStorage.setItem("userName", loggedInUser);
                 localStorage.setItem("pat", encryptedPat);
                 localStorage.setItem("activeRepo", activeRepo);
-
                 setIsAuthenticated(true);
                 navigate("/currentSprint");
             } else if (!validUrl) {

@@ -5,6 +5,7 @@ import '../styles/CustomInput.css'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import CustomInput from '../components/CustomInput.js';
 import { BsFillKeyFill } from 'react-icons/bs';
+import { encryptData } from '../backend/octokit/encrypt.js';
 
 const Settings = () => {
   const { pat, activeRepo, setPAT, setActiveRepo, userName, setUserName, octokitAuth, octokitAuthRepo} = useAuthUtils();
@@ -30,8 +31,11 @@ const Settings = () => {
         const loggedInUser = await octokitAuth(newPAT); // Get logged in username from auth hook
         setPAT(newPAT);
         setUserName(loggedInUser); // Set in auth hook
+
+        const encryptedPat = encryptData(newPAT)
+        
         localStorage.setItem("userName", loggedInUser);
-        localStorage.setItem("pat", newPAT);
+        localStorage.setItem("pat", encryptedPat);
 
         
         const validUrl = await octokitAuthRepo(newPAT, newRepo); // Returns true if valid url

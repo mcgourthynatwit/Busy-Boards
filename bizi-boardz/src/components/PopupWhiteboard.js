@@ -150,7 +150,7 @@ export default function PopupWhiteboard({
     setInter(update);
       
     } else {
-      setElements(null)
+      setElements([]);
     }
 
     return () => {
@@ -677,7 +677,7 @@ export default function PopupWhiteboard({
           >
             Canvas
           </canvas>
-        </div>
+        </div>te
       </div>
     </>
   ) : (

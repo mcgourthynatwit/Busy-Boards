@@ -117,10 +117,7 @@ export default function PopupWhiteboard({
           //setIsLoading(false);
         });
       }
-      if (!elements){
-          setIsLoading(true);
-          syncWhiteboardWithMongo();
-      }
+      
       if(inter){
         clearInterval(inter);
       }
@@ -149,14 +146,13 @@ export default function PopupWhiteboard({
     }, 250);
     setInter(update);
       
-    } else {
-      setElements([]);
     }
 
     return () => {
+      console.log("clearing interval and state")
       clearInterval(inter);
     }
-  }, [trigger, taskID, activeRepo, action, elements, selectedElement, lastSync]);
+  }, [trigger, taskID, activeRepo, action, elements, selectedElement]);
 
   
 

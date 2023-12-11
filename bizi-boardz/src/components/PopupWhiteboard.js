@@ -443,8 +443,6 @@ export default function PopupWhiteboard({
     console.log("Canvas mouse up selected elem", selectedElement);
     if (selectedElement && selectedElement.type !== "text") {
       // no clue where id is set for things other then text so set here
-      const UUID = uuidv4()
-      selectedElement.id = UUID
 
       if(selectedElement.x2 != selectedElement.x1){
         console.log('saving element with id ', selectedElement.id)

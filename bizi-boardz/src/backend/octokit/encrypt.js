@@ -3,14 +3,11 @@ const secretKey = process.env.REACT_APP_SECRET_KEY
 
 
 const encryptData = (pat) => {
-    console.log('orginal', pat)
     const secretKey = process.env.REACT_APP_SECRET_KEY
-    console.log('key', secretKey)
     const data = CryptoJS.AES.encrypt(
         JSON.stringify(pat),
         secretKey
       ).toString();
-    console.log('encrypted', data)
     
     return data;
 }

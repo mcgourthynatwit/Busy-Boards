@@ -204,7 +204,7 @@ const useTaskUtils = () => {
         console.log("Update task calling sync task with sha", fileSHA);
         return await syncTasks(newTaskState, fileSHA, `System pushed updated task ${taskName} from user ${userName}`);
     }
-
+    
     const delTask = async (taskUUID) => {
         if(timer){
             clearTimeout(timer);
@@ -227,6 +227,16 @@ const useTaskUtils = () => {
             return false;
         }
         return await syncTasks(updatedTasks, fileSHA, `System removed task with UUID ${taskUUID} by user ${userName}`);
+    }
+
+    const initSprint = async (currentSprintTasks , upcomingSprintTasks) => {
+        const [existingTasks, fileSHA] = await getTasks()
+            .catch((error) => {
+                setSyncing(false);
+                console.log("Delete task failed to get current tasks!", error);
+                return false
+            });
+        
     }
     return { createTask, delTask, updateTask, getRepoUsers, tasks };
 

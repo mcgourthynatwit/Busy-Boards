@@ -1,10 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect , useState} from 'react';
 import "../styles/PopupStartSprint.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 import useTaskUtils from "../backend/tasks/useTaskUtils";
 import { useTaskContext } from "../providers/TaskProvider";
 export default function PopupLocation({ trigger, setTrigger }) {
+  
+  const [sprintTasks, setSprintTasks] = useState([])
+  const [newSprintTasks, setNewSprintTasks] = useState([])
+
+  const { initSprint } = useTaskContext();
+ 
+  const initSprintHandler = async (sprint, newSprint) => {
+    console.log('calling ... ')
+    await initSprint(sprint, newSprint)
+  }
+
   const mapSprintNum = (sprintNumber) => {
     const sprintNames = {
       0 : "Backlog",
@@ -18,23 +29,18 @@ export default function PopupLocation({ trigger, setTrigger }) {
   const ignoreParentOnClick = (e) => e.stopPropagation();
 
   useEffect(() => {
-    let sprintTasks = [];
-    let newSprintTasks = [];
+    
     console.log("this is all the tasks", tasks)
     tasks.forEach(task => {
       const sprintName = mapSprintNum(task.sprint);
       console.log('for task', task, "the sprint name is", sprintName)
       if (sprintName === "This Sprint") {
-        sprintTasks.push(task);
+        setSprintTasks([...sprintTasks, task])
       } else if (sprintName === "Upcoming Sprint") {
-        newSprintTasks.push(task);
+        setNewSprintTasks([...newSprintTasks, task])
       }
     });
-
-    console.log("here are the tasks in the curr sprint" , sprintTasks);
-    console.log("here will be the tasks added" , newSprintTasks);
-    // Further logic or state updates
-  }, []); // Make sure tasks is defined
+  }, []); 
   return trigger ? (
     
     <>
@@ -61,7 +67,7 @@ export default function PopupLocation({ trigger, setTrigger }) {
             <button className="cancel-btn" onClick={() => setTrigger(false)}>
               Cancel
             </button>
-            <button className="start-sprint-btn">
+            <button className="start-sprint-btn" onClick = {() => initSprintHandler(sprintTasks, newSprintTasks)}>
               <FontAwesomeIcon
                 icon={faPersonRunning}
                 style={{ height: "100%", paddingRight: "6px" }}

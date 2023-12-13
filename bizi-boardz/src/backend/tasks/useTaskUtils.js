@@ -236,9 +236,17 @@ const useTaskUtils = () => {
                 console.log("Delete task failed to get current tasks!", error);
                 return false
             });
+            console.log('being passed in ', currentSprintTasks)
+            console.log('tasks before ', existingTasks)
+
+            let filteredTasks = existingTasks.filter(
+                existingTask => !currentSprintTasks.some(task => task.taskID === existingTask.taskID)
+            );
+            console.log('tasks after', filteredTasks);
+        
         
     }
-    return { createTask, delTask, updateTask, getRepoUsers, tasks };
+    return { createTask, delTask, updateTask, getRepoUsers, initSprint, tasks };
 
 
 

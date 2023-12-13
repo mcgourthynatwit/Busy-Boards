@@ -12,7 +12,6 @@ export default function PopupLocation({ trigger, setTrigger }) {
   const { initSprint } = useTaskContext();
  
   const initSprintHandler = async (sprint, newSprint) => {
-    console.log('calling ... ')
     await initSprint(sprint, newSprint)
   }
 
@@ -29,18 +28,23 @@ export default function PopupLocation({ trigger, setTrigger }) {
   const ignoreParentOnClick = (e) => e.stopPropagation();
 
   useEffect(() => {
-    
-    console.log("this is all the tasks", tasks)
+  
+    let updatedSprintTasks = [];
+    let updatedNewSprintTasks = [];
+  
     tasks.forEach(task => {
       const sprintName = mapSprintNum(task.sprint);
-      console.log('for task', task, "the sprint name is", sprintName)
+  
       if (sprintName === "This Sprint") {
-        setSprintTasks([...sprintTasks, task])
+        updatedSprintTasks.push(task);
       } else if (sprintName === "Upcoming Sprint") {
-        setNewSprintTasks([...newSprintTasks, task])
+        updatedNewSprintTasks.push(task);
       }
     });
-  }, []); 
+    setSprintTasks(updatedSprintTasks);
+    setNewSprintTasks(updatedNewSprintTasks);
+  }, [tasks]);
+  
   return trigger ? (
     
     <>

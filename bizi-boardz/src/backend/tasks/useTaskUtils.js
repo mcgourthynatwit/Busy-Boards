@@ -230,19 +230,35 @@ const useTaskUtils = () => {
     }
 
     const initSprint = async (currentSprintTasks , upcomingSprintTasks) => {
+        if(currentSprintTasks.length == 0 && upcomingSprintTasks.length == 0){
+            console.log('nothing ')
+            return 
+        }
         const [existingTasks, fileSHA] = await getTasks()
             .catch((error) => {
                 setSyncing(false);
                 console.log("Delete task failed to get current tasks!", error);
                 return false
             });
-            console.log('being passed in ', currentSprintTasks)
-            console.log('tasks before ', existingTasks)
-
+           
+            // remove current sprint tasks
             let filteredTasks = existingTasks.filter(
                 existingTask => !currentSprintTasks.some(task => task.taskID === existingTask.taskID)
             );
-            console.log('tasks after', filteredTasks);
+
+            let iter = 0
+
+            // change upcoming sprint to this sprint
+            filteredTasks.forEach(task => {
+                for (let iter = 0; iter < upcomingSprintTasks.length; iter++) {
+                    if (task.taskID == upcomingSprintTasks[iter].taskID) {
+                        task.sprint = 1;
+                        break; // Break the loop once the task is found and updated
+                    }
+                }
+            });
+            
+            return await syncTasks(filteredTasks, fileSHA, 'System created sprint')
         
         
     }

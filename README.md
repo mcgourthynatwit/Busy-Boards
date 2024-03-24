@@ -1,7 +1,7 @@
 This is a clone of the original project completed by :
-  Nicholas McGourthy
-  Jaden Reid
-  Yogi Patel
+  Nicholas McGourthy,
+  Jaden Reid,
+  Yogi Patel,
   Tim Magee
 
 Completed for COMP 4960 Fall 2023

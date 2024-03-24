@@ -1,4 +1,10 @@
-"# comp4960-fall2023-project-biziboyz-group-2" 
+This is a clone of the original project completed by :
+  Nicholas McGourthy
+  Jaden Reid
+  Yogi Patel
+  Tim Magee
+
+Completed for COMP 4960 Fall 2023
 
 # Requirements: 
 1. Node.js (ability to run npm install to install relevant packages)
